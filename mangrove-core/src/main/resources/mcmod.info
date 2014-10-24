@@ -1,0 +1,19 @@
+[
+{
+  "modid": "Mangrove",
+  "name": "Mangrove",
+  "version": "0.0.1",
+  "mcversion": "$mcversion",
+  "description": "",
+  "credits": "Created by Nuno Santos",
+  "logoFile": "",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [ "NunoSantos"],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+}
+]
