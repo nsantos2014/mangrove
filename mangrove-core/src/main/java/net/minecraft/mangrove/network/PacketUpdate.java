@@ -8,8 +8,13 @@
  */
 package net.minecraft.mangrove.network;
 
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.mangrove.core.ITileUpdatable;
+import net.minecraft.mangrove.core.gui.MGContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -65,12 +70,32 @@ public class PacketUpdate extends AbstractPacket {
 
 	@Override
 	public void handleClientSide(EntityPlayer player) {
-		
+		final World world = player.worldObj;
+
+        final TileEntity te = world.getTileEntity(posX,posY,posZ);
+        if (te instanceof ITileUpdatable) {
+			ITileUpdatable tupdatable = (ITileUpdatable) te;
+			try {
+				tupdatable.handleUpdatePacket(this);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	@Override
 	public void handleServerSide(EntityPlayer player) {
-		
+		final World world = player.worldObj;
+
+        final TileEntity te = world.getTileEntity(posX,posY,posZ);
+        if (te instanceof ITileUpdatable) {
+			ITileUpdatable tupdatable = (ITileUpdatable) te;
+			try {
+				tupdatable.handleUpdatePacket(this);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 //	@Override
 //	public void writeData(ByteBuf data) {
@@ -105,3 +130,4 @@ public class PacketUpdate extends AbstractPacket {
 //		return packetId;
 //	}
 }
+

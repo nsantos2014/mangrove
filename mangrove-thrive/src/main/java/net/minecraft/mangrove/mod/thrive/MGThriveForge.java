@@ -7,6 +7,7 @@ import net.minecraft.mangrove.mod.thrive.block.harvester.TileEntityHarvester;
 import net.minecraft.mangrove.mod.thrive.block.harvester.gui.ContainerHarvester;
 import net.minecraft.mangrove.mod.thrive.block.harvester.gui.GuiHarvester;
 import net.minecraft.mangrove.mod.thrive.proxy.CommonProxy;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerNode;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -52,6 +53,11 @@ public class MGThriveForge {
 
 	public void registerRobotFarmer() {
 		GameRegistry.registerBlock(MGThriveBlocks.farmer_link, "farmer_link");
+		
+		GameRegistry.registerBlock(MGThriveBlocks.farmer_node, "farmer_node");
+		
+		TileEntity.addMapping(TileFarmerNode.class, "farmer_node");
+		
 	}
 	public void registerHarvester() {
 		GameRegistry.registerBlock(MGThriveBlocks.harvester, "harvester");

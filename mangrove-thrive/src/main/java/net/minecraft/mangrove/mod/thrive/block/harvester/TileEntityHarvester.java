@@ -34,8 +34,8 @@ public class TileEntityHarvester extends AbstractSidedInventoryTileEntity implem
 	private static final int[] EMPTY = new int[0];
 	
 	private EntityBlock head;
-	private EntityBlock hTray;
-	private EntityBlock vTray;
+//	private EntityBlock hTray;
+//	private EntityBlock vTray;
 	
 	private double tubeY = Double.NaN;
 	private int aimY = 0;

@@ -1,5 +1,6 @@
 package net.minecraft.mangrove.mod.maps.forge;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 
 import net.minecraft.client.Minecraft;
@@ -41,7 +42,7 @@ public class MwForge {
 	public void preInit(FMLPreInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
-        proxy.preInit(event.getSuggestedConfigurationFile());
+        proxy.preInit(new File(event.getModConfigurationDirectory(), "mangrove/maps.conf"));
 	}
 	
 	@EventHandler
