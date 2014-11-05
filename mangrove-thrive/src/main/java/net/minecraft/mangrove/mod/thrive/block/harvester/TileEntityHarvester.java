@@ -1,7 +1,5 @@
 package net.minecraft.mangrove.mod.thrive.block.harvester;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
@@ -17,17 +15,17 @@ import net.minecraft.mangrove.core.CoreConstants;
 import net.minecraft.mangrove.core.ITileUpdatable;
 import net.minecraft.mangrove.core.block.AbstractSidedInventoryTileEntity;
 import net.minecraft.mangrove.core.entity.EntityBlock;
-import net.minecraft.mangrove.core.inventory.InvUtils;
 import net.minecraft.mangrove.core.inventory.Permission;
+import net.minecraft.mangrove.core.json.JSON;
 import net.minecraft.mangrove.core.proxy.FactoryProxy;
 import net.minecraft.mangrove.core.utils.BlockUtils;
-import net.minecraft.mangrove.network.NetBus;
-import net.minecraft.mangrove.network.PacketPayload;
-import net.minecraft.mangrove.network.PacketUpdate;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityHopper;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class TileEntityHarvester extends AbstractSidedInventoryTileEntity implements ITileUpdatable {
 
@@ -494,40 +492,55 @@ public class TileEntityHarvester extends AbstractSidedInventoryTileEntity implem
 		destroyTube();
 	}
 	
-	@Override
-	public void handleUpdatePacket(PacketUpdate packet) throws IOException {
-		PacketPayload payload = packet.payload;
-		ByteBuf data = payload.stream;
-		aimY = data.readInt();
-		tubeY = data.readFloat();
-		//powered = data.readBoolean();
-
-		setTubePosition();
-	}
+//	@Override
+//	public void handleUpdatePacket(PacketUpdate packet) throws IOException {
+//		PacketPayload payload = packet.payload;
+//		ByteBuf data = payload.stream;
+//		aimY = data.readInt();
+//		tubeY = data.readFloat();
+//		//powered = data.readBoolean();
+//
+//		setTubePosition();
+//	}
 
 	
 	public void sendNetworkUpdate() {
-		if (worldObj != null && !worldObj.isRemote) {
-//			BuildCraftCore.instance.sendToPlayers(getUpdatePacket(), worldObj,
-//					xCoord, yCoord, zCoord, DefaultProps.NETWORK_UPDATE_RANGE);
-			NetBus.sendToAll(getPacketUpdate());
-		}
+//		if (worldObj != null && !worldObj.isRemote) {
+////			BuildCraftCore.instance.sendToPlayers(getUpdatePacket(), worldObj,
+////					xCoord, yCoord, zCoord, DefaultProps.NETWORK_UPDATE_RANGE);
+//			NetBus.sendToAll(getPacketUpdate());
+//		}
 	}
 	
+//	@Override
+//	public PacketUpdate getPacketUpdate() {
+//		return new PacketUpdate(this,getPacketPayload());
+//	}	
+//	public PacketPayload getPacketPayload() {
+//		PacketPayload payload = new PacketPayload(new PacketPayload.StreamWriter() {
+//			@Override
+//			public void writeData(ByteBuf buf) {
+//				buf.writeInt(aimY);
+//				buf.writeFloat((float) tubeY);
+////				buf.writeBoolean(powered);
+//			}
+//		});
+//
+//		return payload;
+//	}
+	
 	@Override
-	public PacketUpdate getPacketUpdate() {
-		return new PacketUpdate(this,getPacketPayload());
-	}	
-	public PacketPayload getPacketPayload() {
-		PacketPayload payload = new PacketPayload(new PacketPayload.StreamWriter() {
-			@Override
-			public void writeData(ByteBuf buf) {
-				buf.writeInt(aimY);
-				buf.writeFloat((float) tubeY);
-//				buf.writeBoolean(powered);
-			}
-		});
-
-		return payload;
+	public JsonObject getTilePacketData() {
+		final JsonObject data = JSON.newObject();
+		
+		return data;
+	}
+	@Override
+	public void handleClientUpdate(JsonObject data) throws IOException {
+		
+	}
+	@Override
+	public void handleServerUpdate(JsonObject data) throws IOException {
+		
 	}
 }

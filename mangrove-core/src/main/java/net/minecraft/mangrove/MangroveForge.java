@@ -6,7 +6,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.craftpedia.Craftpedia;
 import net.minecraft.mangrove.core.xray.XRayBlocks;
+import net.minecraft.mangrove.network.GuiWidgetMessage;
+import net.minecraft.mangrove.network.GuiWidgetMessageHandler;
 import net.minecraft.mangrove.network.NetBus;
+import net.minecraft.mangrove.network.TileEntityMessage;
+import net.minecraft.mangrove.network.TileEntityMessageHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -36,6 +40,8 @@ public class MangroveForge {
 	public void preInit(FMLPreInitializationEvent event) {
 		NetBus.initialize();
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GUIHandler());
+		NetBus.register(GuiWidgetMessageHandler.class, GuiWidgetMessage.class);
+		NetBus.register(TileEntityMessageHandler.class,TileEntityMessage.class);
 		
 		Craftpedia.instance.registerKeys();
 //		XRayBlocks.instance.registerKeys();

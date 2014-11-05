@@ -44,7 +44,7 @@ public class BlockFarmerNode extends BlockContainer {
 	
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
-		System.out.println("BlockAdded:"+world);
+//		System.out.println("BlockAdded:"+world);
 		super.onBlockAdded(world, x, y, z);
 	}
 
@@ -78,7 +78,7 @@ public class BlockFarmerNode extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
-		System.out.println("New Tile:"+world);
+//		System.out.println("New Tile:"+world);
 		return new TileFarmerNode();
 	}
 

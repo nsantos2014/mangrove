@@ -2,12 +2,13 @@ package net.minecraft.mangrove.core;
 
 import java.io.IOException;
 
-import net.minecraft.mangrove.network.PacketPayload;
-import net.minecraft.mangrove.network.PacketUpdate;
+import com.google.gson.JsonObject;
 
 public interface ITileUpdatable {
 
-	PacketUpdate getPacketUpdate(); 
+	JsonObject getTilePacketData();
 	
-	void handleUpdatePacket(PacketUpdate packet) throws IOException;
+	void handleClientUpdate(JsonObject data) throws IOException;
+	
+	void handleServerUpdate(JsonObject data) throws IOException;
 }

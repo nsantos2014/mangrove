@@ -19,6 +19,7 @@ import net.minecraft.mangrove.core.gui.slots.IPhantomSlot;
 import net.minecraft.mangrove.core.gui.slots.SlotBase;
 import net.minecraft.mangrove.core.gui.widgets.Widget;
 import net.minecraft.mangrove.core.utils.StackHelper;
+import net.minecraft.mangrove.network.GuiWidgetMessage;
 import net.minecraft.mangrove.network.GuiWidgetPacket;
 import net.minecraft.mangrove.network.NetBus;
 
@@ -101,7 +102,7 @@ public class MGContainer extends Container{
 	public void sendWidgetDataToClient(Widget widget, ICrafting player, byte[] data) {
 //		PacketGuiWidget pkt = new PacketGuiWidget(windowId, widgets.indexOf(widget), data);
 //		BuildCraftCore.instance.sendToPlayer((EntityPlayer) player, pkt);
-		NetBus.sendToServer(new GuiWidgetPacket(windowId, widgets.indexOf(widget), data));
+		NetBus.sendToServer(new GuiWidgetMessage(windowId, widgets.indexOf(widget), data));
 	}
 
 	public void handleWidgetClientData(int widgetId, byte[] data) {

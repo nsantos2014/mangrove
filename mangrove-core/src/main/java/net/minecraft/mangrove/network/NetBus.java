@@ -3,39 +3,35 @@ package net.minecraft.mangrove.network;
 import net.minecraft.entity.player.EntityPlayerMP;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
 
 
 public class NetBus {
-	public static final PacketPipeline packetPipeline = new PacketPipeline();
+	public static SimpleNetworkWrapper network;	
+	private static final String CHANNEL_NAME = "MANGROVE_SC";
+	//public static final PacketPipeline packetPipeline = new PacketPipeline();
 
+	
 	public static void initialize(){
-		packetPipeline.initialise();		
+		network = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL_NAME);
+	    
+	}
+	public static <REQ extends IMessage, REPLY extends IMessage>void register(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType){
+		network.registerMessage(messageHandler, requestMessageType, 0, Side.SERVER);
+		network.registerMessage(messageHandler, requestMessageType, 0, Side.CLIENT);
 	}
 	
-	public static void sendToAll(AbstractPacket message) {
-		packetPipeline.registerPacket(message.getClass());
-		packetPipeline.sendToAll(message);
+	public static void sendToServer(IMessage message) {
+		network.sendToServer(message);		
 	}
-
-	public static void sendTo(AbstractPacket message, EntityPlayerMP player) {
-		packetPipeline.registerPacket(message.getClass());
-		packetPipeline.sendTo(message, player);
+	public static void sendToClient(IMessage message) {
+		network.sendToAll(message);		
 	}
-
-	public static void sendToAllAround(AbstractPacket message, TargetPoint point) {
-		packetPipeline.registerPacket(message.getClass());
-		packetPipeline.sendToAllAround(message, point);
+	public static void sendToPlayer(IMessage message, EntityPlayerMP player) {
+		network.sendTo(message, player);
 	}
-
-	public static void sendToDimension(AbstractPacket message, int dimensionId) {
-		packetPipeline.registerPacket(message.getClass());
-		packetPipeline.sendToDimension(message, dimensionId);
-	}
-
-	public static void sendToServer(AbstractPacket message) {
-		packetPipeline.registerPacket(message.getClass());
-		packetPipeline.sendToServer(message);
-	}
-
 	
 }

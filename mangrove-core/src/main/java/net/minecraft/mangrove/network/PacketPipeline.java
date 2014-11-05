@@ -88,7 +88,7 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
 
         AbstractPacket pkt = clazz.newInstance();
         pkt.decodeInto(ctx, payload.slice());
-
+//        System.out.println("World:"+Minecraft.getMinecraft().theWorld);
         EntityPlayer player;
         switch (FMLCommonHandler.instance().getEffectiveSide()) {
             case CLIENT:
@@ -147,8 +147,9 @@ public class PacketPipeline extends MessageToMessageCodec<FMLProxyPacket, Abstra
      *
      * @param message The message to send
      */
-    public void sendToAll(AbstractPacket message) {
+    public void sendToAll(AbstractPacket message) {    	
         this.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+//        this.channels.get(Side.SERVER).writeOutbound(message);
         this.channels.get(Side.SERVER).writeAndFlush(message);
     }
 

@@ -1,369 +1,384 @@
 package net.minecraft.mangrove.mod.thrive.robofarmer.entity;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.IOException;
+import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.IGrowable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemStack;
-import net.minecraft.mangrove.core.CoreConstants;
 import net.minecraft.mangrove.core.ITileUpdatable;
-import net.minecraft.mangrove.core.entity.EntityBlock;
-import net.minecraft.mangrove.core.proxy.FactoryProxy;
+import net.minecraft.mangrove.core.Position;
+import net.minecraft.mangrove.core.cs.CS;
+import net.minecraft.mangrove.core.cs.CSPosition3i;
+import net.minecraft.mangrove.core.json.JSON;
 import net.minecraft.mangrove.core.utils.BlockUtils;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.action.MoveAction;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.action.SetupAction;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.action.VoidServerExecuteAction;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.action.VoidServerUpdateAction;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.behaviour.VoidBehavior;
 import net.minecraft.mangrove.network.NetBus;
-import net.minecraft.mangrove.network.PacketPayload;
-import net.minecraft.mangrove.network.PacketUpdate;
+import net.minecraft.mangrove.network.TileEntityMessage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileFarmerNode extends TileEntity implements ITileUpdatable{
-	//private EntityBlock head;
-	private EntityWorkrt head=new EntityWorkrt();
+import com.google.gson.JsonObject;
+
+import cpw.mods.fml.relauncher.Side;
+
+public class TileFarmerNode extends TileEntity implements ITileUpdatable {
+	private static final VoidBehavior VOID_BEHAVIOR = new VoidBehavior();
+	private static final VoidServerExecuteAction VOID_EXECUTE_ACTION = new VoidServerExecuteAction();
+	private static final VoidServerUpdateAction VOID_UPDATE_ACTION = new VoidServerUpdateAction();
+	private final Random field_149933_a = new Random();
+	private int tick = 0;	
+	private int step = 0;
 	
-	//private ForgeDirection direction=ForgeDirection.UNKNOWN;
-//	private double tubeStep=0.02;
-//	private double tubePos = Double.NaN;
-//	private int aimPos = 20;
-	private int tick=0;
-	
-	private int prevX=xCoord;
-	private int prevY=yCoord;
-	private int prevZ=zCoord;
-	
-//	private State armState=State.Setup;
-//	
-//	enum State{
-//		Setup,
-//		Expanding,
-//		Contracting,
-//		Idle;
-//	}
+	private Activity machineState = Activity.Setup;
+	private OperationStatus operationStatus = OperationStatus.Start;
+	private IBehaviour activeBehaviour = VOID_BEHAVIOR;
 		
-	public void readFromNBT(NBTTagCompound tag){
-        super.readFromNBT(tag);
-        prevX = tag.getInteger("prevX");      
-        prevY = tag.getInteger("prevY");
-        prevZ = tag.getInteger("prevZ");
-        
-        //this.transferCooldown = tag.getInteger("TransferCooldown");
-        
-//        armState=State.values()[tag.getInteger("armState")];
-//        aimPos = tag.getInteger("aimPos");
-//		tubePos = tag.getFloat("tubePos");
-//		tubeStep = tag.getFloat("tubeStep");
-//		direction= ForgeDirection.getOrientation(tag.getInteger("direction"));
-//		
-		head.readFromNBT(tag);
-    }
-
-    public void writeToNBT(NBTTagCompound tag){
-        super.writeToNBT(tag);
-        tag.setInteger("prevX", prevX);
-        tag.setInteger("prevY", prevY);
-        tag.setInteger("prevZ", prevZ);
-       // tag.setInteger("TransferCooldown", this.transferCooldown);
-        
-//        if (head != null) {
-//        	tag.setFloat("tubePos", (float) head.posZ);
-//		} else {
-//			tag.setFloat("tubePos", zCoord);
+	// TODO Auto-generated method stub
+	
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+//		if( tag.hasKey("position")){
+//			position=new CSPosition3i();
+//			position.readFromNBT(tag);
+//		}else{
+//			position=null;
 //		}
-//        tag.setInteger("armState", armState.ordinal());
-//        tag.setFloat("tubePos",(float)tubePos);
-//        tag.setFloat("tubeStep",(float)tubeStep);
-//        tag.setInteger("aimPos", aimPos);
-//        tag.setInteger("direction", direction.ordinal());
-        head.writeToNBT(tag);
-    }
-    @Override
-    public Block getBlockType() {
-    	Block blockType2 = super.getBlockType();
-    	System.out.println("Block Type:"+blockType2);
+		this.step=tag.getInteger("step");
+		machineState = Activity.values()[tag.getInteger("machineState")];		
+	}
+
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+//		if( position!=null){
+//			final NBTTagCompound positionTag = new NBTTagCompound();
+//			position.writeToNBT(tag);
+//			tag.setTag("position", positionTag);
+//		}else{
+//			tag.removeTag("position");
+//		}
+		tag.setInteger("step", this.step);
+		tag.setInteger("machineState", machineState.ordinal());		
+	}
+
+	@Override
+	public Block getBlockType() {
+		final Block blockType2 = super.getBlockType();
+
 		return blockType2;
-    }
-    @Override
-    public void updateEntity() {
-    	if(head.isMoving()){
-    		if(head.move(worldObj,xCoord,yCoord,zCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()))){
-    			sendNetworkUpdate();
-			//return;
-    		}
-    	}
-    	if( this.worldObj.isRemote){
-    		return;
-    	}
-    	
-    	tick++;    	
-    	
-		int xOffset = head.getXOffset(xCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()));
-		int yOffset = head.getYOffset(yCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()));
-		int zOffset = head.getZOffset(zCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()));
-		
-		if( xOffset!=prevX || yOffset!=prevY|| zOffset!=prevZ){
-			if(!head.isSettingUp()){
-				head.doPlow();
-				sendNetworkUpdate();
-				System.out.println("Execute : "
-					+" remote:"+this.worldObj.isRemote	
-					+ " x="+xOffset
-					+ " y="+yOffset
-					+ " z="+zOffset
-					+"  et="+head
-				);				
-			}			
-			this.prevX=xOffset;
-			this.prevY=yOffset;
-			this.prevZ=zOffset;
-			sendNetworkUpdate();
+	}	
+
+	@Override
+	public void updateEntity() {
+
+		tick++;
+		if (this.worldObj.isRemote) {
+			updateEntityClient();
+		} else {
+			updateEntityServer();
 		}
-		
-		if (this.tick % 32 == 0) {
-			final Block block = worldObj.getBlock(prevX, prevY-1, prevZ);
-			if (head.isPlow()) {
-				if (block == Blocks.grass || block == Blocks.dirt) {
-					doPlow();					
-				}else{
-					System.out.println("Block not plowable:"+block);
+	}
+
+	protected void updateEntityClient() {
+		if(  operationStatus==OperationStatus.Start || operationStatus==OperationStatus.End){
+			final IBehaviour behaviour = VOID_BEHAVIOR;
+			
+			final CSPosition3i position = new CSPosition3i(xCoord, yCoord, zCoord, BlockUtils.getForgeDirectionFromMetadata(this.getBlockMetadata()));
+			final CS localCS = CS.subSystem(position);
+			final CSPosition3i local = new CSPosition3i();
+			local.x=step-1;
+			final CSPosition3i worldPos1 = localCS.toWorld(local);
+			behaviour.init(worldObj, worldPos1);
+			if( this.activeBehaviour != behaviour){
+				behaviour.start();
+				this.activeBehaviour = behaviour;
+			}
+			behaviour.execute();
+			if(behaviour.hasStopped()){
+				operationStatus = operationStatus==OperationStatus.End?OperationStatus.Update:OperationStatus.Execute;
+				fireOperationStatusEvent(Side.CLIENT);
+			}
+		}
+	}
+
+	protected void updateEntityServer() {
+		if (tick % 64 == 0) {
+			final CSPosition3i position = new CSPosition3i(xCoord, yCoord, zCoord, BlockUtils.getForgeDirectionFromMetadata(this.getBlockMetadata()));
+			final CS localCS = CS.subSystem(position);
+			final CSPosition3i local = new CSPosition3i();		
+			
+			local.x=step+1;
+			final CSPosition3i worldPos1 = localCS.toWorld(local);
+			
+			if( operationStatus==OperationStatus.Execute){
+				IServerExecuteAction action=VOID_EXECUTE_ACTION; 										
+							
+				action.init(this.worldObj , worldPos1,step);
+				action.start();
+				do{ 
+					action.execute();
+				}while(!action.isStopped());				
+				fireActionExecutedEvent(action.isSuccessfull());
+			}else if( operationStatus==OperationStatus.Update){
+				IServerUpdateAction action=VOID_UPDATE_ACTION; 										
+				
+				action.init(this.worldObj , worldPos1,machineState,step);
+				action.prepare();
+				do{ 
+					action.update();
+				}while(!action.isDone());
+				if(action.isSuccessfull()){
+					step=action.nextStep();
+					machineState=action.nextActivity();
 				}
-//				head.doIrrigate();
-//			} else if (head.isIrrigate()) {
-//				if (block == Blocks.farmland) {
-//					doIrrigate();
-//				}
-//				head.doPlant();
-//			} else if (head.isPlant()) {
-//				final Block crop = worldObj.getBlock(prevX, prevY + 1, prevZ);
-//				if (block == Blocks.farmland && crop == Blocks.air) {
-//					doPlant();
-//				}
-//				head.doFertilize();
-//			} else if (head.isFertilize()) {
-//				doFertilize();
-//				head.doHarvest();
-//			} else if (head.isHarvest()) {
-				head.doMove();
-			}
-			sendNetworkUpdate();
-//			if (this.worldObj.isRemote) {
-			this.markDirty();
-//			}
-		}
-//		if(this.tick % 16 != 0){
-//    		System.out.println("Update Entity:"+this.worldObj+":"+this.worldObj.getBlock(xCoord, yCoord, zCoord));
-//    	}
-    }
-	
-	public void updateEntity2() {
-		System.out.println("Update Entity:"+this.worldObj.isRemote);
-		if(head.move(worldObj,xCoord,yCoord,zCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()))){
-			System.out.println("Move Entity:"+this.worldObj.isRemote);
-			sendNetworkUpdate();
-			//return;
-		}
-//		
-//		int xOffset = head.getXOffset(xCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()));
-//		int yOffset = head.getYOffset(yCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()));
-//		int zOffset = head.getZOffset(zCoord,BlockUtils.getForgeDirectionFromMetadata(getBlockMetadata()));
-//		
-//		if( xOffset!=prevX || yOffset!=prevY|| zOffset!=prevZ){
-//			System.out.println("Execute : "
-//				+" remote:"+this.worldObj.isRemote	
-//				+ " x="+xOffset
-//				+ " y="+yOffset
-//				+ " z="+zOffset
-//			);
-//			if(!head.isSettingUp()){
-//				final Block block=worldObj.getBlock(xOffset, yOffset, zOffset);
-//				
-//				if(block==Blocks.grass || block==Blocks.dirt){
-//					head.doPlow();
-//				}else if(block==Blocks.farmland){
-//					head.doIrrigate();
-//				}else{
-//					final Block crop=worldObj.getBlock(xOffset, yOffset+1, zOffset);
-//					if( crop.isAir(worldObj, xOffset, yOffset+1, zOffset)){
-//						head.doPlant();
-//					}else{
-//						head.doFertilize();
-//					}
-//				}
-//			}
-//			this.prevX=xOffset;
-//			this.prevY=yOffset;
-//			this.prevZ=zOffset;
-//			sendNetworkUpdate();			
-//		}
-//		if( head.isMove()){
-//			return;
-//		}
-//		if (tubePos < 20 && tubePos > 0) {
-//			tubePos = tubePos + tubeStep;
-//			setTubePosition();
-//			sendNetworkUpdate();
-//			return;
-//		} else {
-//			tubeStep *=-1;
-//			tubePos = tubePos + tubeStep;
-//			//return;
-//		}
-		
-//		this.tick++;
-//		
-//		if(this.tick % 16 != 0){
-//			return;
-//		}
-//		
-//		//boolean serverSide = this.worldObj != null && !this.worldObj.isRemote;
-//		if (this.tick % 32 == 0){			
-//			final Block block=worldObj.getBlock(prevX, prevY, prevZ);
-//			if( head.isPlow()){
-//				if(block==Blocks.grass || block==Blocks.dirt){
-//					doPlow();
-//				}
-//              	head.doIrrigate();
-//            }else if( head.isIrrigate()){
-//            	if(block==Blocks.farmland){
-//            		doIrrigate();
-//            	}
-//				head.doPlant();
-//            }else if( head.isPlant() ){
-//            	final Block crop=worldObj.getBlock(prevX, prevY+1, prevZ);
-//            	if( block==Blocks.farmland && crop==Blocks.air){
-//            		doPlant();
-//            	}
-//            	head.doFertilize();
-//            }else if( head.isFertilize() ){
-//            	doFertilize();
-//            	head.doHarvest();
-//            }else if( head.isHarvest() ){
-//            	head.doMove();
-//			}						
-//			sendNetworkUpdate();
-//			if( this.worldObj.isRemote){
-//				this.markDirty();
-//			}
-//		}
-//		
-		
-//		if (this.tick % 128==0){
-//        	if(aimPos <=0){
-//        		aimPos=20;
-//	        	/*final Block block = worldObj.getBlock(xCoord, yCoord-1, zCoord);
-//	        	if( block==Blocks.air){
-//	        		aimPos = yCoord-1;
-//	        	}*/
-//        	}
-//		}
-	}
-
-	protected void doFertilize() {
-		if( !this.worldObj.isRemote){
-			final Block crop=worldObj.getBlock(prevX, prevY+1, prevZ);
-			if( crop instanceof IGrowable){
-				ItemStack iStack=new ItemStack(Items.dye,64,15);
-				ItemDye.applyBonemeal(iStack, worldObj, prevX, prevY+1, prevZ, Minecraft.getMinecraft().thePlayer);
-			}
-			this.markDirty();
+				sendNetworkUpdate();
+				operationStatus = OperationStatus.Start;
+				fireOperationStatusEvent(Side.SERVER);
+			}			
 		}
 	}
 
-	protected void doPlant() {
-		if( !this.worldObj.isRemote){
-			worldObj.setBlock(prevX, prevY+1, prevZ, Blocks.wheat, 0, 2);
-			this.markDirty();
-		}
-	}
-
-	protected void doIrrigate() {
-		if( !this.worldObj.isRemote){
-			this.worldObj.setBlockMetadataWithNotify(prevX, prevY, prevZ,7, 2);
-			this.markDirty();
-		}
-	}
-
-	protected void doPlow() {
-			System.out.println("Plowing : "+this.worldObj.isRemote+":");
-			final Block block1 = Blocks.farmland;
-			System.out.println("Replace with : "+block1);
-			this.worldObj.playSoundEffect((double)((float)(prevX) + 0.5F), (double)((float)(prevY) + 0.5F), (double)((float)(prevZ) + 0.5F), block1.stepSound.getStepResourcePath(), (block1.stepSound.getVolume() + 1.0F) / 2.0F, block1.stepSound.getPitch() * 0.8F);
-//			if( !this.worldObj.isRemote){
-				this.worldObj.setBlock(prevX, prevY, prevZ, block1);
+//	protected boolean executeAction() {
+//		IAction action; 				
+//		final CSPosition3i position = new CSPosition3i(xCoord, yCoord, zCoord, BlockUtils.getForgeDirectionFromMetadata(this.getBlockMetadata()));
+//		final CS localCS = CS.subSystem(position);
+//		final CSPosition3i local = new CSPosition3i();		
+//		boolean result;
+//		switch (machineState) {
+//		case Setup:			
+//								
+//			local.x=step+1;
+//			final CSPosition3i worldPos1 = localCS.toWorld(local);			
+//			
+//			action = new SetupAction();
+//			action.init(this.worldObj , worldPos1);
+//			action.start();
+//			do{ 
+//				action.execute();
+//			}while(!action.hasStopped());
+//			result=action.wasSuccessfull();
+//			if( result) {
+//				step++;
 //			}
-			this.markDirty();
+//			return result;
+//		case Move:
+//			
+//			local.x=step+1;
+//			final CSPosition3i worldPos2 = localCS.toWorld(local);			
+//			
+//			action = new MoveAction();			
+//			action.init(this.worldObj , worldPos2);
+//			action.start();
+//			do{ 
+//				action.execute();
+//			}while(!action.hasStopped());
+//			result=action.wasSuccessfull();
+//			if( result) {
+//				step=(step<10)?step+1:0;
+//			}
+//			return result;
+//		case Plow:
+//			executePlowAction();
+//			break;
+//		case Irrigate:
+//			executeIrrigateAction();
+//			break;
+//		case Plant:
+//			executePlantAction();
+//			break;
+//		case Fertilize:
+//			executeFertilizeAction();
+//			break;
+//		case Harvest:
+//			executeHarvestAction();
+//			break;
+//		}
+//		return true;
+//	}
+
+	protected void executeHarvestAction() {
+//		if (!this.worldObj.isRemote) {
+//			final Block crop = worldObj.getBlock(prevX, prevY + 1, prevZ);
+//			if (crop instanceof IGrowable) {
+//				int meta = worldObj.getBlockMetadata(prevX, prevY + 1, prevZ);
+//				final ArrayList<ItemStack> drops = crop.getDrops(worldObj, prevX, prevY + 1, prevZ, meta,0);
+//				worldObj.setBlockToAir(prevX, prevY + 1, prevZ);
+//				for(ItemStack iStack:drops){
+//					if (iStack != null){
+//                        float f = this.field_149933_a.nextFloat() * 0.8F + 0.1F;
+//                        float f1 = this.field_149933_a.nextFloat() * 0.8F + 0.1F;
+//                        float f2 = this.field_149933_a.nextFloat() * 0.8F + 0.1F;
+//
+//                                                        
+//                            EntityItem entityitem = new EntityItem(worldObj, (double)((float)prevX + f), (double)((float)prevY+1 + f1), (double)((float)prevZ + f2), iStack);
+//
+//                            float f3 = 0.05F;
+//                            entityitem.motionX = (double)((float)this.field_149933_a.nextGaussian() * f3);
+//                            entityitem.motionY = (double)((float)this.field_149933_a.nextGaussian() * f3 + 0.2F);
+//                            entityitem.motionZ = (double)((float)this.field_149933_a.nextGaussian() * f3);
+//                            worldObj.spawnEntityInWorld(entityitem);
+//                    }
+//				}
+//			}
+//			this.markDirty();
+//		}
+	}
+
+	protected void executeFertilizeAction() {
+//		if (!this.worldObj.isRemote) {
+//			final Block crop = worldObj.getBlock(prevX, prevY + 1, prevZ);
+//			if (crop instanceof IGrowable) {
+//				ItemStack iStack = new ItemStack(Items.dye, 64, 15);
+//				ItemDye.applyBonemeal(iStack, worldObj, prevX, prevY + 1,
+//						prevZ, Minecraft.getMinecraft().thePlayer);
+//			}
+//			this.markDirty();
+//		}
+	}
+
+	protected void executePlantAction() {
+//		if (!this.worldObj.isRemote) {
+//			worldObj.setBlock(prevX, prevY + 1, prevZ, Blocks.wheat, 0, 2);
+//			this.markDirty();
+//		}
+	}
+
+	protected void executeIrrigateAction() {
+//		 if( !this.worldObj.isRemote){
+//		this.worldObj.setBlockMetadataWithNotify(prevX, prevY, prevZ, 7, 2);
+//		this.markDirty();
+//		 }
+	}
+
+	protected void executePlowAction() {
+//		final Block block1 = Blocks.farmland;
+//		this.worldObj.playSoundEffect((double) ((float) (prevX) + 0.5F),
+//				(double) ((float) (prevY) + 0.5F),
+//				(double) ((float) (prevZ) + 0.5F),
+//				block1.stepSound.getStepResourcePath(),
+//				(block1.stepSound.getVolume() + 1.0F) / 2.0F,
+//				block1.stepSound.getPitch() * 0.8F);
+//		 if( !this.worldObj.isRemote){
+//			 System.out.println("Replace with : "+block1);
+//			 this.worldObj.setBlock(prevX, prevY, prevZ, block1, 1, 2);
+//		 }
+//		this.markDirty();
+	}
+
+	public void fireOperationStatusEvent(final Side side) {
+		if (side == Side.CLIENT) {
+			final JsonObject evt = JSON.newObject();
+			evt.addProperty("FireEvent", true);
+			evt.addProperty("Side", "CLIENT");
+			evt.addProperty("operationStatus", operationStatus.name());
+			NetBus.sendToServer(new TileEntityMessage(this, evt));
+		} else {
+			final JsonObject evt = JSON.newObject();
+			evt.addProperty("FireEvent", true);
+			evt.addProperty("Side", "SERVER");
+			evt.addProperty("operationStatus", operationStatus.name());
+			NetBus.sendToClient(new TileEntityMessage(this, evt));
+		}
+	}
+
+	//@SideOnly(Side.SERVER)
+	public void fireActionExecutedEvent(boolean status) {
+		operationStatus = status?OperationStatus.End:OperationStatus.Start;
+		final JsonObject evt = JSON.newObject();
+		evt.addProperty("FireEvent", true);
+		evt.addProperty("Side", "SERVER");
+		evt.addProperty("step", step);
+		evt.addProperty("ActionSuccess", status);
+		evt.addProperty("operationStatus", operationStatus.name());
+		NetBus.sendToClient(new TileEntityMessage(this, evt));		
 	}
 	
 	public void sendNetworkUpdate() {
 		if (worldObj != null && !worldObj.isRemote) {
-//			BuildCraftCore.instance.sendToPlayers(getUpdatePacket(), worldObj,
-//					xCoord, yCoord, zCoord, DefaultProps.NETWORK_UPDATE_RANGE);
-			NetBus.sendToAll(getPacketUpdate());
+			NetBus.sendToClient(new TileEntityMessage(this));
 		}
 	}
-	
-	@Override
-	public PacketUpdate getPacketUpdate() {
-		return new PacketUpdate(this,getPacketPayload());
-	}	
-	public PacketPayload getPacketPayload() {
-		PacketPayload payload = new PacketPayload(new PacketPayload.StreamWriter() {
-			@Override
-			public void writeData(ByteBuf buf) {
-				head.writeData(buf);
-				buf.writeInt(prevX);
-				buf.writeInt(prevY);
-				buf.writeInt(prevZ);
-//				buf.writeInt(armState.ordinal());
-//				buf.writeInt(aimPos);
-//				buf.writeFloat((float) tubePos);
-//				buf.writeFloat((float) tubeStep);
-//				buf.writeInt(direction.ordinal());
-//				buf.writeBoolean(powered);
-			}
-		});
 
-		return payload;
-	}
 	@Override
-	public void handleUpdatePacket(PacketUpdate packet) throws IOException {
-		PacketPayload payload = packet.payload;
-		ByteBuf data = payload.stream;
-		prevX = data.readInt();
-		prevY = data.readInt();
-		prevZ = data.readInt();
-//		armState=State.values()[data.readInt()];
-//		aimPos = data.readInt();
-//		tubePos = data.readFloat();
-//		tubeStep = data.readFloat();
-//		direction=ForgeDirection.values()[data.readInt()];
-		head.readData(data);
-		System.out.println("handleUpdatePacket:"+head);
-	}
+	public JsonObject getTilePacketData() {
 
-	 /**
-     * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think it
-     * hasn't changed and skip it.
-     */
-    public void markDirty(){
-        super.markDirty();
-    }
-    
-//    private void setTubePosition() {
-//		if (head != null) {
-//			head.iSize = CoreConstants.PIPE_MAX_POS - CoreConstants.PIPE_MIN_POS;
-//			head.jSize = CoreConstants.PIPE_MAX_POS - CoreConstants.PIPE_MIN_POS;
-//			head.kSize = tubePos;
-//
-//			head.setPosition(xCoord + CoreConstants.PIPE_MIN_POS, yCoord + CoreConstants.PIPE_MIN_POS,zCoord-tubePos);
+		final JsonObject data = JSON.newObject();
+//		if( position!=null){
+//			data.add("position", position.getPacketData());
+//		}else{
+//			data.add("position", null);
 //		}
-//	}
-    @Override
+		data.addProperty("step", this.step);
+		data.addProperty("machineState", machineState.toString());		
+		return data;
+	}
+
+	@Override
+	public void handleClientUpdate(JsonObject data) throws IOException {
+		System.out.println(this.worldObj + ": Client? handleClientUpdate:"
+				+ machineState + ":" + data);
+//		if( data.has("position")){
+//			if(data.get("position").isJsonNull()){
+//				this.position=null;
+//			}else{
+//				this.position=new CSPosition3i();
+//				this.position.setPacketData(data.getAsJsonObject("position"));
+//			}
+//		}
+		if( data.has("step")){
+			if(data.get("step").isJsonNull()){
+				this.step=0;
+			}else{
+				this.step=data.get("step").getAsInt();
+			}
+		}
+		if (data.has("FireEvent")) {
+			final OperationStatus operationStatusOld = operationStatus;
+			operationStatus = OperationStatus.valueOf(OperationStatus.class,
+					data.get("operationStatus").getAsString());
+			System.out.println("Client Operation Status transition:"
+					+ operationStatusOld + "->" + operationStatus);
+//			if( operationStatus==OperationStatus.End){
+			if(data.has("ExecutionSuccess") && !data.get("ExecutionSuccess").getAsBoolean()){
+				System.out.println("Failed Execution");
+				//operationStatus=OperationStatus.Execute;
+			}
+//			}
+		} else {
+			// System.out.println("handleClientUpdate:"+data);			
+			machineState = Activity.valueOf(Activity.class,
+					data.get("machineState").getAsString());
+			
+		}
+	}
+
+	@Override
+	public void handleServerUpdate(JsonObject data) throws IOException {
+		System.out.println(this.worldObj + ":Server? handleServerUpdate:"
+				+ machineState + ":" + data);
+		if (data.has("FireEvent")) {
+			final OperationStatus operationStatusOld = operationStatus;
+			operationStatus = OperationStatus.valueOf(OperationStatus.class,
+					data.get("operationStatus").getAsString());
+			System.out.println("Server Operation Status transition:"
+					+ operationStatusOld + "->" + operationStatus);
+		} else {
+			System.out.println("handleServerUpdate:" + data);
+		}
+
+	}
+
+	/**
+	 * For tile entities, ensures the chunk containing the tile entity is saved
+	 * to disk later - the game won't think it hasn't changed and skip it.
+	 */
+	public void markDirty() {
+		super.markDirty();
+	}
+
+	@Override
 	public void invalidate() {
 		super.invalidate();
 		destroy();
@@ -371,51 +386,12 @@ public class TileFarmerNode extends TileEntity implements ITileUpdatable{
 
 	@Override
 	public void validate() {
-		//tileBuffer = null;
 		super.validate();
 	}
 
-	//@Override
+	// @Override
 	public void destroy() {
-		//tileBuffer = null;
-//		pumpLayerQueues.clear();
-		head.destroyTube(worldObj);
+		
 	}
-//	 private void createTube() {
-//			if (head == null) {
-//				head = FactoryProxy.proxy.newPumpTube(worldObj);
-//
-////				if (!Double.isNaN(tubePos)) {
-////					head.posZ = tubePos;
-////				} else {
-////					head.posZ = zCoord;
-////				}
-//				tubeStep=Math.abs(tubeStep);
-//				tubePos = tubeStep;
-//				
-//
-////				if (aimPos == 0) {
-////					aimPos = zCoord;
-////				}
-//
-//				setTubePosition();
-//
-//				worldObj.spawnEntityInWorld(head);
-//
-//				if (!worldObj.isRemote) {
-//					sendNetworkUpdate();
-//				}
-//			}
-//		}
-//
-//		private void destroyTube() {
-//			if (head != null) {
-//				//CoreProxy.proxy.removeEntity(tube);
-//				worldObj.removeEntity(head);
-//				head = null;
-//				tubePos = Double.NaN;
-//				aimPos = 0;
-//			}
-//		}
-}
 
+}
