@@ -17,7 +17,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockFarmerNode extends BlockContainer {
+public class BlockFarmerNode extends BlockContainer implements IConnection{
 	@SideOnly(Side.CLIENT)
 	protected IIcon blockIcon;
 	@SideOnly(Side.CLIENT)
