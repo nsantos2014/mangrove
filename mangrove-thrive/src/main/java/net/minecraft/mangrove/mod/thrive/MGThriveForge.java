@@ -7,7 +7,10 @@ import net.minecraft.mangrove.mod.thrive.block.harvester.TileEntityHarvester;
 import net.minecraft.mangrove.mod.thrive.block.harvester.gui.ContainerHarvester;
 import net.minecraft.mangrove.mod.thrive.block.harvester.gui.GuiHarvester;
 import net.minecraft.mangrove.mod.thrive.proxy.CommonProxy;
+import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerKernel;
 import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerNode;
+import net.minecraft.mangrove.mod.thrive.robofarmer.gui.KernelContainer;
+import net.minecraft.mangrove.mod.thrive.robofarmer.gui.KernelGui;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -52,12 +55,14 @@ public class MGThriveForge {
 	}
 
 	public void registerRobotFarmer() {
-		GameRegistry.registerBlock(MGThriveBlocks.farmer_link, "farmer_link");
-		
+		GameRegistry.registerBlock(MGThriveBlocks.farmer_link, "farmer_link");		
 		GameRegistry.registerBlock(MGThriveBlocks.farmer_node, "farmer_node");
+		GameRegistry.registerBlock(MGThriveBlocks.farmer_kernel, "farmer_kernel");
 		
 		TileEntity.addMapping(TileFarmerNode.class, "farmer_node");
+		TileEntity.addMapping(TileFarmerKernel.class, "farmer_kernel");
 		
+		handler.registerClass(TileFarmerKernel.class, KernelContainer.class, KernelGui.class);
 	}
 	public void registerHarvester() {
 		GameRegistry.registerBlock(MGThriveBlocks.harvester, "harvester");

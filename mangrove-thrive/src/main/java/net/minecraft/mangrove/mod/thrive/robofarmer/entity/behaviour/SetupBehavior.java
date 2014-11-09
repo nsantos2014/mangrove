@@ -1,6 +1,5 @@
 package net.minecraft.mangrove.mod.thrive.robofarmer.entity.behaviour;
 
-import javafx.geometry.Pos;
 import net.minecraft.mangrove.core.CoordinatesTransform;
 import net.minecraft.mangrove.core.CoreConstants;
 import net.minecraft.mangrove.core.Position;

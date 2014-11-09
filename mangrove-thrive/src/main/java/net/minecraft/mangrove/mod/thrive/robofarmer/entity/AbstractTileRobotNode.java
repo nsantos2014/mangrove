@@ -1,12 +1,17 @@
 package net.minecraft.mangrove.mod.thrive.robofarmer.entity;
 
+import io.netty.channel.rxtx.RxtxChannelConfig.Stopbits;
+
 import java.io.IOException;
 
 import com.google.gson.JsonObject;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.mangrove.core.ITileUpdatable;
+import net.minecraft.mangrove.core.cs.CSPoint3i;
 import net.minecraft.mangrove.core.json.JSON;
+import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
+import net.minecraft.mangrove.mod.thrive.robofarmer.block.SystemUtils;
 import net.minecraft.mangrove.network.NetBus;
 import net.minecraft.mangrove.network.TileEntityMessage;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,11 +19,12 @@ import net.minecraft.tileentity.TileEntity;
 
 public abstract class AbstractTileRobotNode extends TileEntity implements
 		ITileUpdatable {
-	private Lifecycle stage = Lifecycle.Init;
+	private Lifecycle stage = Lifecycle.Off;
 	private int tick = 0;
 	private int step = 0;
 	
-	private int maxStep = 1;	
+	private int maxStep = 1;
+    protected CSPoint3i controlPosition;	
 	
 	public int getMaxStep() {
 		return maxStep;
@@ -45,8 +51,21 @@ public abstract class AbstractTileRobotNode extends TileEntity implements
 	
 	@Override
 	public final void updateEntity() {
-		tick++;
-		
+	    final CSPoint3i point=new CSPoint3i(xCoord,yCoord,zCoord);
+        this.controlPosition = SystemUtils.findFirstControl(worldObj, xCoord, yCoord, zCoord);
+        if( controlPosition==null){
+            doStop();
+            return;
+        } else {
+            if( !MGThriveBlocks.farmer_kernel.isPowered(worldObj, controlPosition)){
+                doStop();
+                return;
+            }else if(stage==Lifecycle.Off){
+                doStart();
+                return;
+            }
+        }
+		tick++;		
 		if (this.worldObj.isRemote) {
 			switch (stage) {
 			case RenderScene:
@@ -143,6 +162,21 @@ public abstract class AbstractTileRobotNode extends TileEntity implements
 	protected int stageDuration(Lifecycle stage2) {
 		return 0;
 	}
+
+	public void doStart(){
+	    if( this.worldObj!=null && !this.worldObj.isRemote && this.stage==Lifecycle.Off){
+	        this.stage=Lifecycle.Init;
+	        fireLifecycleEvent();
+	        markDirty();
+	    }
+	}
+	public void doStop(){
+        if( this.worldObj!=null && !this.worldObj.isRemote && this.stage!=Lifecycle.Off){
+            this.stage=Lifecycle.Off;
+            fireLifecycleEvent();
+            markDirty();
+        }
+    }
 	protected abstract boolean doExecute(int serverTick);
 	protected abstract void doCommit(int serverTick);
 	protected abstract void doRollback(int serverTick);

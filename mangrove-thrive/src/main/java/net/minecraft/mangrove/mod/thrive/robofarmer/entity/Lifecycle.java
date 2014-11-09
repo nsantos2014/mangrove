@@ -1,7 +1,8 @@
 package net.minecraft.mangrove.mod.thrive.robofarmer.entity;
 
 public enum Lifecycle {
-	Init,
+	Off,
+    Init,
 	RenderScene,
 	Execute,
 	RenderSceneOut,
