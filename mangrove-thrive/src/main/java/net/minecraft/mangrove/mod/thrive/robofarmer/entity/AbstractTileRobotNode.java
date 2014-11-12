@@ -145,7 +145,7 @@ public abstract class AbstractTileRobotNode extends TileEntity implements
 				break;
 			default:				
 				if( tick % 128==0){
-					System.out.println("Server Side Stage="+stage);
+//					System.out.println("Server Side Stage="+stage);
 					fireLifecycleEvent();					
 				}
 				break;
@@ -220,8 +220,8 @@ public abstract class AbstractTileRobotNode extends TileEntity implements
 
 	@Override
 	public void handleClientUpdate(JsonObject data) throws IOException {
-		System.out.println(this.worldObj + ": Client? handleClientUpdate:"
-				+ stage + ":" + data);
+//		System.out.println(this.worldObj + ": Client? handleClientUpdate:"
+//				+ stage + ":" + data);
 		if (data.has("step")) {
 			if (data.get("step").isJsonNull()) {
 				this.step = 0;

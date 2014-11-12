@@ -36,6 +36,7 @@ public class BlockBoatDoor extends Block{
 	        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
 	        this.setBlockName("boat_door");
 	        this.setBlockTextureName("door_iron");
+	        this.setHardness(30.0f);
 	    }
 
 	    /**

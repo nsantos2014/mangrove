@@ -1,3 +1,5 @@
 tile.harvester.name=Harvester
+tile.feeder.name=Feeder
 tile.farmer_link.name=Robot Farmer Link
-tile.farmer_mode.name=Robot Farmer Node
+tile.farmer_node.name=Robot Farmer Node
+tile.farmer_kernel.name=Robot Farmer Kernel

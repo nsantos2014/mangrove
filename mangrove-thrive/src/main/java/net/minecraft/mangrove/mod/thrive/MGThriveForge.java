@@ -6,6 +6,9 @@ import net.minecraft.mangrove.GUIHandler;
 import net.minecraft.mangrove.mod.thrive.block.harvester.TileEntityHarvester;
 import net.minecraft.mangrove.mod.thrive.block.harvester.gui.ContainerHarvester;
 import net.minecraft.mangrove.mod.thrive.block.harvester.gui.GuiHarvester;
+import net.minecraft.mangrove.mod.thrive.feeder.ContainerFeeder;
+import net.minecraft.mangrove.mod.thrive.feeder.GuiFeeder;
+import net.minecraft.mangrove.mod.thrive.feeder.TileEntityFeeder;
 import net.minecraft.mangrove.mod.thrive.proxy.CommonProxy;
 import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerKernel;
 import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerNode;
@@ -44,6 +47,7 @@ public class MGThriveForge {
 	public void preInit(FMLPreInitializationEvent evt) {
 		registerHarvester();
 		registerRobotFarmer();
+		registerFeeder();
 	}
 	
 	@EventHandler
@@ -76,4 +80,17 @@ public class MGThriveForge {
 				Character.valueOf('i'), "iron_ore", Character.valueOf('w'),
 				"plankWood" }));
 	}
+	
+	public void registerFeeder() {
+        GameRegistry.registerBlock(MGThriveBlocks.feeder, "feeder");
+        handler.registerClass(TileEntityFeeder.class, ContainerFeeder.class, GuiFeeder.class);
+        // harvester.setLightLevel(0.9f);
+        TileEntity.addMapping(TileEntityFeeder.class, "feeder");
+
+//        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(
+//                MGThriveBlocks.harvester), new Object[] {
+//                Boolean.valueOf(true), " w ", "wiw", "   ",
+//                Character.valueOf('i'), "iron_ore", Character.valueOf('w'),
+//                "plankWood" }));
+    }
 }

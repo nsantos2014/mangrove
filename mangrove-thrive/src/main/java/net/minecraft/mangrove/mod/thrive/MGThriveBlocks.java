@@ -1,6 +1,7 @@
 package net.minecraft.mangrove.mod.thrive;
 
 import net.minecraft.mangrove.mod.thrive.block.harvester.BlockHarvester;
+import net.minecraft.mangrove.mod.thrive.feeder.BlockFeeder;
 import net.minecraft.mangrove.mod.thrive.robofarmer.block.BlockFarmerKernel;
 import net.minecraft.mangrove.mod.thrive.robofarmer.block.BlockFarmerLink;
 import net.minecraft.mangrove.mod.thrive.robofarmer.block.BlockFarmerNode;
@@ -14,5 +15,7 @@ public class MGThriveBlocks {
 	public static final BlockFarmerLink farmer_link=new BlockFarmerLink();
 	
 	public static final BlockFarmerNode farmer_node=new BlockFarmerNode();
+	
+	public static final BlockFeeder feeder=new BlockFeeder();
 
 }
