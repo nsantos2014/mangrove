@@ -47,4 +47,11 @@ public class CSPoint3d{
 		this.y=pos.y;
 		this.z=pos.z;
 	}
+
+    @Override
+    public String toString() {
+        return "CSPoint3d [x=" + x + ", y=" + y + ", z=" + z + "]";
+    }
+	
+	
 }

@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.mangrove.mod.maps.Mw;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.terraingen.InitMapGenEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +43,7 @@ public class MwForge {
 	public void preInit(FMLPreInitializationEvent event) {
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.TERRAIN_GEN_BUS.register(this);
         proxy.preInit(new File(event.getModConfigurationDirectory(), "mangrove/maps.conf"));
 	}
 	
@@ -79,5 +81,9 @@ public class MwForge {
                 Mw.instance.close();
             }
         }
+    }
+    @SubscribeEvent
+    public void onInitWorld(InitMapGenEvent event){
+        System.out.println("Event : "+event.type+":"+event.newGen);
     }
 }

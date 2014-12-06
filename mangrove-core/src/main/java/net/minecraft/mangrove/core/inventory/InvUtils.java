@@ -154,6 +154,9 @@ public class InvUtils {
 		world.spawnEntityInWorld(entityitem);
 	}
 
+	public static void dropItems(World world, IInventory inv, double i, double j, double k) {
+	    dropItems(world, inv, (int)Math.ceil(i), (int)Math.ceil(j), (int)Math.ceil(k));
+	}
 	public static void dropItems(World world, IInventory inv, int i, int j, int k) {
 		for (int slot = 0; slot < inv.getSizeInventory(); ++slot) {
 			ItemStack items = inv.getStackInSlot(slot);

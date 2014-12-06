@@ -14,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.cs.CSPoint3i;
 import net.minecraft.mangrove.core.utils.BlockUtils;
+import net.minecraft.mangrove.mod.thrive.proxy.CommonProxy;
 import net.minecraft.mangrove.mod.thrive.robofarmer.IRobotComponent;
 import net.minecraft.mangrove.mod.thrive.robofarmer.IRobotConnection;
 import net.minecraft.mangrove.mod.thrive.robofarmer.IRobotNode;
@@ -34,6 +35,8 @@ public class BlockFarmerNode extends BlockContainer implements IRobotNode{
 	protected IIcon blockIconTop;
 	@SideOnly(Side.CLIENT)
 	protected IIcon blockIconFront;
+	
+	   private boolean field_149996_a;
 
 	public BlockFarmerNode() {
 		super(Material.wood);
@@ -43,12 +46,30 @@ public class BlockFarmerNode extends BlockContainer implements IRobotNode{
 		this.setCreativeTab(CreativeTabs.tabRedstone);
 	}
 
+	 /**
+     * If this block doesn't render as an ordinary block it will return False
+     * (examples: signs, buttons, stairs, etc)
+     */
+    public boolean renderAsNormalBlock() {
+        return false;        
+    }
+    
+    public int getRenderType() {
+        return CommonProxy.blockFarmerNodeRenderId;
+    }
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube? This determines whether
+     * or not to render the shared face of two adjacent blocks and also whether
+     * the player can attach torches, redstone wire, etc to this block.
+     */
+    public boolean isOpaqueCube() {
+        return false;
+    }
 	/**
 	 * Updates the blocks bounds based on its current state. Args: world, x, y,
 	 * z
 	 */
-	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x,
-			int y, int z) {
+	public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x,int y, int z) {
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 	}
 	
@@ -134,15 +155,32 @@ public class BlockFarmerNode extends BlockContainer implements IRobotNode{
         updateMetadata(world, x, y, z);
     }
     
-    private void updateMetadata(IBlockAccess par1World, int par2, int par3, int par4) {
-        int l = par1World.getBlockMetadata(par2, par3, par4);
+    @Override
+    public void updateNetwork(IBlockAccess world, int x, int y, int z) {
+        System.out.println("Update network ("+x+","+y+","+z+") "+this);
+        updateMetadata(world, x, y, z);
+    }
+    
+    private void updateMetadata(IBlockAccess world, int x, int y, int z) {
+        int l = world.getBlockMetadata(x, y, z);
         int i1 = BlockUtils.getDirectionFromMetadata(l);
-        boolean flag = !(((World) par1World).isBlockIndirectlyGettingPowered(par2, par3, par4));
         boolean flag1 = BlockUtils.getIsBlockNotPoweredFromMetadata(l);
-
-        if (flag == flag1)
+        //boolean flag = !(((World) par1World).isBlockIndirectlyGettingPowered(x, y, z));
+        
+        CSPoint3i controlPos = SystemUtils.findFirstControl((World) world, x, y, z);
+        boolean flag = false;
+        if(controlPos==null && flag1){
+            System.out.println("Update Metadata: No Control and "+flag1);
             return;
-        ((World) par1World).setBlockMetadataWithNotify(par2, par3, par4, i1 | ((flag) ? 0 : 8), 4);
+        }else if(controlPos!=null){
+            flag = !(((World) world).isBlockIndirectlyGettingPowered(controlPos.x, controlPos.y, controlPos.z));
+        }
+        if (flag == flag1){
+            System.out.println("Update Metadata: Same Value "+flag1);
+            return;
+        }
+        System.out.println("Update Metadata:"+flag);
+        ((World) world).setBlockMetadataWithNotify(x, y, z, i1 | ((flag) ? 0 : 8), 2);
     }
     
     @Override
@@ -167,17 +205,38 @@ public class BlockFarmerNode extends BlockContainer implements IRobotNode{
 
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
-		final ForgeDirection dir = ForgeDirection.getOrientation(meta);
-		return side == 0 || side == 1
-					? this.blockIconTop 
-					: (side == dir.ordinal() 
-						? this.blockIconFront
-					    : this.blockIcon);
+	    return this.blockIcon;
+//		final ForgeDirection dir = ForgeDirection.getOrientation(meta);
+//		return side == 0 || side == 1
+//					? this.blockIconTop 
+//					: (side == dir.ordinal() 
+//						? this.blockIconFront
+//					    : this.blockIcon);
 
 		// return side == 1 ? this.blockIconTop : (side == 0 ? Blocks.planks
 		// .getBlockTextureFromSide(side)
 		// : (side != 2 && side != 4 ? this.blockIcon
 		// : this.blockIconFront));
 	}
-	
+//	@SideOnly(Side.CLIENT)
+//    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y,
+//            int z, int side) {
+//        Block block = blockAccess.getBlock(x, y, z);
+//
+//        if (this == Blocks.glass /* || this == Blocks.stained_glass */) {
+//            if (blockAccess.getBlockMetadata(x, y, z) != blockAccess
+//                    .getBlockMetadata(x - Facing.offsetsXForSide[side], y
+//                            - Facing.offsetsYForSide[side], z
+//                            - Facing.offsetsZForSide[side])) {
+//                return true;
+//            }
+//
+//            if (block == this) {
+//                return false;
+//            }
+//        }
+//
+//        return !this.field_149996_a && block == this ? false : super
+//                .shouldSideBeRendered(blockAccess, x, y, z, side);
+//    }
 }

@@ -5,6 +5,7 @@ import net.minecraft.mangrove.mod.house.block.door.BoatDoorRenderer;
 	
 public class CommonProxy {
 	public static int boatDoorRendererID;
+    public static int blockGlassLamp;
 	
 
 	public void registerRenderers() {

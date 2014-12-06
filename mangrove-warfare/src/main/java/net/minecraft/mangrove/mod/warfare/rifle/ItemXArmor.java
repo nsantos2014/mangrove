@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class ItemXArmor extends ItemArmor{
@@ -29,44 +30,7 @@ public class ItemXArmor extends ItemArmor{
     private static final int[] maxDamageArray = new int[] {11, 16, 15, 13};
     private static final String[] CLOTH_OVERLAY_NAMES = new String[] {"leather_helmet_overlay", "leather_chestplate_overlay", "leather_leggings_overlay", "leather_boots_overlay"};
     public static final String[] EMPTY_SLOT_NAMES = new String[] {"empty_armor_slot_helmet", "empty_armor_slot_chestplate", "empty_armor_slot_leggings", "empty_armor_slot_boots"};
-    private static final IBehaviorDispenseItem dispenserBehavior = new BehaviorDefaultDispenseItem()
-    {
-        private static final String __OBFID = "CL_00001767";
-        /**
-         * Dispense the specified stack, play the dispense sound and spawn particles.
-         */
-        protected ItemStack dispenseStack(IBlockSource p_82487_1_, ItemStack p_82487_2_)
-        {
-            EnumFacing enumfacing = BlockDispenser.func_149937_b(p_82487_1_.getBlockMetadata());
-            int i = p_82487_1_.getXInt() + enumfacing.getFrontOffsetX();
-            int j = p_82487_1_.getYInt() + enumfacing.getFrontOffsetY();
-            int k = p_82487_1_.getZInt() + enumfacing.getFrontOffsetZ();
-            AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double)i, (double)j, (double)k, (double)(i + 1), (double)(j + 1), (double)(k + 1));
-            List list = p_82487_1_.getWorld().selectEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb, new IEntitySelector.ArmoredMob(p_82487_2_));
-
-            if (list.size() > 0)
-            {
-                EntityLivingBase entitylivingbase = (EntityLivingBase)list.get(0);
-                int l = entitylivingbase instanceof EntityPlayer ? 1 : 0;
-                int i1 = EntityLiving.getArmorPosition(p_82487_2_);
-                ItemStack itemstack1 = p_82487_2_.copy();
-                itemstack1.stackSize = 1;
-                entitylivingbase.setCurrentItemOrArmor(i1 - l, itemstack1);
-
-                if (entitylivingbase instanceof EntityLiving)
-                {
-                    ((EntityLiving)entitylivingbase).setEquipmentDropChance(i1, 2.0F);
-                }
-
-                --p_82487_2_.stackSize;
-                return p_82487_2_;
-            }
-            else
-            {
-                return super.dispenseStack(p_82487_1_, p_82487_2_);
-            }
-        }
-    };
+    
     /** Stores the armor type: 0 is helmet, 1 is plate, 2 is legs and 3 is boots */
     public final int armorType;
     /** Holds the amount of damage that the armor reduces at full durability. */
@@ -88,21 +52,26 @@ public class ItemXArmor extends ItemArmor{
 
     public ItemXArmor(int renderIndex, int armorType)
     {
-        super(ArmorMaterial.CHAIN,renderIndex,armorType);
+        super(ArmorMaterial.DIAMOND,renderIndex,armorType);
         this.material=ArmorMaterial.CHAIN;
         this.armorType = armorType;
         this.renderIndex = renderIndex;        
         
-        this.maxDamageFactor=33;
-        this.damageReductionAmountArray=new int[]{2, 5, 3, 1};
+        this.maxDamageFactor=64;
+        this.damageReductionAmountArray=new int[]{10, 10, 10, 10};
         this.damageReduceAmount =this.damageReductionAmountArray[armorType];
         
         this.setMaxDamage(ItemXArmor.maxDamageArray[armorType] * this.maxDamageFactor);
         this.maxStackSize = 1;
         this.setCreativeTab(CreativeTabs.tabCombat);
-        BlockDispenser.dispenseBehaviorRegistry.putObject(this, dispenserBehavior);
+        //BlockDispenser.dispenseBehaviorRegistry.putObject(this, dispenserBehavior);
     }
-
+    
+//    @Override
+//    public String getUnlocalizedName(ItemStack p_77667_1_) {
+//        int i = MathHelper.clamp_int(p_77667_1_.getItemDamage(), 0, 15);
+//        return super.getUnlocalizedName(p_77667_1_)+ "." + i;
+//    }
     @SideOnly(Side.CLIENT)
     public int getColorFromItemStack(ItemStack p_82790_1_, int p_82790_2_)
     {

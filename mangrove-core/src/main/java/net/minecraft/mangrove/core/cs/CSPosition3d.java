@@ -11,7 +11,10 @@ public class CSPosition3d extends CSPoint3d{
 	public ForgeDirection direction=ForgeDirection.UNKNOWN;
 
 	public CSPosition3d() {
-		super();
+	    super();
+	}
+	public CSPosition3d(CSPosition3i position) {
+		this(position.x,position.y,position.z,position.direction);
 	}
 
 	public CSPosition3d(double x, double y, double z) {
@@ -57,6 +60,10 @@ public class CSPosition3d extends CSPoint3d{
 		super.set(pos);
 		this.direction=pos.direction;
 	}
+    @Override
+    public String toString() {
+        return "CSPosition3d [direction=" + direction + ", x=" + x + ", y=" + y + ", z=" + z + "]";
+    }
 	
 	
 	

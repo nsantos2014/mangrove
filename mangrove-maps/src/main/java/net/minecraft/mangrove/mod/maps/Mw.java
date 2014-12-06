@@ -9,6 +9,7 @@ import net.minecraft.mangrove.mod.maps.forge.MwKeyHandler;
 import net.minecraft.mangrove.mod.maps.gui.MwGui;
 import net.minecraft.mangrove.mod.maps.gui.MwGuiMarkerDialog;
 import net.minecraft.mangrove.mod.maps.map.*;
+import net.minecraft.mangrove.mod.maps.mobs.MobMarker;
 import net.minecraft.mangrove.mod.maps.overlay.OverlaySlime;
 import net.minecraft.mangrove.mod.maps.region.BlockColours;
 import net.minecraft.mangrove.mod.maps.region.RegionManager;
@@ -151,6 +152,8 @@ public class Mw {
 	public RegionManager regionManager = null;
 	public ChunkManager chunkManager = null;
 	public Trail playerTrail = null;
+
+    public MobMarker mobManager=new MobMarker();
 	
 	public static Mw instance;
 	

@@ -36,7 +36,9 @@ public class BlockBoatDoor extends Block{
 	        this.setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
 	        this.setBlockName("boat_door");
 	        this.setBlockTextureName("door_iron");
-	        this.setHardness(30.0f);
+	        //this.setHardness(30.0f);
+	        this.setHarvestLevel("pickaxe", 0);
+	        this.setResistance(2000.0F);
 	    }
 
 	    /**
@@ -567,4 +569,13 @@ Direction :WEST  00 : 100 Open :Open Y :1 Side :Left
 	            world.setBlockToAir(x, y - 1, z);
 	        }
 	    }
+	    
+	    @Override
+	    public boolean canHarvestBlock(EntityPlayer player, int meta) {
+	        // TODO Auto-generated method stub
+	        //return super.canHarvestBlock(player, meta);
+	        System.out.println("CanHarvest");
+	        return true;
+	    }
+	    
 }

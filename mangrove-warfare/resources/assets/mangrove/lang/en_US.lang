@@ -1,1 +1,8 @@
-tile.blasterRifle.name=Blaster Rifle
+item.blasterRifle.name=Blaster Rifle
+item.surpass.0.name=Wooden Surpass
+item.surpass.1.name=Iron Surpass
+item.surpass.2.name=Diamond Surpass
+item.helmetX.name=Helmet X
+item.chestplateX.name=Chestplate X
+item.leggingsX.name=Leggings X
+item.bootsX.name=Boots X

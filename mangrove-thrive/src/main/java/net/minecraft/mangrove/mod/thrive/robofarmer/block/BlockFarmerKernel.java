@@ -15,11 +15,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.mangrove.core.block.AbstractBlockInventory;
 import net.minecraft.mangrove.core.cs.CSPoint3i;
 import net.minecraft.mangrove.core.inventory.ITransactor;
 import net.minecraft.mangrove.core.inventory.TransactorSimple;
 import net.minecraft.mangrove.core.utils.BlockUtils;
 import net.minecraft.mangrove.mod.thrive.MGThriveForge;
+import net.minecraft.mangrove.mod.thrive.proxy.CommonProxy;
 import net.minecraft.mangrove.mod.thrive.robofarmer.IRobotComponent;
 import net.minecraft.mangrove.mod.thrive.robofarmer.IRobotControl;
 import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerKernel;
@@ -29,7 +31,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockFarmerKernel extends BlockContainer implements IRobotControl {
+public class BlockFarmerKernel extends AbstractBlockInventory implements IRobotControl {
 
     @SideOnly(Side.CLIENT)
     private IIcon blockIconTop;
@@ -46,11 +48,31 @@ public class BlockFarmerKernel extends BlockContainer implements IRobotControl {
         setHardness(2.0F);
         setResistance(8.0F);
     }
-
+    
+    /**
+     * If this block doesn't render as an ordinary block it will return False
+     * (examples: signs, buttons, stairs, etc)
+     */
+    public boolean renderAsNormalBlock() {
+        return false;
+    }
+    
+    public int getRenderType() {
+        return CommonProxy.blockFarmerKernelRenderId;
+    }
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube? This determines whether
+     * or not to render the shared face of two adjacent blocks and also whether
+     * the player can attach torches, redstone wire, etc to this block.
+     */
+    public boolean isOpaqueCube() {
+        return false;
+    }
     @Override
     public void onPostBlockPlaced(World world, int x, int y, int z, int meta) {
         super.onPostBlockPlaced(world, x, y, z, meta);
         System.out.println("Block placed at :" + x + "," + y + "," + z + " (" + meta + ")");
+        updateMetadata(world, x, y, z);
     }
 
     @Override
@@ -64,6 +86,7 @@ public class BlockFarmerKernel extends BlockContainer implements IRobotControl {
                 // System.out.println("Block neighbour changed at :"+x+","+y+","+z+" ("+block+")");
             }
         }
+        updateMetadata(world, x, y, z);
     }
 
     @Override
@@ -121,11 +144,11 @@ public class BlockFarmerKernel extends BlockContainer implements IRobotControl {
         return new TileFarmerKernel();
     }
 
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2,
-            int par3, int par4, int par5) {
-        return true;
-    }
+//    @SideOnly(Side.CLIENT)
+//    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2,
+//            int par3, int par4, int par5) {
+//        return true;
+//    }
 
     public void onNeighborChange(IBlockAccess world, int x, int y, int z,
             int tileX, int tileY, int tileZ) {
@@ -137,15 +160,17 @@ public class BlockFarmerKernel extends BlockContainer implements IRobotControl {
         int i1 = BlockUtils.getDirectionFromMetadata(l);
         boolean flag = !(((World) par1World).isBlockIndirectlyGettingPowered(par2, par3, par4));
         boolean flag1 = BlockUtils.getIsBlockNotPoweredFromMetadata(l);
-
+        System.out.println("Update metadata : "+flag+":"+flag1+":"+l);
         if (flag == flag1)
             return;
-        ((World) par1World).setBlockMetadataWithNotify(par2, par3, par4, i1 | ((flag) ? 0 : 8), 4);
+        ((World) par1World).setBlockMetadataWithNotify(par2, par3, par4, i1 | ((flag) ? 0 : 8), 2);
+        SystemUtils.updateNetwork(((World) par1World), par2, par3, par4);
     }
 
     public void onBlockAdded(World par1World, int par2, int par3, int par4) {
         super.onBlockAdded(par1World, par2, par3, par4);
         updateMetadata(par1World, par2, par3, par4);
+        
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2,
@@ -202,5 +227,10 @@ public class BlockFarmerKernel extends BlockContainer implements IRobotControl {
             return TransactorSimple.getTransactorFor((TileFarmerKernel)tile);
         }
         return null;
+    }
+      
+    @Override
+    public void updateNetwork(IBlockAccess world, int x, int y, int z) {
+     
     }
 }

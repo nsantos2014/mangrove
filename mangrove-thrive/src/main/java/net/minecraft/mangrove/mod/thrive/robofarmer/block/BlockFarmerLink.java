@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -319,40 +320,71 @@ public class BlockFarmerLink extends Block implements IRobotConnection{
     public void registerBlockIcons(IIconRegister iconRegister) {
         this.blockIcon = iconRegister.registerIcon(this.field_149827_a);
     }
+    
+    @Override
+    public void updateNetwork(IBlockAccess world, int x, int y, int z) {
+        System.out.println("Update network ("+x+","+y+","+z+") "+this);
+        updateMetadata(world, x, y, z);        
+    }
 
-    private void updateMetadata(IBlockAccess par1World, int par2, int par3, int par4) {
-        int l = par1World.getBlockMetadata(par2, par3, par4);
+    private void updateMetadata(IBlockAccess world, int x, int y, int z) {
+        int l = world.getBlockMetadata(x, y, z);
         int i1 = BlockUtils.getDirectionFromMetadata(l);
-        boolean flag = !(((World) par1World).isBlockIndirectlyGettingPowered(par2, par3, par4));
+//        boolean flag = !(((World) par1World).isBlockIndirectlyGettingPowered(par2, par3, par4));
         boolean flag1 = BlockUtils.getIsBlockNotPoweredFromMetadata(l);
 
-        if (flag == flag1)
+//        if (flag == flag1)
+//            return;
+//        ((World) par1World).setBlockMetadataWithNotify(par2, par3, par4, i1 | ((flag) ? 0 : 8), 2);
+        CSPoint3i controlPos = SystemUtils.findFirstControl((World) world, x, y, z);
+        boolean flag = false;
+        if(controlPos==null && flag1){
+            System.out.println("Update Metadata: No Control and "+flag1);
             return;
-        ((World) par1World).setBlockMetadataWithNotify(par2, par3, par4, i1 | ((flag) ? 0 : 8), 4);
+        }else if(controlPos!=null){
+            flag = !(((World) world).isBlockIndirectlyGettingPowered(controlPos.x, controlPos.y, controlPos.z));
+        }
+//        boolean flag = !(((World) world).isBlockIndirectlyGettingPowered(controlPos.x, controlPos.y, controlPos.z));
+        if (flag == flag1){
+            System.out.println("Update Metadata: Same Value "+flag1);
+            return;
+        }
+        System.out.println("Update Metadata:"+flag);
+        ((World) world).setBlockMetadataWithNotify(x, y, z, i1 | ((flag) ? 0 : 8), 2);
     }
-    
-    
-//    /**
-//     * Called upon block activation (right click on the block.)
-//     */
-//    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_,float p_149727_8_, float p_149727_9_) {
-//       // return world.isRemote ? true : ItemLead.func_150909_a(player, world, x, y, z);
-//        return true;
-//    }
 
-//    @Override
-    @SideOnly(Side.SERVER)
-    public UUID getSid(World world, int x, int y, int z) {
+    
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side){
+//        final Set<CSPoint3i> controls = SystemUtils.findAllControl(world, x, y, z);
+//        if( controls.size()==1){
+//            CSPoint3i point = controls.iterator().next();
+//            return (world.getBlockMetadata(point.x, point.y, point.z) & 8) > 0 ? 15 : 0;    
+//        }
+        return 0;
         
-        for (int i1 = 0; (i1 < 6); ++i1){
-            Block j1 = world.getBlock(x + Facing.offsetsXForSide[i1], y + Facing.offsetsYForSide[i1], z + Facing.offsetsZForSide[i1]);
-            
-            if( j1 instanceof IRobotComponent){
-                final IRobotComponent component=(IRobotComponent)j1;
-                
-                
-            }
-        }        
-        return null;
+    }
+
+    public int isProvidingStrongPower(IBlockAccess p_149748_1_, int p_149748_2_, int p_149748_3_, int p_149748_4_, int p_149748_5_)
+    {
+//        int i1 = p_149748_1_.getBlockMetadata(p_149748_2_, p_149748_3_, p_149748_4_);
+//
+//        if ((i1 & 8) == 0)
+//        {
+//            return 0;
+//        }
+//        else
+//        {
+//            int j1 = i1 & 7;
+//            return j1 == 0 && p_149748_5_ == 0 ? 15 : (j1 == 7 && p_149748_5_ == 0 ? 15 : (j1 == 6 && p_149748_5_ == 1 ? 15 : (j1 == 5 && p_149748_5_ == 1 ? 15 : (j1 == 4 && p_149748_5_ == 2 ? 15 : (j1 == 3 && p_149748_5_ == 3 ? 15 : (j1 == 2 && p_149748_5_ == 4 ? 15 : (j1 == 1 && p_149748_5_ == 5 ? 15 : 0)))))));
+//        }
+        return 0;
+    }
+
+    /**
+     * Can this block provide power. Only wire currently seems to have this change based on its state.
+     */
+    public boolean canProvidePower()
+    {
+        return false;
     }
 }

@@ -1,16 +1,21 @@
 package net.minecraft.mangrove;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.craftpedia.Craftpedia;
+import net.minecraft.mangrove.core.xray.XRay;
+import net.minecraft.mangrove.core.xray.XRayAddGui;
 import net.minecraft.mangrove.core.xray.XRayBlocks;
 import net.minecraft.mangrove.network.GuiWidgetMessage;
 import net.minecraft.mangrove.network.GuiWidgetMessageHandler;
 import net.minecraft.mangrove.network.NetBus;
 import net.minecraft.mangrove.network.TileEntityMessage;
 import net.minecraft.mangrove.network.TileEntityMessageHandler;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -18,6 +23,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -35,6 +41,10 @@ public class MangroveForge {
 
 	@Instance(MangroveForge.ID)
 	public static MangroveForge instance;
+	
+	public MangroveForge() {
+//	    FMLCommonHandler.instance().bus().register(XRay.instance);
+    }
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -49,62 +59,88 @@ public class MangroveForge {
 //		MinecraftForge.EVENT_BUS.register(Craftpedia.instance);
 //		MinecraftForge.EVENT_BUS.register(XRayBlocks.instance);
 		
+		XRay.instance.preInit(event);
+		
 		FMLCommonHandler.instance().bus().register(Craftpedia.instance);
+		FMLCommonHandler.instance().bus().register(XRay.instance);
+		MinecraftForge.EVENT_BUS.register(XRay.instance);
+		MinecraftForge.EVENT_BUS.register(this);
+		
+		
 //		FMLCommonHandler.instance().bus().register(XRayBlocks.instance);
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		
+	    XRay.instance.init(event);
+	    addNewRecipes();
+	}
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event){
+	    
 	}
 
 	public void addNewRecipes() {
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.arrow,64), 
-			new Object[] { " F ", " S ", " L ", 
-			'F',new ItemStack(Items.feather, 1),
-			'S',new ItemStack(Items.stick, 1), 
-			'L',new ItemStack(Items.flint, 1) 
-		}));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.arrow,64), 
+//			new Object[] { " F ", " S ", " L ", 
+//			'F',new ItemStack(Items.feather, 1),
+//			'S',new ItemStack(Items.stick, 1), 
+//			'L',new ItemStack(Items.flint, 1) 
+//		}));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.iron_ore, 1), 
 			new Object[] { "XXX", "XXX", "XXX", 
 			'X',Blocks.cobblestone 
 		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel,4), 
-			new Object[] { "DDD", "D D", "DDD", 
-			'D',new ItemStack(Blocks.dirt) 
-		}));
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gold_ore, 1), 
-			new Object[] { "SDS", "XDX", "DXD", 
-			'S',Blocks.cobblestone, 
-			'D', Blocks.dirt, 
-			'X', Blocks.gravel 
-		}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gold_ore, 1), 
-			new Object[] { "DDD", "DTD", "DDD", 
-			'D',Blocks.dirt, 
-			'T', Blocks.iron_bars 
-		}));
-
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gold_ore, 2), 
-			new Object[] { "GGG", "GTG", "GGG", 
-			'G',Blocks.gravel, 
-			'T', Blocks.iron_bars 
-		}));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel,4), 
+//			new Object[] { "DDD", "D D", "DDD", 
+//			'D',new ItemStack(Blocks.dirt) 
+//		}));
+//
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gold_ore, 1), 
+//			new Object[] { "SDS", "XDX", "DXD", 
+//			'S',Blocks.cobblestone, 
+//			'D', Blocks.dirt, 
+//			'X', Blocks.gravel 
+//		}));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gold_ore, 1), 
+//			new Object[] { "DDD", "DTD", "DDD", 
+//			'D',Blocks.dirt, 
+//			'T', Blocks.iron_bars 
+//		}));
+//
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gold_ore, 2), 
+//			new Object[] { "GGG", "GTG", "GGG", 
+//			'G',Blocks.gravel, 
+//			'T', Blocks.iron_bars 
+//		}));
 	}
 	
+//	@SubscribeEvent
+//	public boolean onTickInGame(TickEvent.ClientTickEvent e) {
+//		XRayBlocks.instance.onTick(Minecraft.getMinecraft().theWorld != null);
+////		if ((!(toggleXray)) || (this.mc.theWorld == null))
+////			return true;
+////		if (cooldownTicks < 1) {
+////			compileDL();
+////			cooldownTicks = 80;
+////		}
+////		cooldownTicks -= 1;
+//		return true;
+//	}
 	@SubscribeEvent
-	public boolean onTickInGame(TickEvent.ClientTickEvent e) {
-		XRayBlocks.instance.onTick(Minecraft.getMinecraft().theWorld != null);
-//		if ((!(toggleXray)) || (this.mc.theWorld == null))
-//			return true;
-//		if (cooldownTicks < 1) {
-//			compileDL();
-//			cooldownTicks = 80;
-//		}
-//		cooldownTicks -= 1;
-		return true;
+    public void renderWorldLastEvent(RenderWorldLastEvent evt) {
+	    XRay.instance.renderWorldLastEvent(evt);
+	    
+//	    System.out.println("===========================================================================================");
+//	    System.out.println("Villages");
+////      final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+//      final World world = Minecraft.getMinecraft().theWorld;
+//      
+//      for(Object vilObj: world.villageCollectionObj.getVillageList()){
+//          System.out.println("Vil:"+vilObj);
+//      }
+//      System.out.println("===========================================================================================");
 	}
 }

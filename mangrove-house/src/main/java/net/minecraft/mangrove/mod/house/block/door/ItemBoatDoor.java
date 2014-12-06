@@ -18,7 +18,7 @@ public class ItemBoatDoor extends Item {
 		this.doorMaterial = Material.rock;
 		this.maxStackSize = 1;
 		this.setCreativeTab(CreativeTabs.tabRedstone);
-		//this.setUnlocalizedName("boat_door_item");
+		this.setUnlocalizedName("boat_door_item");
 		this.setTextureName("mangrove:boat_door");
 	}
 

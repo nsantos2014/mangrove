@@ -57,6 +57,11 @@ public class CSPosition3i extends CSPoint3i{
 		super.set(pos);
 		this.direction=pos.direction;
 	}
+
+    @Override
+    public String toString() {
+        return "CSPosition3i [direction=" + direction + ", x=" + x + ", y=" + y + ", z=" + z + "]";
+    }
 	
 	
 	

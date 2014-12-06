@@ -185,6 +185,7 @@ public class MapRenderer {
 		// draw markers
 		this.mw.markerManager.drawMarkers(this.mapMode, this.mapView);
 		
+		this.mw.mobManager.draw(this.mapMode, this.mapView, 0xff000000);
 		// draw player trail
 		if (this.mw.playerTrail.enabled) {
 			this.mw.playerTrail.draw(this.mapMode, this.mapView);
@@ -241,7 +242,7 @@ public class MapRenderer {
    	 	//for (IMwDataProvider provider : MwAPI.getDataProviders())
 		IMwDataProvider provider = MwAPI.getCurrentDataProvider();
 		if (provider != null) {
-			ArrayList<IMwChunkOverlay> overlays = provider.getChunksOverlay(
+			final ArrayList<IMwChunkOverlay> overlays = provider.getChunksOverlay(
 					this.mapView.getDimension(),
 					this.mapView.getX(), this.mapView.getZ(),
 					this.mapView.getMinX(), this.mapView.getMinZ(),

@@ -11,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.mangrove.core.block.AbstractBlockInventory;
 import net.minecraft.mangrove.core.utils.BlockUtils;
 import net.minecraft.mangrove.mod.house.MGHouseForge;
 import net.minecraft.tileentity.TileEntity;
@@ -19,7 +20,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockCrate extends BlockContainer{
+public class BlockCrate extends AbstractBlockInventory{
 	@SideOnly(Side.CLIENT)
     private IIcon blockIconTop;
     @SideOnly(Side.CLIENT)

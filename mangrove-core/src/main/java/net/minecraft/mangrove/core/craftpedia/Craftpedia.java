@@ -37,7 +37,7 @@ public static final Craftpedia instance=new Craftpedia();
 	public boolean enabled = true;
 
 	private Craftpedia() {
-		this.toggleXrayGui = new KeyBinding("Toggle Xray-Gui", Keyboard.KEY_F1, "Craftpedia");
+		this.toggleXrayGui = new KeyBinding("Toggle Craftpedia", Keyboard.KEY_F6, "Craftpedia");
 	}
 	public void registerKeys(){
 		ClientRegistry.registerKeyBinding(this.toggleXrayGui);

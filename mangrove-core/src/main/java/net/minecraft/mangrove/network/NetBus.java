@@ -1,6 +1,9 @@
 package net.minecraft.mangrove.network;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -34,4 +37,11 @@ public class NetBus {
 		network.sendTo(message, player);
 	}
 	
+	public static void notify(String zone,String message){        
+        final EntityClientPlayerMP thePlayer = Minecraft.getMinecraft().thePlayer;
+        if( thePlayer!=null){
+            final ChatComponentText chatcomponenttext = new ChatComponentText(String.format("%s : %s", zone,message));
+            thePlayer.addChatMessage(chatcomponenttext);
+        }
+    }
 }

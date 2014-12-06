@@ -105,7 +105,7 @@ public abstract class AbstractTileRobotNode extends TileEntity implements
 			}
 			
 		} else {
-			//System.out.println("Stage="+stage);
+//			System.out.println("Stage="+stage);
 			switch (stage) {
 			case Init:
 				if( tick % _stageDuration(stage)==0){

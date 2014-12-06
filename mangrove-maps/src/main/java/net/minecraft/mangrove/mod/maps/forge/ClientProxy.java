@@ -5,7 +5,9 @@ import java.io.File;
 import net.minecraft.client.Minecraft;
 import net.minecraft.mangrove.mod.maps.Mw;
 import net.minecraft.mangrove.mod.maps.api.MwAPI;
+import net.minecraft.mangrove.mod.maps.overlay.OverlayChecker;
 import net.minecraft.mangrove.mod.maps.overlay.OverlayGrid;
+import net.minecraft.mangrove.mod.maps.overlay.OverlayMobs;
 import net.minecraft.mangrove.mod.maps.overlay.OverlaySlime;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -31,7 +33,8 @@ public class ClientProxy extends CommonProxy {
 	public void postInit() {
 		MwAPI.registerDataProvider("Slime", new OverlaySlime());
 		MwAPI.registerDataProvider("Grid", new OverlayGrid());
-		//MwAPI.registerDataProvider("Checker", new OverlayChecker());
-		//MwAPI.setCurrentDataProvider("Slime");
+		MwAPI.registerDataProvider("Checker", new OverlayChecker());
+		MwAPI.registerDataProvider("Mobs", new OverlayMobs());
+		MwAPI.setCurrentDataProvider("Slime");
 	}
 }

@@ -13,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.mod.house.proxy.CommonProxy;
 import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -21,7 +22,10 @@ public class BlockGlassLamp extends Block {
 
 	private boolean field_149996_a;
 	private String field_149995_b;
-
+	
+	@SideOnly(Side.CLIENT)
+    protected IIcon blockInsideIcon;
+	
 //	private static final IIcon[] field_149998_a = new IIcon[16];
 
 	public BlockGlassLamp() {
@@ -83,7 +87,10 @@ public class BlockGlassLamp extends Block {
 	 * Gets the block's texture. Args: side, meta
 	 */
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
+	public IIcon getIcon(int side, int meta) {
+	    if( side==1){
+	        return blockInsideIcon;
+	    }
 		return blockIcon;
 	}
 
@@ -99,7 +106,7 @@ public class BlockGlassLamp extends Block {
 	 * Returns the quantity of items to drop on block destruction.
 	 */
 	public int quantityDropped(Random p_149745_1_) {
-		return 0;
+		return 1;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -138,7 +145,8 @@ public class BlockGlassLamp extends Block {
 
 	 @SideOnly(Side.CLIENT)
 	 public void registerBlockIcons(IIconRegister p_149651_1_) {
-	 this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
+	     this.blockIcon = p_149651_1_.registerIcon("glass");
+	     this.blockInsideIcon = p_149651_1_.registerIcon("beacon");
 	 }
 
 	/**
@@ -156,4 +164,7 @@ public class BlockGlassLamp extends Block {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
+	public int getRenderType() {
+        return CommonProxy.blockGlassLamp;
+    }
 }

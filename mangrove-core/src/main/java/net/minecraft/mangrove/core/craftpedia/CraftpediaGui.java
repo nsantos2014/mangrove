@@ -32,6 +32,8 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.mangrove.core.gui.button.GuiSlider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.StringTranslate;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -270,16 +272,24 @@ public class CraftpediaGui extends GuiScreen{
 //				final Block block = (Block) (Block.blockRegistry.getObject(objectId));
 				if( currentIcon!=null){
 					final Item item = currentIcon.getItem();
-					final Block block= Block.getBlockFromItem(item);
+					
 					drawRect(left+3, heightCalc + 10 - 48 + i * 24, right-3, heightCalc - 10 - 48 + i * 24, rgba(.30f, .30f, .30f,1.0f));
 					if ((item != null) /*&& (RenderBlocks.renderItemIn3d(blockFromItem.getRenderType()))*/) {
 					
 						renderItem(iconLeft, heightCalc - 60 + 4 + i * 24,  currentIcon);
 											
 					}
-					String currentBlockName = block.getLocalizedName();
+//					final Block block= Block.getBlockFromItem(item);
+//					
+//					String currentBlockName = block.getLocalizedName();
+					String currentBlockName =item.getUnlocalizedName(currentIcon);
+					
 					if (currentBlockName == null) {
 						currentBlockName = "No Name";
+					}else  if( StatCollector.canTranslate(currentBlockName+".name")){
+					    currentBlockName = StatCollector.translateToLocal(currentBlockName+".name");					     
+					}else {
+					    currentBlockName = StatCollector.translateToFallback(currentBlockName+".name");
 					}
 //					
 					drawCenteredString(this.fontRendererObj, currentBlockName, titleCenter, heightCalc - 60 + 7 + i * 24, 16777215);

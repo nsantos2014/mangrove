@@ -14,10 +14,12 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.cs.CS;
 import net.minecraft.mangrove.core.cs.CSPoint3i;
+import net.minecraft.mangrove.core.cs.CSPosition3d;
 import net.minecraft.mangrove.core.cs.CSPosition3i;
 import net.minecraft.mangrove.core.inventory.ITransactor;
 import net.minecraft.mangrove.core.inventory.filter.ArrayStackFilter;
 import net.minecraft.mangrove.core.utils.BlockUtils;
+import net.minecraft.mangrove.core.utils.WorldUtils;
 import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
 import net.minecraft.mangrove.mod.thrive.robofarmer.IRobotControl;
 import net.minecraft.mangrove.mod.thrive.robofarmer.block.SystemUtils;
@@ -101,7 +103,7 @@ public class TileFarmerNode extends AbstractTileRobotNode {
                     if( iStack!=null && iStack.stackSize>0) {
                         transactor.remove(new ArrayStackFilter(new ItemStack(Items.wheat_seeds,1)), ForgeDirection.UP, true);
                         worldObj.playSoundEffect((double) ((float) worldPos.x + 0.5F), (double) ((float) worldPos.y + 1 + 0.5F), (double) ((float) worldPos.z + 0.5F),
-                            block1.stepSound.getStepResourcePath(), (block1.stepSound.getVolume() + 1.0F) / 2.0F, block1.stepSound.getPitch() * 0.8F);
+                                block1.stepSound.getStepResourcePath(), (block1.stepSound.getVolume() + 1.0F) / 2.0F, block1.stepSound.getPitch() * 0.8F);
 
                         this.worldObj.setBlock(worldPos.x, worldPos.y + 1, worldPos.z, Blocks.wheat, 0, 2);
                         blockCrop = this.worldObj.getBlock(worldPos.x, worldPos.y + 1, worldPos.z);
@@ -188,8 +190,21 @@ public class TileFarmerNode extends AbstractTileRobotNode {
 
     @Override
     protected boolean renderScene(int clientTick) {
-        setupCS();
-        // System.out.println("renderScene:"+clientTick);
+        this.localCS = null;
+        this.local=null;
+        setupCS();        
+        
+        final CSPosition3i worldPos = localCS.toWorld(local);
+        final CSPosition3d position = new CSPosition3d(worldPos);
+        System.out.println("renderScene:"+clientTick+":"+getStep()+": "+position);
+        
+        worldObj.spawnParticle("happyVillager",position.x+0.25, position.y-1.5, position.z+0.25,  0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle("happyVillager",position.x+0.25, position.y-1.5, position.z+0.75,  0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle("happyVillager",position.x+0.50, position.y-1.1, position.z+0.50,  0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle("happyVillager",position.x+0.75, position.y-1.5, position.z+0.25,  0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle("happyVillager",position.x+0.75, position.y-1.5, position.z+0.75,  0.5D, 1.0D, 0.5D);
+        
+       
         return true;
     }
 
