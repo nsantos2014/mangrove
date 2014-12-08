@@ -16,7 +16,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 
-public class VehicleJKeyHandler {
+public class MAVHandler {
     public static KeyBinding keyFloatMode = new KeyBinding("key.floatMode", Keyboard.KEY_F, MGVehiclesForge.ID);
     public static KeyBinding keyCollectMode = new KeyBinding("key.collectNearby", Keyboard.KEY_H,  MGVehiclesForge.ID);
     public static KeyBinding digAroundMode = new KeyBinding("key.digaround", Keyboard.KEY_J,  MGVehiclesForge.ID);
@@ -26,7 +26,7 @@ public class VehicleJKeyHandler {
     private Minecraft mc;
     private GameSettings gameSettings;
     
-    public VehicleJKeyHandler() {
+    public MAVHandler() {
         this.mc=Minecraft.getMinecraft();
         this.gameSettings=this.mc.gameSettings;
         

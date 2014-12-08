@@ -3,7 +3,6 @@ package net.minecraft.mangrove.mod.vehicles.mav.render;
 import java.nio.FloatBuffer;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -12,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.mangrove.mod.vehicles.mav.EntityMAV;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
@@ -30,7 +28,6 @@ public class RenderMAV extends Render
     /** instance of ModelBoat for rendering */
     protected ModelLandMAV modelLand;
     protected ModelBoatMAV modelBoat;
-    protected ModelMixMAV modelMix;
     protected final RenderBlocks field_94145_f;
     
 
@@ -38,7 +35,6 @@ public class RenderMAV extends Render
         this.shadowSize = 0.5F;
         this.modelLand = new ModelLandMAV();
         this.modelBoat = new ModelBoatMAV();
-        this.modelMix=new ModelMixMAV();
         this.field_94145_f = new RenderBlocks();
     }
 
@@ -64,7 +60,7 @@ public class RenderMAV extends Render
 	        double d6 = 0.30000001192092896D;
 	        Vec3 vec3 =  Vec3.createVectorHelper(d3, d4, d5);
 //	        float f5 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * v;
-//	        float f5 = entity.moveForward;//entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * v;
+	        float f5 = entity.moveForward;//entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * v;
 	        
 //	        double y;
 //			if (vec3 != null)
@@ -361,30 +357,13 @@ public class RenderMAV extends Render
         this.modelBoat.render(entityMAV, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GL11.glPopMatrix();
     }
-   
-    public void doRenderMix(EntityMAV entityMAV, double x, double y, double z, float u, float v){
-        GL11.glPushMatrix();
-
-        GL11.glTranslatef((float)x, (float)y, (float)z);
-        GL11.glRotatef(180.0F - u, 0.0F, 1.0F, 0.0F);
-        
-//        float f4 = 1.0F;
-//        GL11.glScalef(f4, f4, f4);
-        //GL11.glScalef(1.0F / f4, 1.0F / f4, 1.0F / f4);
-        this.bindEntityTexture(entityMAV);
-//        GL11.glScalef(-3.9F, -1.9F, 3.9F);
-        GL11.glScalef(-1.0F, -1.0F, 1.0F);
-        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-        this.modelMix.render(entityMAV, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glPopMatrix();
-    }
     
     public void doRenderLand(EntityMAV entityMAV, double x, double y, double z, float par8, float par9)
     {
         GL11.glPushMatrix();
 
         GL11.glTranslatef((float)x, (float)y, (float)z);
-//        GL11.glRotatef(180.0F - par8, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(180.0F - par8, 0.0F, 1.0F, 0.0F);
         
 //        float f2 = (float)entityMAV.getTimeSinceHit() - par9;
 //        float f3 = entityMAV.getDamageTaken() - par9;
@@ -399,12 +378,12 @@ public class RenderMAV extends Render
 //            GL11.glRotatef(MathHelper.sin(f2) * f2 * f3 / 10.0F * (float)entityMAV.getForwardDirection(), 1.0F, 0.0F, 0.0F);
 //        }
 
-        float f4 = 10.0F;
+        float f4 = 1.5F;
         GL11.glScalef(f4, f4, f4);
-//        GL11.glScalef(1.0F / f4, 1.0F / f4, 1.0F / f4);
+        GL11.glScalef(1.0F / f4, 1.0F / f4, 1.0F / f4);
         this.bindEntityTexture(entityMAV);
-//        GL11.glScalef(-3.9F, -1.9F, 3.9F);
-//        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+        GL11.glScalef(-1.0F, -1.0F, 1.0F);
+        GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
         this.modelLand.render(entityMAV, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GL11.glPopMatrix();
     }
@@ -414,9 +393,9 @@ public class RenderMAV extends Render
      */
     protected ResourceLocation getEntityTexture(EntityMAV entity)
     {
-//    	if( entity.isFloating())
-//    		return boatTextures;
-//    	else
+    	if( entity.isFloating())
+    		return boatTextures;
+    	else
     		return landTextures;
     }
 
@@ -437,11 +416,11 @@ public class RenderMAV extends Render
     public void doRender(Entity entity, double x, double y, double z, float u, float v)
     {
     	EntityMAV entityMAV = (EntityMAV)entity;
-//    	if( entityMAV.isFloating()){
+    	if( entityMAV.isFloating()){
     		this.doRenderBoat(entityMAV, x, y, z, u, v);
-//    	}else{
-//    		this.doRenderLand(entityMAV, x, y, z, u, v);
-//    	}
-//    	this.doRenderMix(entityMAV, x, y, z, u, v);
+    	}else{
+    		this.doRenderLand(entityMAV, x, y, z, u, v);
+    	}
+		
     }
 }

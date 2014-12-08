@@ -7,7 +7,13 @@ import net.minecraft.mangrove.GUIHandler;
 import net.minecraft.mangrove.mod.vehicles.mav.EntityMAV;
 import net.minecraft.mangrove.mod.vehicles.mav.gui.ContainerMAV;
 import net.minecraft.mangrove.mod.vehicles.mav.gui.GuiMAV;
+import net.minecraft.mangrove.mod.vehicles.network.KeyboardMessage;
+import net.minecraft.mangrove.mod.vehicles.network.KeyboardMessageHandler;
 import net.minecraft.mangrove.mod.vehicles.proxy.CommonProxy;
+import net.minecraft.mangrove.mod.vehicles.proxy.MAVHandler;
+import net.minecraft.mangrove.network.GuiWidgetMessage;
+import net.minecraft.mangrove.network.GuiWidgetMessageHandler;
+import net.minecraft.mangrove.network.NetBus;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -36,10 +42,11 @@ public class MGVehiclesForge {
 	@SidedProxy(clientSide = MGVehiclesForge.CLIENT_SIDE_PROXY, serverSide = MGVehiclesForge.SERVER_SIDE_PROXY)
 	public static CommonProxy proxy;
 	public static GUIHandler handler = new GUIHandler();
-	
+	public static MAVHandler mavHandler = new MAVHandler();	
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
+	    NetBus.register(KeyboardMessageHandler.class, KeyboardMessage.class);
 	    registerEntityMAV();
 	}
 	
@@ -54,6 +61,8 @@ public class MGVehiclesForge {
 	public void registerEntityMAV(){
 	    GameRegistry.registerItem(MGVehiclesItems.mav, "mav");
         EntityRegistry.registerModEntity(EntityMAV.class, "mav", 12090, instance, 80, 3, true);
-        handler.registerID(CommonProxy.idGuiMAV, ContainerMAV.class, GuiMAV.class,EntityMAV.class);
+        handler.registerID(CommonProxy.idGuiMAV, ContainerMAV.class, GuiMAV.class,EntityMAV.class);        
+        FMLCommonHandler.instance().bus().register(mavHandler);
+        MinecraftForge.EVENT_BUS.register(mavHandler);        
 	}
 }
