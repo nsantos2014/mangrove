@@ -8,10 +8,11 @@ import net.minecraft.mangrove.mod.thrive.autobench.TileEntityAutobench;
 import net.minecraft.mangrove.mod.thrive.autobench.gui.AutobenchContainer;
 import net.minecraft.mangrove.mod.thrive.autobench.gui.AutobenchGui;
 import net.minecraft.mangrove.mod.thrive.proxy.CommonProxy;
-import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerKernel;
-import net.minecraft.mangrove.mod.thrive.robofarmer.entity.TileFarmerNode;
-import net.minecraft.mangrove.mod.thrive.robofarmer.gui.KernelContainer;
-import net.minecraft.mangrove.mod.thrive.robofarmer.gui.KernelGui;
+import net.minecraft.mangrove.mod.thrive.robot.entity.TileRobotKernel;
+import net.minecraft.mangrove.mod.thrive.robot.farmer.TileRobotFarmerNode;
+import net.minecraft.mangrove.mod.thrive.robot.gui.KernelContainer;
+import net.minecraft.mangrove.mod.thrive.robot.gui.KernelGui;
+import net.minecraft.mangrove.mod.thrive.robot.miner.TileRobotMinerNode;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
@@ -39,12 +40,17 @@ public class MGThriveForge {
 	public static CommonProxy proxy;
 	public static GUIHandler handler = new GUIHandler();
 	
+	public int cooldownTime=20;
+	
 	//public static CreativeTabs tabThrive = new CreativeTabs("MyMod");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
+	    registerRobot();
 		registerRobotFarmer();
-		registerAutobench();		
+		registerRobotMiner();
+		registerAutobench();	
+		
 	}
 	
 	@EventHandler
@@ -68,17 +74,17 @@ public class MGThriveForge {
             Character.valueOf('w'), Blocks.planks 
         }));
 	}
-	public void registerRobotFarmer() {
-		GameRegistry.registerBlock(MGThriveBlocks.farmer_link, "farmer_link");		
-		GameRegistry.registerBlock(MGThriveBlocks.farmer_node, "farmer_node");
-		GameRegistry.registerBlock(MGThriveBlocks.farmer_kernel, "farmer_kernel");
+	public void registerRobot() {
+		GameRegistry.registerBlock(MGThriveBlocks.robot_link, "robot_link");		
 		
-		TileEntity.addMapping(TileFarmerNode.class, "farmer_node");
-		TileEntity.addMapping(TileFarmerKernel.class, "farmer_kernel");
+		GameRegistry.registerBlock(MGThriveBlocks.robot_kernel, "robot_kernel");
 		
-		handler.registerClass(TileFarmerKernel.class, KernelContainer.class, KernelGui.class);
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.farmer_link,16,0), new Object[] {
+		TileEntity.addMapping(TileRobotKernel.class, "robot_kernel");
+		
+		handler.registerClass(TileRobotKernel.class, KernelContainer.class, KernelGui.class);
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.robot_link,16,0), new Object[] {
             Boolean.valueOf(true), 
             "iwi", 
             "iri", 
@@ -87,7 +93,7 @@ public class MGThriveForge {
             Character.valueOf('r'), Items.redstone, 
             Character.valueOf('w'), Blocks.planks 
         }));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.farmer_kernel,1,0), new Object[] {
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.robot_kernel,1,0), new Object[] {
             Boolean.valueOf(true), 
             "iwi", 
             "iai", 
@@ -97,40 +103,37 @@ public class MGThriveForge {
             Character.valueOf('w'), Blocks.planks,
             Character.valueOf('a'), Blocks.crafting_table,
         }));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.farmer_node,4,0), new Object[] {
+		
+	}
+	public void registerRobotFarmer() {
+	    GameRegistry.registerBlock(MGThriveBlocks.farmer_node, "farmer_node");
+	    TileEntity.addMapping(TileRobotFarmerNode.class, "farmer_node");
+	    GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.farmer_node,4,0), new Object[] {
             Boolean.valueOf(true), 
             "iwi", 
-            "i i", 
+            "iti", 
             "iri",
             Character.valueOf('i'), Items.iron_ingot,
             Character.valueOf('r'), Items.redstone, 
             Character.valueOf('w'), Blocks.planks,
             Character.valueOf('a'), Blocks.crafting_table,
+            Character.valueOf('t'), Items.stone_hoe,
         }));
 	}
-//	public void registerHarvester() {
-//		GameRegistry.registerBlock(MGThriveBlocks.harvester, "harvester");
-//		handler.registerClass(TileEntityHarvester.class, ContainerHarvester.class, GuiHarvester.class);
-//		// harvester.setLightLevel(0.9f);
-//		TileEntity.addMapping(TileEntityHarvester.class, "harvester");
-//
-//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(
-//				MGThriveBlocks.harvester), new Object[] {
-//				Boolean.valueOf(true), " w ", "wiw", "   ",
-//				Character.valueOf('i'), "iron_ore", Character.valueOf('w'),
-//				"plankWood" }));
-//	}
+	public void registerRobotMiner() {
+        GameRegistry.registerBlock(MGThriveBlocks.miner_node, "miner_node");
+        TileEntity.addMapping(TileRobotMinerNode.class, "miner_node");
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGThriveBlocks.miner_node,4,0), new Object[] {
+            Boolean.valueOf(true), 
+            "iwi", 
+            "iti", 
+            "iri",
+            Character.valueOf('i'), Items.iron_ingot,
+            Character.valueOf('r'), Items.redstone, 
+            Character.valueOf('w'), Blocks.planks,
+            Character.valueOf('a'), Blocks.crafting_table,
+            Character.valueOf('t'), Items.stone_pickaxe,
+        }));
+    }
 	
-//	public void registerFeeder() {
-//        GameRegistry.registerBlock(MGThriveBlocks.feeder, "feeder");
-//        handler.registerClass(TileEntityFeeder.class, ContainerFeeder.class, GuiFeeder.class);
-//        // harvester.setLightLevel(0.9f);
-//        TileEntity.addMapping(TileEntityFeeder.class, "feeder");
-//
-////        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(
-////                MGThriveBlocks.harvester), new Object[] {
-////                Boolean.valueOf(true), " w ", "wiw", "   ",
-////                Character.valueOf('i'), "iron_ore", Character.valueOf('w'),
-////                "plankWood" }));
-//    }
 }

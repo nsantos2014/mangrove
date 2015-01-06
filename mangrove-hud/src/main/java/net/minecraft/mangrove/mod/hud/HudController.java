@@ -75,11 +75,12 @@ public class HudController {
 
 			long days = time / 24000;
 			long dayticks = time % 24000;
-			left.add(String.format("Days: %02d %s", days,
-					moonPhases[world.getMoonPhase()]));
+			long hours = ((dayticks/ 1000)) % 24;
+			long minutes = (dayticks % 1000) * 6 / 100;
+//			long seconds= (dayticks % 1000) * 6 % 100;
+			left.add(String.format("Days: %02d %s", days, moonPhases[world.getMoonPhase()]));
 
-			left.add(String.format("time: %02d:%02d",
-					((7 + (dayticks / 1000)) % 24), ((dayticks % 1000) / 60)));
+			left.add(String.format("Time: %02d:%02d",(7+hours)%24, minutes));
 			FontRenderer fontRenderer = mc.fontRenderer;
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glDisable(GL11.GL_LIGHTING);

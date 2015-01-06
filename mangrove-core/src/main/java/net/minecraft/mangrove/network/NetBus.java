@@ -1,5 +1,7 @@
 package net.minecraft.mangrove.network;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,15 +18,19 @@ public class NetBus {
 	public static SimpleNetworkWrapper network;	
 	private static final String CHANNEL_NAME = "MANGROVE_SC";
 	//public static final PacketPipeline packetPipeline = new PacketPipeline();
+	private static final AtomicInteger msgIdCounter=new AtomicInteger(); 
 
-	
+	static{
+	    network = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL_NAME);
+	}
 	public static void initialize(){
-		network = NetworkRegistry.INSTANCE.newSimpleChannel(CHANNEL_NAME);
-	    
+			    
 	}
 	public static <REQ extends IMessage, REPLY extends IMessage>void register(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType){
-		network.registerMessage(messageHandler, requestMessageType, 0, Side.SERVER);
-		network.registerMessage(messageHandler, requestMessageType, 0, Side.CLIENT);
+	    final int msgId = msgIdCounter.getAndIncrement();
+		network.registerMessage(messageHandler, requestMessageType, msgId, Side.SERVER);
+		network.registerMessage(messageHandler, requestMessageType, msgId, Side.CLIENT);
+		
 	}
 	
 	public static void sendToServer(IMessage message) {

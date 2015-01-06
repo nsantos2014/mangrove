@@ -1,4 +1,7 @@
 tile.autobench.name=Autobench
-tile.farmer_link.name=Robot Farmer Link
+tile.robot_link.name=Robot Link
+tile.robot_kernel.name=Robot Kernel
 tile.farmer_node.name=Robot Farmer Node
-tile.farmer_kernel.name=Robot Farmer Kernel
+tile.miner_node.name=Robot Miner Node
+tile.hopperduct.name=Duct
+tile.gratedhopper.name=Grated Hopper

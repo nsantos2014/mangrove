@@ -86,35 +86,35 @@ public class MGWarfareForge {
         GameRegistry.registerItem(MGWarfareItems.x_leggings, "leggingsX");
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGWarfareItems.x_helmet), new Object[] {
             Boolean.valueOf(true), 
-            "iii", 
-            "idi", 
-            " d ",
-            Character.valueOf('d'), Items.diamond, 
-            Character.valueOf('i'), Items.iron_ingot 
+            "   ", 
+            " d ", 
+            " r ",
+            Character.valueOf('d'), Items.iron_helmet, 
+            Character.valueOf('r'), Items.redstone 
          }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGWarfareItems.x_boots), new Object[] {
             Boolean.valueOf(true), 
+            "   ", 
             " d ", 
-            "i i", 
-            "idi",
-            Character.valueOf('d'), Items.diamond, 
-            Character.valueOf('i'), Items.iron_ingot 
+            " r ",
+            Character.valueOf('d'), Items.iron_boots, 
+            Character.valueOf('r'), Items.redstone 
          }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGWarfareItems.x_chestplate), new Object[] {
             Boolean.valueOf(true), 
-            "idi", 
-            "iii", 
-            "iii",
-            Character.valueOf('d'), Items.diamond, 
-            Character.valueOf('i'), Items.iron_ingot 
+            "   ", 
+            " d ", 
+            " r ",
+            Character.valueOf('d'), Items.iron_chestplate, 
+            Character.valueOf('r'), Items.redstone
          }));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGWarfareItems.x_leggings), new Object[] {
             Boolean.valueOf(true), 
-            "iii", 
-            "idi", 
-            " d ",
-            Character.valueOf('d'), Items.diamond, 
-            Character.valueOf('i'), Items.iron_ingot 
+            "   ", 
+            " d ", 
+            " r ",
+            Character.valueOf('d'), Items.iron_leggings, 
+            Character.valueOf('r'), Items.redstone
          }));
     }
 }

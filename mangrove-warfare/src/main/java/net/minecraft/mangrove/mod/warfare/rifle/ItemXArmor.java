@@ -18,7 +18,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.mod.warfare.MGWarfareItems;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
@@ -50,9 +53,8 @@ public class ItemXArmor extends ItemArmor{
     private ArmorMaterial material;
     
 
-    public ItemXArmor(int renderIndex, int armorType)
-    {
-        super(ArmorMaterial.DIAMOND,renderIndex,armorType);
+    public ItemXArmor(ArmorMaterial material,int renderIndex, int armorType) {
+        super(material,renderIndex,armorType);
         this.material=ArmorMaterial.CHAIN;
         this.armorType = armorType;
         this.renderIndex = renderIndex;        
@@ -243,7 +245,14 @@ public class ItemXArmor extends ItemArmor{
         return p_77659_1_;
     }
 //    
-    
+    @Override
+    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+        if( this==MGWarfareItems.x_helmet){
+            player.addPotionEffect(new PotionEffect(Potion.waterBreathing.getId(), 1));
+            player.addPotionEffect(new PotionEffect(Potion.nightVision.getId(), 1));
+        }
+        super.onArmorTick(world, player, itemStack);
+    }
 //    public static enum XArmorMaterial
 //    {
 //        CLOTH(5, new int[]{1, 3, 2, 1}, 15),

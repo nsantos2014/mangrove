@@ -8,6 +8,12 @@ import net.minecraft.mangrove.MangroveForge;
 import net.minecraft.mangrove.mod.house.block.crate.TileEntityCrate;
 import net.minecraft.mangrove.mod.house.block.crate.gui.ContainerCrate;
 import net.minecraft.mangrove.mod.house.block.crate.gui.GuiCrate;
+import net.minecraft.mangrove.mod.house.duct.entity.TileEntityDuct;
+import net.minecraft.mangrove.mod.house.duct.entity.TileEntityGratedHopper;
+import net.minecraft.mangrove.mod.house.duct.gui.ContainerGratedHopper;
+import net.minecraft.mangrove.mod.house.duct.gui.ContainerHopperDuct;
+import net.minecraft.mangrove.mod.house.duct.gui.GuiGratedHopper;
+import net.minecraft.mangrove.mod.house.duct.gui.GuiHopperDuct;
 import net.minecraft.mangrove.mod.house.proxy.CommonProxy;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,7 +44,7 @@ public class MGHouseForge {
 	public static CommonProxy proxy;
 	public static GUIHandler handler=new GUIHandler();
 	//
-
+	public int cooldownTime=20;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
@@ -46,6 +52,7 @@ public class MGHouseForge {
 		registerGlassLamp();
 		registerGlowLadder();
 		registerCrate();
+		registerDucts();
 //		registerCraftpedia(evt);
 	}
 	
@@ -111,6 +118,38 @@ public class MGHouseForge {
             'L', new ItemStack(Blocks.ladder)
 		});
 	}
+	
+	public void registerDucts() {
+        GameRegistry.registerBlock(MGHouseBlocks.duct, "duct");
+        TileEntity.addMapping(TileEntityDuct.class, "duct");
+        
+        
+        GameRegistry.registerBlock(MGHouseBlocks.duct_filter, "duct_filter");
+        TileEntity.addMapping(TileEntityGratedHopper.class, "duct_filter");
+        
+       
+        
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.duct,16,0), new Object[] {
+            Boolean.valueOf(true), 
+            "igi", 
+            "g g", 
+            "igi",
+            Character.valueOf('i'), Items.iron_ingot,
+            Character.valueOf('g'), Blocks.glass 
+        }));
+        
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.duct_filter,1,0), new Object[] {
+            Boolean.valueOf(true), 
+            "   ", 
+            " d ", 
+            " r ",
+            Character.valueOf('r'), Items.redstone,
+            Character.valueOf('d'), MGHouseBlocks.duct 
+        }));
+        
+        handler.registerClass(TileEntityDuct.class, ContainerHopperDuct.class, GuiHopperDuct.class);
+        handler.registerClass(TileEntityGratedHopper.class, ContainerGratedHopper.class, GuiGratedHopper.class);
+    }
 	
 //	public void registerCraftpedia(FMLPreInitializationEvent event){
 //		Configuration cfg = new Configuration(event.getSuggestedConfigurationFile());

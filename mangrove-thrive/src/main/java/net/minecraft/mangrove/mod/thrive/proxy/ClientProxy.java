@@ -1,17 +1,17 @@
 package net.minecraft.mangrove.mod.thrive.proxy;
 
-import net.minecraft.mangrove.core.entity.EntityBlock;
-import net.minecraft.mangrove.mod.thrive.robofarmer.entity.RenderEntityBlock;
-import net.minecraft.mangrove.mod.thrive.robofarmer.render.BlockFarmerKernelRenderer;
-import net.minecraft.mangrove.mod.thrive.robofarmer.render.BlockFarmerLinkRenderer;
-import net.minecraft.mangrove.mod.thrive.robofarmer.render.BlockFarmerNodeRenderer;
+import net.minecraft.mangrove.mod.thrive.robot.render.BlockRobotKernelRenderer;
+import net.minecraft.mangrove.mod.thrive.robot.render.BlockRobotLinkRenderer;
+import net.minecraft.mangrove.mod.thrive.robot.render.BlockRobotNodeRenderer;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy{
 //	private HarvesterRenderer harvesterRenderer=new HarvesterRenderer();
-    private BlockFarmerKernelRenderer blockFarmerKernelRender=new BlockFarmerKernelRenderer();
-	private BlockFarmerLinkRenderer blockFarmerLinkRender=new BlockFarmerLinkRenderer();
-	private BlockFarmerNodeRenderer blockFarmerNodeRender=new BlockFarmerNodeRenderer();
+    private BlockRobotKernelRenderer blockFarmerKernelRender=new BlockRobotKernelRenderer();
+	private BlockRobotLinkRenderer blockFarmerLinkRender=new BlockRobotLinkRenderer();
+	private BlockRobotNodeRenderer blockFarmerNodeRender=new BlockRobotNodeRenderer();
+	
+	
 	
 	public void registerRenderers() {
 //		harvesterRendererID=RenderingRegistry.getNextAvailableRenderId();
@@ -21,10 +21,13 @@ public class ClientProxy extends CommonProxy{
 		blockFarmerLinkRenderId=RenderingRegistry.getNextAvailableRenderId();
 		blockFarmerNodeRenderId=RenderingRegistry.getNextAvailableRenderId();
 		
+		
+		
 		RenderingRegistry.registerBlockHandler(blockFarmerKernelRenderId,this.blockFarmerKernelRender);
 		RenderingRegistry.registerBlockHandler(blockFarmerLinkRenderId,this.blockFarmerLinkRender);
 		RenderingRegistry.registerBlockHandler(blockFarmerNodeRenderId,this.blockFarmerNodeRender);
 		//----------------------------------------------		
-		RenderingRegistry.registerEntityRenderingHandler(EntityBlock.class, RenderEntityBlock.INSTANCE);
+		
+		
 	}
 }

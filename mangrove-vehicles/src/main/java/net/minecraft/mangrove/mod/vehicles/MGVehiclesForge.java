@@ -11,10 +11,7 @@ import net.minecraft.mangrove.mod.vehicles.network.KeyboardMessage;
 import net.minecraft.mangrove.mod.vehicles.network.KeyboardMessageHandler;
 import net.minecraft.mangrove.mod.vehicles.proxy.CommonProxy;
 import net.minecraft.mangrove.mod.vehicles.proxy.MAVHandler;
-import net.minecraft.mangrove.network.GuiWidgetMessage;
-import net.minecraft.mangrove.network.GuiWidgetMessageHandler;
 import net.minecraft.mangrove.network.NetBus;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -27,7 +24,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = MGVehiclesForge.ID, name = MGVehiclesForge.NAME, version = MGVehiclesForge.VERSION, useMetadata = false)
 public class MGVehiclesForge {
@@ -63,6 +59,17 @@ public class MGVehiclesForge {
         EntityRegistry.registerModEntity(EntityMAV.class, "mav", 12090, instance, 80, 3, true);
         handler.registerID(CommonProxy.idGuiMAV, ContainerMAV.class, GuiMAV.class,EntityMAV.class);        
         FMLCommonHandler.instance().bus().register(mavHandler);
-        MinecraftForge.EVENT_BUS.register(mavHandler);        
+        MinecraftForge.EVENT_BUS.register(mavHandler);
+        
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGVehiclesItems.mav,1,0), new Object[] {
+            Boolean.valueOf(true), 
+            "   ", 
+            "iai", 
+            "wrw",
+            Character.valueOf('i'), Items.iron_ingot,
+            Character.valueOf('r'), Items.redstone,
+            Character.valueOf('a'), Blocks.crafting_table, 
+            Character.valueOf('w'), Blocks.planks 
+        }));
 	}
 }

@@ -39,7 +39,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyControlable {
-    protected static final Set<Item> itemRecover       = new HashSet<Item>();
+    protected static final Set<Item> itemRecover = new HashSet<Item>();
 
     static {
         itemRecover.add(Items.stone_axe);
@@ -50,38 +50,37 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
         itemRecover.add(Items.iron_pickaxe);
         itemRecover.add(Items.golden_pickaxe);
         itemRecover.add(Items.diamond_pickaxe);
-        //itemRecover.add(Items.diamond_pickaxe);
+        // itemRecover.add(Items.diamond_pickaxe);
     }
 
-    private static final IAttribute  jumpStrength = (new RangedAttribute("horse.jumpStrength", 0.7D, 0.0D, 2.0D)).setDescription("Jump Strength").setShouldWatch(true);
-    
-    protected boolean                jumping=false;
-    protected boolean                collectNearby     = false;
-    protected boolean                digAround     = false;
+    private static final IAttribute jumpStrength = (new RangedAttribute("horse.jumpStrength", 0.7D, 0.0D, 2.0D)).setDescription("Jump Strength").setShouldWatch(true);
 
-    private final InventorySupport   inventorySupport;
+    protected boolean jumping = false;
+    protected boolean collectNearby = false;
+    protected boolean digAround = false;
+
+    private final InventorySupport inventorySupport;
     /**
      * "The higher this value, the more likely the horse is to be tamed next time a player rides it."
      */
-    protected float                  jumpPower=0.0f;
-    private boolean                  field_110294_bI=false;
-    private int                      field_110285_bP=0;
-    private float                    speed=.6f;
-    
+    protected float jumpPower = 0.0f;
+    private boolean field_110294_bI = false;
+    private int field_110285_bP = 0;
+    private float speed = .6f;
 
     public EntityVehicleBase(World par1World) {
         super(par1World);
         this.targetTasks.taskEntries.clear();
         this.tasks.taskEntries.clear();
         this.setSize(0.98F, 0.1F);
-        //this.setSize(0.98F, 0.98F);
-//        this.setSize(1.4F, 1.6F);
-//        this.yOffset = this.height / 3.0F;
+        // this.setSize(0.98F, 0.98F);
+        // this.setSize(1.4F, 1.6F);
+        // this.yOffset = this.height / 3.0F;
         this.yOffset = 0.2f;
-//        this.width=1.4f;
-//        this.height=1.6f;
+        // this.width=1.4f;
+        // this.height=1.6f;
         this.isImmuneToFire = true;
-        this.speed=0.1f;
+        this.speed = 0.1f;
         inventorySupport = new InventorySupport(5, "container", false);
         inventorySupport.defineSlotRange(0, 180, null, Permission.BOTH, 0, 1, 2, 3, 4, 5);
     }
@@ -101,49 +100,55 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Returns a boundingBox used to collide the entity with other entities and blocks. This enables the entity to be pushable on contact, like boats or minecarts.
+     * Returns a boundingBox used to collide the entity with other entities and
+     * blocks. This enables the entity to be pushable on contact, like boats or
+     * minecarts.
      */
     public AxisAlignedBB getCollisionBox(Entity par1Entity) {
-//        System.out.println("Get Collision Box :"+par1Entity);
-//        if (this.riddenByEntity != null) {
-//            return this.boundingBox.func_111270_a(this.riddenByEntity.boundingBox);
-//        }
-        
+        // System.out.println("Get Collision Box :"+par1Entity);
+        // if (this.riddenByEntity != null) {
+        // return
+        // this.boundingBox.func_111270_a(this.riddenByEntity.boundingBox);
+        // }
+
         return this.boundingBox.copy().expand(1, 1, 1);
-//        return null;
+        // return null;
     }
 
     /**
      * returns the bounding box for this entity
      */
     public AxisAlignedBB getBoundingBox() {
-        //System.out.println("Get Bounding Box");
-//        if (this.riddenByEntity != null) {
-//            return this.boundingBox.func_111270_a(this.riddenByEntity.boundingBox);
-//        }
-//        return this.boundingBox;
+        // System.out.println("Get Bounding Box");
+        // if (this.riddenByEntity != null) {
+        // return
+        // this.boundingBox.func_111270_a(this.riddenByEntity.boundingBox);
+        // }
+        // return this.boundingBox;
         return this.boundingBox.copy().expand(1, 1, 1);
     }
 
     public void setCollectNearby() {
         this.collectNearby = true;
     }
+
     public void toggleDigAround() {
-        this.digAround = !this.digAround ;
-        if( this.digAround){
-            this.speed=.1f;
-        }else{
-            this.speed=.6f;
+        this.digAround = !this.digAround;
+        if (this.digAround) {
+            this.speed = .1f;
+        } else {
+            this.speed = .6f;
         }
     }
-    
+
     @Override
     public float getBrightness(float p_70013_1_) {
         return 1.0f;
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Gets the name of this command sender (usually username, but possibly
+     * "Rcon")
      */
     public String getCommandSenderName() {
         if (this.hasCustomNameTag()) {
@@ -198,54 +203,57 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
         return this.dataWatcher.getWatchableObjectInt(22);
     }
 
-//    /**
-//     * 0 = iron, 1 = gold, 2 = diamond
-//     */
-//    private int getHorseArmorIndex(ItemStack par1ItemStack) {
-//        if (par1ItemStack == null) {
-//            return 0;
-//        } else {
-//            Item item = par1ItemStack.getItem();
-//            return item == Items.iron_horse_armor ? 1 : (item == Items.golden_horse_armor ? 2 : (item == Items.diamond_horse_armor ? 3 : 0));
-//        }
-//    }
+    // /**
+    // * 0 = iron, 1 = gold, 2 = diamond
+    // */
+    // private int getHorseArmorIndex(ItemStack par1ItemStack) {
+    // if (par1ItemStack == null) {
+    // return 0;
+    // } else {
+    // Item item = par1ItemStack.getItem();
+    // return item == Items.iron_horse_armor ? 1 : (item ==
+    // Items.golden_horse_armor ? 2 : (item == Items.diamond_horse_armor ? 3 :
+    // 0));
+    // }
+    // }
 
-//    public boolean isEatingHaystack() {
-//        return this.getWatchableBoolean(32);
-//    }
-//
-//    public boolean isRearing() {
-//        return this.getWatchableBoolean(64);
-//    }
+    // public boolean isEatingHaystack() {
+    // return this.getWatchableBoolean(32);
+    // }
+    //
+    // public boolean isRearing() {
+    // return this.getWatchableBoolean(64);
+    // }
 
     public boolean func_110205_ce() {
         return this.getWatchableBoolean(16);
     }
 
-//    public void func_146086_d(ItemStack p_146086_1_) {
-//        this.dataWatcher.updateObject(22, Integer.valueOf(this.getHorseArmorIndex(p_146086_1_)));
-//    }
+    // public void func_146086_d(ItemStack p_146086_1_) {
+    // this.dataWatcher.updateObject(22,
+    // Integer.valueOf(this.getHorseArmorIndex(p_146086_1_)));
+    // }
 
     public void func_110242_l(boolean par1) {
         this.setWatchableBoolean(16, par1);
     }
 
-//    public void setChested(boolean par1) {
-//       this.setWatchableBoolean(8, par1);
-//    }
+    // public void setChested(boolean par1) {
+    // this.setWatchableBoolean(8, par1);
+    // }
 
     public void pressKey(ID id, EntityPlayer player) {
         if (worldObj.isRemote /* && (key == 6 || key == 8 || key == 9) */) {
-//            MyMod.packetPipeline.sendToServer(new VehicleControlPacket(id));
+            // MyMod.packetPipeline.sendToServer(new VehicleControlPacket(id));
             NetBus.sendToServer(new KeyboardMessage(id));
             return;
         }
-//        System.out.println("Called : " + id);
+        // System.out.println("Called : " + id);
         switch (id) {
         case JUMP: // jump;
             // setJumpPower((int) (this.jumpPower*100.0f));
             setJumpPower(90);
-//            setJumping(true);
+            // setJumping(true);
             break;
         case INVENTORY:
             openGUI(player);
@@ -264,15 +272,15 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
             // setJumpPower(10);
             // setJumping(true);
             toggleDigAround();
-            break;    
+            break;
         case INC_SPEED:
             incSpeed();
             break;
         case DEC_SPEED:
             decSpeed();
             break;
-         default:
-             break;
+        default:
+            break;
         }
     }
 
@@ -324,7 +332,8 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Returns true if this entity should push and be pushed by other entities when colliding.
+     * Returns true if this entity should push and be pushed by other entities
+     * when colliding.
      */
     public boolean canBePushed() {
         return this.riddenByEntity == null;
@@ -372,11 +381,12 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
             }
         }
     }
-//@Override
-//public boolean canAttackWithItem() {
-//    // TODO Auto-generated method stub
-//    return /*super.canAttackWithItem()*/ false;
-//}
+
+    // @Override
+    // public boolean canAttackWithItem() {
+    // // TODO Auto-generated method stub
+    // return /*super.canAttackWithItem()*/ false;
+    // }
     /**
      * Called when the mob is falling. Calculates and applies fall damage.
      */
@@ -407,11 +417,12 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Called by InventoryBasic.onInventoryChanged() on a array that is never filled.
+     * Called by InventoryBasic.onInventoryChanged() on a array that is never
+     * filled.
      */
     public void onInventoryChanged(InventoryBasic par1InventoryBasic) {
         int i = this.func_110241_cb();
-//        boolean flag = this.isHorseSaddled();
+        // boolean flag = this.isHorseSaddled();
         // this.func_110232_cE();
 
         if (this.ticksExisted > 20) {
@@ -420,14 +431,15 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
             } else if (i != this.func_110241_cb()) {
                 this.playSound("mob.horse.armor", 0.5F, 1.0F);
             }
-//            if (!flag && this.isHorseSaddled()) {
-//                this.playSound("mob.horse.leather", 0.5F, 1.0F);
-//            }
+            // if (!flag && this.isHorseSaddled()) {
+            // this.playSound("mob.horse.leather", 0.5F, 1.0F);
+            // }
         }
     }
 
     /**
-     * Checks if the entity's current position is a valid location to spawn this entity.
+     * Checks if the entity's current position is a valid location to spawn this
+     * entity.
      */
     public boolean getCanSpawnHere() {
         this.prepareChunkForSpawn();
@@ -456,9 +468,9 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
         return "mob.horse.donkey.hit";
     }
 
-//    public boolean isHorseSaddled() {
-//        return /* this.getHorseWatchableBoolean(4) */true;
-//    }
+    // public boolean isHorseSaddled() {
+    // return /* this.getHorseWatchableBoolean(4) */true;
+    // }
 
     /**
      * Returns the sound this mob makes while it's alive.
@@ -523,7 +535,8 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Get number of ticks, at least during which the living entity will be silent.
+     * Get number of ticks, at least during which the living entity will be
+     * silent.
      */
     public int getTalkInterval() {
         return 400;
@@ -536,7 +549,12 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
 
     public void openGUI(EntityPlayer player) {
         if (!this.worldObj.isRemote && (this.riddenByEntity == null || this.riddenByEntity == player) /*
-                                                                                                       * && this . isTame ( )
+                                                                                                       * &&
+                                                                                                       * this
+                                                                                                       * .
+                                                                                                       * isTame
+                                                                                                       * (
+                                                                                                       * )
                                                                                                        */) {
             int i = MathHelper.floor_double(this.posX);
             int j = MathHelper.floor_double(this.posY);
@@ -546,7 +564,8 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+     * Called when a player interacts with a mob. e.g. gets milk from a cow,
+     * gets into the saddle on a pig.
      */
     public boolean interact(EntityPlayer par1EntityPlayer) {
         ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
@@ -598,15 +617,16 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Checks if the parameter is an item which this animal can be fed to breed it (wheat, carrots or seeds depending on the animal type)
+     * Checks if the parameter is an item which this animal can be fed to breed
+     * it (wheat, carrots or seeds depending on the animal type)
      */
     public boolean isBreedingItem(ItemStack par1ItemStack) {
         return false;
     }
 
-//    private void func_110210_cH() {
-//        this.field_110278_bp = 1;
-//    }
+    // private void func_110210_cH() {
+    // this.field_110278_bp = 1;
+    // }
 
     /**
      * Called when the mob's health reaches 0.
@@ -653,70 +673,82 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
 
         }
     }
-    
+
     public void digBlocksNearby() {
-        final int xPos=MathHelper.floor_double(this.posX);
-        final int yPos=MathHelper.floor_double(this.posY);
-        final int zPos=MathHelper.floor_double(this.posZ);
-        
-        final int minX = Math.min(xPos+1, xPos-1);
-        final int maxX = Math.max(xPos+1, xPos-1);
-        
-        final int minZ = Math.min(zPos+1, zPos-1);
-        final int maxZ = Math.max(zPos+1, zPos-1);
-        
+        final int xPos = MathHelper.floor_double(this.posX);
+        final int yPos = MathHelper.floor_double(this.posY);
+        final int zPos = MathHelper.floor_double(this.posZ);
+
+        final int minX = Math.min(xPos + 1, xPos - 1);
+        final int maxX = Math.max(xPos + 1, xPos - 1);
+
+        final int minZ = Math.min(zPos + 1, zPos - 1);
+        final int maxZ = Math.max(zPos + 1, zPos - 1);
+
         final int minY = yPos;
-        final int maxY = yPos+1;
+        final int maxY = yPos + 1;
         System.out.println("Dig ");
-        int k=0;
-        for(int y=maxY; y>=minY; y--) {
-            for(int x=minX;x<= maxX;x++){
-                for(int z=minZ;z<=maxZ;z++){
-                    final Block block = worldObj.getBlock(x,y, z);
-                    final int meta= worldObj.getBlockMetadata(x,y, z);
-                    if( block==Blocks.sand|| block==Blocks.gravel || block==Blocks.dirt||block==Blocks.grass|| block==Blocks.stained_hardened_clay || block==Blocks.hardened_clay){
-                        final ArrayList<ItemStack> dropsList = block.getDrops(worldObj, x,y, z,meta, 0);
-                        
+        int k = 0;
+        for (int y = maxY; y >= minY; y--) {
+            for (int x = minX; x <= maxX; x++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    final Block block = worldObj.getBlock(x, y, z);
+                    final int meta = worldObj.getBlockMetadata(x, y, z);
+                    if (block == Blocks.sand || block == Blocks.gravel || block == Blocks.dirt || block == Blocks.grass || block == Blocks.stained_hardened_clay
+                            || block == Blocks.hardened_clay) {
+                        final ArrayList<ItemStack> dropsList = block.getDrops(worldObj, x, y, z, meta, 0);
+
                         if (dropsList != null && !dropsList.isEmpty()) {
                             int firstEmptySlot = getSizeInventory();
                             for (ItemStack itemStack : dropsList) {
                                 for (int invSlot = 0; invSlot < getSizeInventory(); invSlot++) {
-                                    final ItemStack iStack=getStackInSlot(invSlot);
+                                    final ItemStack iStack = getStackInSlot(invSlot);
                                     if (iStack == null) {
                                         firstEmptySlot = Math.min(invSlot, firstEmptySlot);
                                     } else if (iStack.isItemEqual(itemStack)) {
-                                        int newStackSize = iStack.stackSize+ itemStack.stackSize;
+                                        int newStackSize = iStack.stackSize + itemStack.stackSize;
                                         if (newStackSize <= itemStack.getMaxStackSize()) {
                                             iStack.stackSize = newStackSize;
                                             itemStack.stackSize = 0;
-//                                            this.inventoryFull = false;
+                                            // this.inventoryFull = false;
                                             break;
                                         }
                                     }
                                 }
-                                if (itemStack.stackSize != 0 && firstEmptySlot == getSizeInventory()) { // if item
-                                                                                    // stack has
-                                                                                    // not bean
-                                                                                    // added to
-                                                                                    // stack and
-                                                                                    // no empty
-                                                                                    // slot
-                                                                                    // found
-                                                                                    // then no
-                                                                                    // room to
-                                                                                    // item
-//                                    this.inventoryFull = true;
+                                if (itemStack.stackSize != 0 && firstEmptySlot == getSizeInventory()) { // if
+                                                                                                        // item
+                                    // stack has
+                                    // not bean
+                                    // added to
+                                    // stack and
+                                    // no empty
+                                    // slot
+                                    // found
+                                    // then no
+                                    // room to
+                                    // item
+                                    // this.inventoryFull = true;
                                     toggleDigAround();
                                     // drillMatrix.markBlocked();
-                                } else if (itemStack.stackSize != 0) { // if item stack has not
-                                                                        // bean added to stack
-                                                                        // then set first empty
-                                                                        // slot
-                                    setInventorySlotContents(firstEmptySlot, itemStack.copy());                         
-//                                    this.inventoryFull = false;
+                                } else if (itemStack.stackSize != 0) { // if
+                                                                       // item
+                                                                       // stack
+                                                                       // has
+                                                                       // not
+                                                                       // bean
+                                                                       // added
+                                                                       // to
+                                                                       // stack
+                                                                       // then
+                                                                       // set
+                                                                       // first
+                                                                       // empty
+                                                                       // slot
+                                    setInventorySlotContents(firstEmptySlot, itemStack.copy());
+                                    // this.inventoryFull = false;
                                 }
                             }
-                
+
                             // if(this.inventory[2]==null){
                             // this.inventory[2]=dropsList.get(0);
                             // this.onInventoryChanged();
@@ -727,39 +759,40 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
                             //
                             // }
                         }
-                        this.worldObj.setBlock(x,y,z, Blocks.air, 0, 3);
+                        this.worldObj.setBlock(x, y, z, Blocks.air, 0, 3);
                     }
-                    
-//                    System.out.println("Block: "+(k++)+" ("+x+","+z+"):"+block);
-                    
-                    
+
+                    // System.out.println("Block: "+(k++)+" ("+x+","+z+"):"+block);
+
                 }
             }
         }
-//        
-//        final List list2 = this.worldObj.getB(EntityItem.class, expand);
-//        if (!list2.isEmpty()) {
-//            for (Object o : list2) {
-//                if (o instanceof EntityItem) {
-//                    final EntityItem entityItem = (EntityItem) o;
-//                    final ItemStack itemStack = entityItem.getEntityItem();
-//                    if (itemStack != null) {
-//                        ItemStack result = inventorySupport.mergeStack(itemStack);
-//                        if (result == null) {
-//                            entityItem.setDead();
-//                        } else {
-//                            entityItem.setEntityItemStack(result);
-//                        }
-//                    }
-//                }
-//            }
-//            System.out.println(list2);
-//
-//        }
+        //
+        // final List list2 = this.worldObj.getB(EntityItem.class, expand);
+        // if (!list2.isEmpty()) {
+        // for (Object o : list2) {
+        // if (o instanceof EntityItem) {
+        // final EntityItem entityItem = (EntityItem) o;
+        // final ItemStack itemStack = entityItem.getEntityItem();
+        // if (itemStack != null) {
+        // ItemStack result = inventorySupport.mergeStack(itemStack);
+        // if (result == null) {
+        // entityItem.setDead();
+        // } else {
+        // entityItem.setEntityItemStack(result);
+        // }
+        // }
+        // }
+        // }
+        // System.out.println(list2);
+        //
+        // }
     }
 
     /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons use this to react to sunlight and start to burn.
+     * Called frequently so the entity can update its state every tick as
+     * required. For example, zombies and skeletons use this to react to
+     * sunlight and start to burn.
      */
     public void onLivingUpdate() {
         super.onLivingUpdate();
@@ -792,18 +825,18 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
             int y = MathHelper.floor_double(this.posY) + 1;
             int z = MathHelper.floor_double(this.posZ);
             if (px != x || py != y || pz != z) {
-//                Block prevBlock = this.worldObj.getBlock(px, py, pz);
-//                if (prevBlock == MyMod.light_air) {
-//                    this.worldObj.setBlock(px, py, pz, Blocks.air);
-//                } else if (prevBlock == MyMod.light_water) {
-//                    this.worldObj.setBlock(px, py, pz, Blocks.water);
-//                }
-//                Block block = this.worldObj.getBlock(x, y, z);
-//                if (block == Blocks.air) {
-//                    this.worldObj.setBlock(x, y, z, MyMod.light_air);
-//                } else if (block == Blocks.water) {
-//                    this.worldObj.setBlock(x, y, z, MyMod.light_water);
-//                }
+                // Block prevBlock = this.worldObj.getBlock(px, py, pz);
+                // if (prevBlock == MyMod.light_air) {
+                // this.worldObj.setBlock(px, py, pz, Blocks.air);
+                // } else if (prevBlock == MyMod.light_water) {
+                // this.worldObj.setBlock(px, py, pz, Blocks.water);
+                // }
+                // Block block = this.worldObj.getBlock(x, y, z);
+                // if (block == Blocks.air) {
+                // this.worldObj.setBlock(x, y, z, MyMod.light_air);
+                // } else if (block == Blocks.water) {
+                // this.worldObj.setBlock(x, y, z, MyMod.light_water);
+                // }
             }
         }
 
@@ -811,10 +844,10 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
             collectItemsNearby();
             collectNearby = false;
         }
-        
+
         if (digAround) {
             digBlocksNearby();
-//            digAround = false;
+            // digAround = false;
         }
 
     }
@@ -830,8 +863,7 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     private boolean func_110200_cJ() {
-        return this.riddenByEntity == null && this.ridingEntity == null 
-                && !this.func_110222_cv() && this.getHealth() >= this.getMaxHealth();
+        return this.riddenByEntity == null && this.ridingEntity == null && !this.func_110222_cv() && this.getHealth() >= this.getMaxHealth();
     }
 
     public void setEating(boolean par1) {
@@ -860,18 +892,22 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
                 this.field_110285_bP = 0;
             }
 
-            if (this.onGround && this.jumpPower == 0.0F /*&& this.isRearing() */&& !this.field_110294_bI) {
+            if (this.onGround && this.jumpPower == 0.0F /* && this.isRearing() */&& !this.field_110294_bI) {
                 par1 = 0.0F;
                 par2 = 0.0F;
             }
-//            System.out.println("Jump :" + this.jumpPower+" "+this.isJumping());
+            // System.out.println("Jump :" +
+            // this.jumpPower+" "+this.isJumping());
             if (this.jumpPower > 0.0F && !this.isJumping()) {
-                
+
                 this.motionY = this.getJumpStrength() * (double) this.jumpPower;
-//                System.out.println("Jump :" + this.jumpPower+" motion Y:"+this.motionY);
-//                if (this.isPotionActive(Potion.jump)) {
-//                    this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
-//                }
+                // System.out.println("Jump :" +
+                // this.jumpPower+" motion Y:"+this.motionY);
+                // if (this.isPotionActive(Potion.jump)) {
+                // this.motionY += (double) ((float)
+                // (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1)
+                // * 0.1F);
+                // }
 
                 this.setJumping(true);
                 this.isAirBorne = true;
@@ -891,7 +927,7 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
             this.jumpMovementFactor = this.getAIMoveSpeed() * 0.1F;
 
             if (!this.worldObj.isRemote) {
-                this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue()*1.6f);
+                this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue() * 1.6f);
                 super.moveEntityWithHeading(par1, par2);
             }
 
@@ -911,22 +947,23 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     public float getAIMoveSpeed() {
         return getSpeed();
     }
-    
+
     public float getSpeed() {
         return this.speed;
     }
-    
-    public void incSpeed(){
-        this.speed*=1.2f;
-        this.speed=Math.max(0.1f,this.speed);
-        this.speed=Math.min(2.0f,this.speed);
-        System.out.println("Speed : "+this.speed);
+
+    public void incSpeed() {
+        this.speed *= 1.2f;
+        this.speed = Math.max(0.1f, this.speed);
+        this.speed = Math.min(2.0f, this.speed);
+        System.out.println("Speed : " + this.speed);
     }
-    public void decSpeed(){
-        this.speed*=0.8f;
-        this.speed=Math.max(0.1f,this.speed);
-        this.speed=Math.min(2.0f,this.speed);
-        System.out.println("Speed : "+this.speed);
+
+    public void decSpeed() {
+        this.speed *= 0.8f;
+        this.speed = Math.max(0.1f, this.speed);
+        this.speed = Math.min(2.0f, this.speed);
+        System.out.println("Speed : " + this.speed);
     }
 
     /**
@@ -936,8 +973,9 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
         super.writeEntityToNBT(par1NBTTagCompound);
         inventorySupport.writeToNBT(par1NBTTagCompound);
         par1NBTTagCompound.setFloat("RunSpeed", speed);
-//        par1NBTTagCompound.setBoolean("EatingHaystack", this.isEatingHaystack());
-//        par1NBTTagCompound.setBoolean("Bred", this.func_110205_ce());
+        // par1NBTTagCompound.setBoolean("EatingHaystack",
+        // this.isEatingHaystack());
+        // par1NBTTagCompound.setBoolean("Bred", this.func_110205_ce());
 
     }
 
@@ -947,10 +985,10 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
         super.readEntityFromNBT(par1NBTTagCompound);
         inventorySupport.readFromNBT(par1NBTTagCompound);
-        speed=par1NBTTagCompound.getFloat("RunSpeed");
-        this.speed=Math.max(0.1f,this.speed);
-        this.speed=Math.min(2.0f,this.speed);
-//        this.func_110242_l(par1NBTTagCompound.getBoolean("Bred"));
+        speed = par1NBTTagCompound.getFloat("RunSpeed");
+        this.speed = Math.max(0.1f, this.speed);
+        this.speed = Math.min(2.0f, this.speed);
+        // this.func_110242_l(par1NBTTagCompound.getBoolean("Bred"));
         IAttributeInstance iattributeinstance = this.getAttributeMap().getAttributeInstanceByName("Speed");
     }
 
@@ -1049,14 +1087,17 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a new stack.
+     * Removes from an inventory slot (first arg) up to a specified number
+     * (second arg) of items and returns them in a new stack.
      */
     public ItemStack decrStackSize(int slot, int size) {
         return this.inventorySupport.decrStackSize(slot, size);
     }
 
     /**
-     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem - like when you close a workbench GUI.
+     * When some containers are closed they call this on each slot, then drop
+     * whatever it returns as an EntityItem - like when you close a workbench
+     * GUI.
      */
     public ItemStack getStackInSlotOnClosing(int slot) {
         ItemStack stack = this.inventorySupport.getStackInSlot(slot);
@@ -1067,7 +1108,8 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     * Sets the given item stack to the specified slot in the inventory (can be
+     * crafting or armor sections).
      */
     public void setInventorySlotContents(int slot, ItemStack itemStack) {
         this.inventorySupport.setSlotContents(slot, itemStack);
@@ -1099,7 +1141,8 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Do not make give this method the name canInteractWith because it clashes with Container
+     * Do not make give this method the name canInteractWith because it clashes
+     * with Container
      */
     public boolean isUseableByPlayer(EntityPlayer player) {
         // return /*this.worldObj.getTileEntity((int)this.posX, (int)this.posY,
@@ -1116,7 +1159,8 @@ public class EntityVehicleBase extends EntityLiving implements IInventory, IKeyC
     }
 
     /**
-     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
+     * Returns true if automation is allowed to insert the given stack (ignoring
+     * stack size) into the given slot.
      */
     public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
         return true;
