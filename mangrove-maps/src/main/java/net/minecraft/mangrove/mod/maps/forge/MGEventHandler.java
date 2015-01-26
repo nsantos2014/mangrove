@@ -1,6 +1,5 @@
 package net.minecraft.mangrove.mod.maps.forge;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.mangrove.mod.maps.Mw;
 import net.minecraft.mangrove.mod.maps.overlay.OverlaySlime;
 import net.minecraft.util.ChatComponentText;
@@ -8,12 +7,13 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class EventHandler {
+public class MGEventHandler {
 	
 	Mw mw;
 	
-	public EventHandler(Mw mw) {
+	public MGEventHandler(Mw mw) {
 		this.mw = mw;
 	}
 	

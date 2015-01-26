@@ -3,6 +3,7 @@ package net.minecraft.mangrove.mod.maps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -154,12 +155,13 @@ public class Render {
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	        Tessellator tes = Tessellator.instance;
-	        tes.startDrawingQuads();
-	        tes.addVertexWithUV(x + w, y,     zDepth, u2, v1);
-	        tes.addVertexWithUV(x,     y,     zDepth, u1, v1);
-			tes.addVertexWithUV(x,     y + h, zDepth, u1, v2);
-			tes.addVertexWithUV(x + w, y + h, zDepth, u2, v2);
+	        Tessellator tes = Tessellator.getInstance();
+	        WorldRenderer render = tes.getWorldRenderer();
+	        render.startDrawingQuads();
+	        render.addVertexWithUV(x + w, y,     zDepth, u2, v1);
+	        render.addVertexWithUV(x,     y,     zDepth, u1, v1);
+	        render.addVertexWithUV(x,     y + h, zDepth, u1, v2);
+			render.addVertexWithUV(x + w, y + h, zDepth, u2, v2);
 	        tes.draw();
 			GL11.glDisable(GL11.GL_BLEND);
 		} catch (NullPointerException e) {
@@ -173,12 +175,13 @@ public class Render {
 		GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Tessellator tes = Tessellator.instance;
-        tes.startDrawing(GL11.GL_TRIANGLE_FAN);
-        tes.addVertex(x + (length * Math.cos(angle)), y + (length * Math.sin(angle)), zDepth);
-        tes.addVertex(x + (length * 0.5D * Math.cos(angle - arrowBackAngle)), y + (length * 0.5D * Math.sin(angle - arrowBackAngle)), zDepth);
-        tes.addVertex(x + (length * 0.3D * Math.cos(angle + Math.PI)), y + (length * 0.3D * Math.sin(angle + Math.PI)), zDepth);
-        tes.addVertex(x + (length * 0.5D * Math.cos(angle + arrowBackAngle)), y + (length * 0.5D * Math.sin(angle + arrowBackAngle)), zDepth);
+        Tessellator tes = Tessellator.getInstance();
+        WorldRenderer render = tes.getWorldRenderer();
+        render.startDrawing(GL11.GL_TRIANGLE_FAN);
+        render.addVertex(x + (length * Math.cos(angle)), y + (length * Math.sin(angle)), zDepth);
+        render.addVertex(x + (length * 0.5D * Math.cos(angle - arrowBackAngle)), y + (length * 0.5D * Math.sin(angle - arrowBackAngle)), zDepth);
+        render.addVertex(x + (length * 0.3D * Math.cos(angle + Math.PI)), y + (length * 0.3D * Math.sin(angle + Math.PI)), zDepth);
+        render.addVertex(x + (length * 0.5D * Math.cos(angle + arrowBackAngle)), y + (length * 0.5D * Math.sin(angle + arrowBackAngle)), zDepth);
         tes.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -188,11 +191,12 @@ public class Render {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        Tessellator tes = Tessellator.instance;
-        tes.startDrawing(GL11.GL_TRIANGLES);
-        tes.addVertex(x1, y1, zDepth);
-        tes.addVertex(x2, y2, zDepth);
-        tes.addVertex(x3, y3, zDepth);
+        Tessellator tes = Tessellator.getInstance();
+        WorldRenderer render = tes.getWorldRenderer();
+        render.startDrawing(GL11.GL_TRIANGLES);
+        render.addVertex(x1, y1, zDepth);
+        render.addVertex(x2, y2, zDepth);
+        render.addVertex(x3, y3, zDepth);
         tes.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -202,12 +206,13 @@ public class Render {
 		GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Tessellator tes = Tessellator.instance;
-        tes.startDrawingQuads();
-        tes.addVertex(x + w, y,     zDepth);
-        tes.addVertex(x,     y,     zDepth);
-		tes.addVertex(x,     y + h, zDepth);
-		tes.addVertex(x + w, y + h, zDepth);
+        Tessellator tes = Tessellator.getInstance();
+        WorldRenderer render = tes.getWorldRenderer();
+        render.startDrawingQuads();
+        render.addVertex(x + w, y,     zDepth);
+        render.addVertex(x,     y,     zDepth);
+        render.addVertex(x,     y + h, zDepth);
+		render.addVertex(x + w, y + h, zDepth);
         tes.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);
@@ -217,14 +222,15 @@ public class Render {
 		GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Tessellator tes = Tessellator.instance;
-        tes.startDrawing(GL11.GL_TRIANGLE_FAN);
-        tes.addVertex(x, y, zDepth);
+        Tessellator tes = Tessellator.getInstance();
+        WorldRenderer render = tes.getWorldRenderer();
+        render.startDrawing(GL11.GL_TRIANGLE_FAN);
+        render.addVertex(x, y, zDepth);
         // for some the circle is only drawn if theta is decreasing rather than ascending
         double end = Math.PI * 2.0;
         double incr = end / circleSteps;
         for (double theta = -incr; theta < end; theta += incr) {
-        	tes.addVertex(x + (r * Math.cos(-theta)), y + (r * Math.sin(-theta)), zDepth);
+        	render.addVertex(x + (r * Math.cos(-theta)), y + (r * Math.sin(-theta)), zDepth);
         }
         tes.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -235,15 +241,16 @@ public class Render {
 		GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		Tessellator tes = Tessellator.instance;
-        tes.startDrawing(GL11.GL_TRIANGLE_STRIP);
+        Tessellator tes = Tessellator.getInstance();
+        WorldRenderer render = tes.getWorldRenderer();
+        render.startDrawing(GL11.GL_TRIANGLE_STRIP);
         // for some the circle is only drawn if theta is decreasing rather than ascending
         double end = Math.PI * 2.0;
         double incr = end / circleSteps;
         double r2 = r + width;
         for (double theta = -incr; theta < end; theta += incr) {
-        	tes.addVertex(x + (r * Math.cos(-theta)), y + (r * Math.sin(-theta)), zDepth);
-        	tes.addVertex(x + (r2 * Math.cos(-theta)), y + (r2 * Math.sin(-theta)), zDepth);
+        	render.addVertex(x + (r * Math.cos(-theta)), y + (r * Math.sin(-theta)), zDepth);
+        	render.addVertex(x + (r2 * Math.cos(-theta)), y + (r2 * Math.sin(-theta)), zDepth);
         }
         tes.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -264,7 +271,7 @@ public class Render {
 	public static void drawString(int x, int y, int colour, String formatString, Object...args) {
 		Minecraft mc = Minecraft.getMinecraft();
 		//mc.renderEngine.resetBoundTexture();
-		FontRenderer fr = mc.fontRenderer;
+		FontRenderer fr = mc.fontRendererObj;
 		String s = String.format(formatString, args);
 		fr.drawStringWithShadow(s, x, y, colour);
 	}
@@ -272,7 +279,7 @@ public class Render {
 	public static void drawCentredString(int x, int y, int colour, String formatString, Object...args) {
 		Minecraft mc = Minecraft.getMinecraft();
 		//mc.renderEngine.resetBoundTexture();
-		FontRenderer fr = mc.fontRenderer;
+		FontRenderer fr = mc.fontRendererObj;
 		String s = String.format(formatString, args);
 		int w = fr.getStringWidth(s);
 		fr.drawStringWithShadow(s, x - (w / 2), y, colour);

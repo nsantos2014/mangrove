@@ -10,7 +10,7 @@ import net.minecraft.mangrove.mod.maps.overlay.OverlayGrid;
 import net.minecraft.mangrove.mod.maps.overlay.OverlayMobs;
 import net.minecraft.mangrove.mod.maps.overlay.OverlaySlime;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class ClientProxy extends CommonProxy {
 	
@@ -22,7 +22,7 @@ public class ClientProxy extends CommonProxy {
 	
 	public void load() {
 		Mw mw = new Mw(this.config);
-		MinecraftForge.EVENT_BUS.register(new EventHandler(mw));
+		MinecraftForge.EVENT_BUS.register(new MGEventHandler(mw));
 		FMLCommonHandler.instance().bus().register(new MwKeyHandler());
 		// temporary workaround for user defined key bindings not being loaded
 		// at game start. see https://github.com/MinecraftForge/FML/issues/378

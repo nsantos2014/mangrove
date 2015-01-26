@@ -1,5 +1,7 @@
 package net.minecraft.mangrove.mod.maps.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.mangrove.mod.maps.Mw;
@@ -39,11 +41,11 @@ public class MwGuiOptions extends GuiScreen {
         super.drawScreen(mouseX, mouseY, f);
     }
 
-    protected void mouseClicked(int x, int y, int button) {
+    protected void mouseClicked(int x, int y, int button) throws IOException {
         super.mouseClicked(x, y, button);
     }
 
-    protected void keyTyped(char c, int k) {
+    protected void keyTyped(char c, int k) throws IOException {
         if (this.optionSlot.keyTyped(c, k)) {
             super.keyTyped(c, k);
         }

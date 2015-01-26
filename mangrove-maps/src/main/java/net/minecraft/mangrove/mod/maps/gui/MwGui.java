@@ -1,6 +1,7 @@
 package net.minecraft.mangrove.mod.maps.gui;
 
 import java.awt.Point;
+import java.io.IOException;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -16,12 +17,12 @@ import net.minecraft.mangrove.mod.maps.map.mapmode.FullScreenMapMode;
 import net.minecraft.mangrove.mod.maps.map.mapmode.MapMode;
 import net.minecraft.mangrove.mod.maps.tasks.MergeTask;
 import net.minecraft.mangrove.mod.maps.tasks.RebuildRegionsTask;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MwGui extends GuiScreen {
@@ -141,9 +142,9 @@ public class MwGui extends GuiScreen {
     
     public int getHeightAtBlockPos(int bX, int bZ) {
     	int bY = 0;
-    	int worldDimension = this.mw.mc.theWorld.provider.dimensionId;
+    	int worldDimension = this.mw.mc.theWorld.provider.getDimensionId();
     	if ((worldDimension == this.mapView.getDimension()) && (worldDimension != -1)) {
-    		bY = this.mw.mc.theWorld.getChunkFromBlockCoords(bX, bZ).getHeightValue(bX & 0xf, bZ & 0xf);
+    		bY = this.mw.mc.theWorld.getChunkFromBlockCoords(new BlockPos(bX, 0,bZ)).getHeight(bX & 0xf, bZ & 0xf);
     	}
     	return bY;
     }
@@ -307,7 +308,7 @@ public class MwGui extends GuiScreen {
     // override GuiScreen's handleMouseInput to process
     // the scroll wheel.
     @Override
-    public void handleMouseInput() {
+    public void handleMouseInput() throws IOException {
     	if (MwAPI.getCurrentDataProvider() != null && MwAPI.getCurrentDataProvider().onMouseInput(this.mapView, this.mapMode))
     		return;
     	
@@ -489,8 +490,9 @@ public class MwGui extends GuiScreen {
           	s = String.format("cursor: (%d, ?, %d)", bX, bZ);
           }
     	 if (this.mc.theWorld != null) {
-    		 if (!this.mc.theWorld.getChunkFromBlockCoords(bX, bZ).isEmpty()) {
-    			 s += String.format(", biome: %s", this.mc.theWorld.getBiomeGenForCoords(bX, bZ).biomeName);
+    		 BlockPos pos = new BlockPos(bX, 0, bZ);
+			if (!this.mc.theWorld.getChunkFromBlockCoords(pos).isEmpty()) {
+    			 s += String.format(", biome: %s", this.mc.theWorld.getBiomeGenForCoords(pos).biomeName);
     		 }
     	 }
          
@@ -605,7 +607,7 @@ public class MwGui extends GuiScreen {
         
         // draw name of player under mouse cursor
         if (this.isPlayerNearScreenPos(mouseX, mouseY)) {
-        	this.drawMouseOverHint(mouseX, mouseY, this.mc.thePlayer.getDisplayName(),
+        	this.drawMouseOverHint(mouseX, mouseY, this.mc.thePlayer.getDisplayName().getFormattedText(),
         			this.mw.playerXInt,
 					this.mw.playerYInt,
 					this.mw.playerZInt);

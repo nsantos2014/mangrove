@@ -31,9 +31,10 @@ public class ChunkManager {
 	// TODO: make this a full copy of chunk data to prevent possible race conditions
 	public static MwChunk copyToMwChunk(Chunk chunk) {
 		
-		byte[][] msbArray = new byte[16][];
-		byte[][] lsbArray = new byte[16][];
-		byte[][] metaArray = new byte[16][];
+//		byte[][] msbArray = new byte[16][];
+//		byte[][] lsbArray = new byte[16][];
+//		byte[][] metaArray = new byte[16][];
+		char[][] dataArray = new char[16][];
 		byte[][] lightingArray = new byte[16][];
 		
 		ExtendedBlockStorage[] storageArrays = chunk.getBlockStorageArray();
@@ -41,16 +42,16 @@ public class ChunkManager {
 			for (ExtendedBlockStorage storage : storageArrays) {
 				if (storage != null) {
 					int y = (storage.getYLocation() >> 4) & 0xf;
-					lsbArray[y] = storage.getBlockLSBArray();
-					msbArray[y] = (storage.getBlockMSBArray() != null) ? storage.getBlockMSBArray().data : null;
-					metaArray[y] = (storage.getMetadataArray() != null) ? storage.getMetadataArray().data : null;
-					lightingArray[y] = (storage.getBlocklightArray() != null) ? storage.getBlocklightArray().data : null;
+//					lsbArray[y] = storage.getBlockLSBArray();
+//					msbArray[y] = (storage.getBlockMSBArray() != null) ? storage.getBlockMSBArray().data : null;
+//					metaArray[y] = (storage.getMetadataArray() != null) ? storage.getMetadataArray().data : null;
+					dataArray[y] = (storage.getData() != null) ? storage.getData() : null;
+					lightingArray[y] = (storage.getBlocklightArray() != null) ? storage.getBlocklightArray().getData() : null;
 				}
 			}
 		}
 		
-		return new MwChunk(chunk.xPosition, chunk.zPosition, chunk.worldObj.provider.dimensionId,
-				msbArray, lsbArray, metaArray, lightingArray, chunk.getBiomeArray());
+		return new MwChunk(chunk.xPosition, chunk.zPosition, chunk.getWorld().provider.getDimensionId(),dataArray, lightingArray, chunk.getBiomeArray());
 	}
 	
 	public synchronized void addChunk(Chunk chunk) {

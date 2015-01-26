@@ -1,7 +1,11 @@
 package net.minecraft.mangrove.mod.maps.overlay;
 
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.mangrove.mod.maps.api.IMwChunkOverlay;
 import net.minecraft.mangrove.mod.maps.api.IMwDataProvider;
@@ -10,13 +14,6 @@ import net.minecraft.mangrove.mod.maps.map.mapmode.MapMode;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import com.sun.xml.internal.stream.Entity;
 
 public class OverlayMobs implements IMwDataProvider {
 
@@ -54,9 +51,9 @@ public class OverlayMobs implements IMwDataProvider {
 		// We should pass the center of the map too to reduce the display like in this case
 		// and the zoom lvl, to provide higher level informations
 		
-		final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+		final EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         final World world = player.getEntityWorld();
-        if (world.provider.dimensionId != dim)
+        if (world.provider.getDimensionId() != dim)
 			return new ArrayList<IMwChunkOverlay>();
 		
 //		int minChunkX = (MathHelper.ceiling_double_int(minX) >> 4) - 1;
@@ -71,7 +68,7 @@ public class OverlayMobs implements IMwDataProvider {
 //		int limitMinZ = Math.max(minChunkZ, cZ - 100);
 //		int limitMaxZ = Math.min(maxChunkZ, cZ + 100);
 
-		final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(minX, player.posY-5, minZ, maxX, player.posY+5, maxZ);
+		final AxisAlignedBB boundingBox = AxisAlignedBB.fromBounds(minX, player.posY-5, minZ, maxX, player.posY+5, maxZ);
         final List list = world.getEntitiesWithinAABB(EntityLiving.class, boundingBox);
 		//System.out.println("Entity : "+list.size()+":"+boundingBox);
         final ArrayList<IMwChunkOverlay> chunks = new ArrayList<IMwChunkOverlay>();

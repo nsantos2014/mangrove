@@ -3,8 +3,8 @@ package net.minecraft.mangrove.mod.maps.gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.mangrove.mod.maps.map.Marker;
 import net.minecraft.mangrove.mod.maps.map.MarkerManager;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class MwGuiMarkerDialog extends MwGuiTextDialog {

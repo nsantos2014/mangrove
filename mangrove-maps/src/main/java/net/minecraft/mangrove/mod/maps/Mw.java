@@ -1,5 +1,9 @@
 package net.minecraft.mangrove.mod.maps;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.settings.KeyBinding;
@@ -8,7 +12,13 @@ import net.minecraft.mangrove.mod.maps.forge.MwForge;
 import net.minecraft.mangrove.mod.maps.forge.MwKeyHandler;
 import net.minecraft.mangrove.mod.maps.gui.MwGui;
 import net.minecraft.mangrove.mod.maps.gui.MwGuiMarkerDialog;
-import net.minecraft.mangrove.mod.maps.map.*;
+import net.minecraft.mangrove.mod.maps.map.MapTexture;
+import net.minecraft.mangrove.mod.maps.map.MapView;
+import net.minecraft.mangrove.mod.maps.map.Marker;
+import net.minecraft.mangrove.mod.maps.map.MarkerManager;
+import net.minecraft.mangrove.mod.maps.map.MiniMap;
+import net.minecraft.mangrove.mod.maps.map.Trail;
+import net.minecraft.mangrove.mod.maps.map.UndergroundTexture;
 import net.minecraft.mangrove.mod.maps.mobs.MobMarker;
 import net.minecraft.mangrove.mod.maps.overlay.OverlaySlime;
 import net.minecraft.mangrove.mod.maps.region.BlockColours;
@@ -18,10 +28,6 @@ import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
 
@@ -583,7 +589,7 @@ public class Mw {
 		//		world.getWorldInfo().getWorldName(),
 		//		world.provider.dimensionId);
 		
-		this.playerDimension = world.provider.dimensionId;
+		this.playerDimension = world.provider.getDimensionId();
 		if (this.ready) {
 			this.addDimension(this.playerDimension);
 			this.miniMap.view.setDimension(this.playerDimension);
@@ -648,7 +654,7 @@ public class Mw {
 	// add chunk to the set of loaded chunks
 	public void onChunkLoad(Chunk chunk) {
 		this.load();
-		if ((chunk != null) && (chunk.worldObj instanceof net.minecraft.client.multiplayer.WorldClient)) {
+		if ((chunk != null) && (chunk.getWorld() instanceof net.minecraft.client.multiplayer.WorldClient)) {
 			if (this.ready) {
 				this.chunkManager.addChunk(chunk);
 			} else {
@@ -660,7 +666,7 @@ public class Mw {
 	// remove chunk from the set of loaded chunks.
 	// convert to mwchunk and write chunk to region file if in multiplayer.
 	public void onChunkUnload(Chunk chunk) {
-		if (this.ready && (chunk != null) && (chunk.worldObj instanceof net.minecraft.client.multiplayer.WorldClient)) {
+		if (this.ready && (chunk != null) && (chunk.getWorld() instanceof net.minecraft.client.multiplayer.WorldClient)) {
 			this.chunkManager.removeChunk(chunk);
 		}
 	}

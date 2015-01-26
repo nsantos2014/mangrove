@@ -223,7 +223,7 @@ public class MwGuiOptionSlot extends GuiSlot {
 	}
 
     @Override
-    protected void drawSlot(int i, int x, int y, int i4, Tessellator tessellator, int i5, int i6){
+    protected void drawSlot(int i, int x, int y, int i4, int i5, int i6){
         GuiButton button = buttons[i];
         button.xPosition = x;
         button.yPosition = y;

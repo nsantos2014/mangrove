@@ -3,6 +3,13 @@ package net.minecraft.mangrove.mod.maps.region;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 
 public class MwChunk implements IChunk {
 	public static final int SIZE = 16;
@@ -11,27 +18,32 @@ public class MwChunk implements IChunk {
 	public final int z;
 	public final int dimension;
 	
-	public final byte[][] msbArray;
-	public final byte[][] lsbArray;
-	public final byte[][] metaArray;
+//	public final byte[][] msbArray;
+//	public final byte[][] lsbArray;
+//	public final byte[][] metaArray;
+	public final char[][] dataArray;
 	public final byte[][] lightingArray;
 	
 	public final byte[] biomeArray;
 	
 	public final int maxY;
 	
-	public MwChunk(int x, int z, int dimension, byte[][] msbArray, byte[][] lsbArray, byte[][] metaArray, byte[][] lightingArray, byte[] biomeArray) {
+//	public MwChunk(int x, int z, int dimension, byte[][] msbArray, byte[][] lsbArray, byte[][] metaArray, byte[][] lightingArray, byte[] biomeArray) {
+//		
+//	}
+	public MwChunk(int x, int z, int dimension, char[][] dataArray,byte[][] lightingArray, byte[] biomeArray) {
 		this.x = x;
 		this.z = z;
 		this.dimension = dimension;
-		this.msbArray = msbArray;
-		this.lsbArray = lsbArray;
-		this.metaArray = metaArray;
+//		this.msbArray = msbArray;
+//		this.lsbArray = lsbArray;
+//		this.metaArray = metaArray;
+		this.dataArray = dataArray;
 		this.biomeArray = biomeArray;
 		this.lightingArray = lightingArray;
 		int maxY = 0;
 		for (int y = 0; y < 16; y++) {
-			if (lsbArray[y] != null) {
+			if (dataArray[y] != null) {
 				maxY = (y << 4) + 15;
 			}
 		}
@@ -46,9 +58,10 @@ public class MwChunk implements IChunk {
 	public static MwChunk read(int x, int z, int dimension, RegionFileCache regionFileCache) {
 		
 		byte[] biomeArray = null;
-		byte[][] msbArray = new byte[16][];
-		byte[][] lsbArray = new byte[16][];
-		byte[][] metaArray = new byte[16][];
+		char[][] dataArray = new char[16][];
+//		byte[][] msbArray = new byte[16][];
+//		byte[][] lsbArray = new byte[16][];
+//		byte[][] metaArray = new byte[16][];
 		byte[][] lightingArray = new byte[16][];
 		
         DataInputStream dis = null;
@@ -106,9 +119,16 @@ public class MwChunk implements IChunk {
 					Nbt section = sections.getChild(i);
 					if (!section.isNull()) {
 						int y = section.getChild("Y").getByte();
-						lsbArray[y & 0xf] = section.getChild("Blocks").getByteArray();
-						msbArray[y & 0xf] = section.getChild("Add").getByteArray();
-						metaArray[y & 0xf] = section.getChild("Data").getByteArray();
+//						lsbArray[y & 0xf] = section.getChild("Blocks").getByteArray();
+//						msbArray[y & 0xf] = section.getChild("Add").getByteArray();
+//						metaArray[y & 0xf] = section.getChild("Data").getByteArray();
+						
+						
+						ByteBuffer byteBuffer = ByteBuffer.wrap(section.getChild("BlockState").getByteArray());
+						CharBuffer charBuffer = Charset.forName("UTF-8").decode(byteBuffer);
+						dataArray[y & 0xf] = charBuffer.array();
+						
+						
 					}
 				}
 				biomeArray = level.getChild("Biomes").getByteArray();
@@ -126,7 +146,7 @@ public class MwChunk implements IChunk {
 			//this.log("MwChunk.read: chunk (%d, %d) input stream is null", this.x, this.z); 
 		}
 		
-		return new MwChunk(x, z, dimension, msbArray, lsbArray, metaArray, lightingArray, biomeArray);
+		return new MwChunk(x, z, dimension, dataArray,lightingArray, biomeArray);
 	}
 	
 	public boolean isEmpty() {
@@ -151,17 +171,30 @@ public class MwChunk implements IChunk {
 		return this.maxY;
 	}
 	
-	public int getBlockAndMetadata(int x, int y, int z) {
-		int yi = (y >> 4) & 0xf;
+    public IBlockState get(int x, int y, int z)  {
+    	int yi = (y >> 4) & 0xf;
 		int offset = ((y & 0xf) << 8) | ((z & 0xf) << 4) | (x & 0xf);
 		
-		int lsb  = ((this.lsbArray  != null) && (this.lsbArray[yi]  != null)) ? this.lsbArray[yi][offset]       : 0;
-		int msb  = ((this.msbArray  != null) && (this.msbArray[yi]  != null)) ? this.msbArray[yi][offset  >> 1] : 0;
-		int meta = ((this.metaArray != null) && (this.metaArray[yi] != null)) ? this.metaArray[yi][offset >> 1] : 0;
-		
-		return ((offset & 1) == 1) ?
-				((msb & 0xf0) << 8)  | ((lsb & 0xff) << 4) | ((meta & 0xf0) >> 4) :
-				((msb & 0x0f) << 12) | ((lsb & 0xff) << 4) | (meta & 0x0f);
+        IBlockState iblockstate = (IBlockState)Block.BLOCK_STATE_IDS.getByValue(this.dataArray[yi][offset]);
+        return iblockstate != null ? iblockstate : Blocks.air.getDefaultState();
+    }
+	
+	public int getBlockAndMetadata(int x, int y, int z) {
+		IBlockState istate = get(x, y, z);
+		Block block = istate.getBlock();
+		int blockId=Block.getIdFromBlock(block);
+		int meta= block.getMetaFromState(istate);
+		return ((blockId &0x0ff)<<4)| (meta & 0xf); 
+//		int yi = (y >> 4) & 0xf;
+//		int offset = ((y & 0xf) << 8) | ((z & 0xf) << 4) | (x & 0xf);
+//		
+//		int lsb  = ((this.lsbArray  != null) && (this.lsbArray[yi]  != null)) ? this.lsbArray[yi][offset]       : 0;
+//		int msb  = ((this.msbArray  != null) && (this.msbArray[yi]  != null)) ? this.msbArray[yi][offset  >> 1] : 0;
+//		int meta = ((this.metaArray != null) && (this.metaArray[yi] != null)) ? this.metaArray[yi][offset >> 1] : 0;
+//		
+//		return ((offset & 1) == 1) ?
+//				((msb & 0xf0) << 8)  | ((lsb & 0xff) << 4) | ((meta & 0xf0) >> 4) :
+//				((msb & 0x0f) << 12) | ((lsb & 0xff) << 4) | (meta & 0x0f);
 	}
 	
 	public Nbt getNbt() {
@@ -172,15 +205,23 @@ public class MwChunk implements IChunk {
 			
 			section.addChild(new Nbt(Nbt.TAG_BYTE, "Y", (byte) y));
 			
-			if ((this.lsbArray != null) && (this.lsbArray[y] != null)) {
-				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "Blocks", this.lsbArray[y]));
+//			if ((this.lsbArray != null) && (this.lsbArray[y] != null)) {
+//				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "Blocks", this.lsbArray[y]));
+//			}
+//			if ((this.msbArray != null) && (this.msbArray[y] != null)) {
+//				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "Add", this.msbArray[y]));
+//			}
+//			if ((this.metaArray != null) && (this.metaArray[y] != null)) {
+//				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "Data", this.metaArray[y]));
+//			}
+			
+			if ((this.dataArray != null) && (this.dataArray[y] != null)) {
+				CharBuffer charBuffer = CharBuffer.wrap(dataArray[y]);
+				ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "BlockState", byteBuffer.array()));
 			}
-			if ((this.msbArray != null) && (this.msbArray[y] != null)) {
-				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "Add", this.msbArray[y]));
-			}
-			if ((this.metaArray != null) && (this.metaArray[y] != null)) {
-				section.addChild(new Nbt(Nbt.TAG_BYTE_ARRAY, "Data", this.metaArray[y]));
-			}
+			
+		    
 			
 			sections.addChild(section);
 		}

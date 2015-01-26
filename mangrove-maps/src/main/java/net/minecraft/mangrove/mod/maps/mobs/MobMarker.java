@@ -1,20 +1,15 @@
 package net.minecraft.mangrove.mod.maps.mobs;
 
 import java.awt.Point;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.mangrove.mod.maps.Render;
-import net.minecraft.mangrove.mod.maps.api.IMwChunkOverlay;
 import net.minecraft.mangrove.mod.maps.map.MapView;
 import net.minecraft.mangrove.mod.maps.map.mapmode.MapMode;
-import net.minecraft.mangrove.mod.maps.overlay.OverlayMobs.MobChunkOverlay;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -26,11 +21,11 @@ public class MobMarker {
     }
     
     public void draw(MapMode mapMode, MapView mapView, int borderColour) {
-        final EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+        final EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
         final World world = player.getEntityWorld();
-        double scale = mapView.getDimensionScaling(world.provider.dimensionId);
+        double scale = mapView.getDimensionScaling(world.provider.getDimensionId());
         
-        final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(player.posX-50, player.posY-10, player.posZ-50,  player.posX+50, player.posY+10, player.posZ+50);
+        final AxisAlignedBB boundingBox = AxisAlignedBB.fromBounds(player.posX-50, player.posY-10, player.posZ-50,  player.posX+50, player.posY+10, player.posZ+50);
         final List list = world.getEntitiesWithinAABB(EntityLiving.class, boundingBox);
         //System.out.println("Entity : "+list.size()+":"+boundingBox);
         for (final Object entityObj:list){
@@ -56,7 +51,7 @@ public class MobMarker {
         double mSize = mapMode.markerSize;
         double halfMSize = mapMode.markerSize / 2.0;
         
-        net.minecraft.client.renderer.entity.Render renderer = RenderManager.instance.getEntityRenderObject(entityLiving);
+        net.minecraft.client.renderer.entity.Render renderer = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entityLiving);
         
         Render.setColour(borderColour);        
         Render.drawRect(p.x - halfMSize, p.y - halfMSize, mSize, mSize);

@@ -2,19 +2,20 @@ package net.minecraft.mangrove.mod.hud;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.util.Direction;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import org.lwjgl.opengl.GL11;
 
 public class HudController {
 
@@ -55,7 +56,7 @@ public class HudController {
 
 		WorldClient world = mc.theWorld;
 
-		EntityClientPlayerMP player = mc.thePlayer;
+		EntityPlayerSP player = mc.thePlayer;
 
 		if (!mc.gameSettings.showDebugInfo && (world != null)
 				&& (player != null)) {
@@ -65,8 +66,8 @@ public class HudController {
 			int heading = MathHelper
 					.floor_double((double) (mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 			ArrayList<String> left = new ArrayList<String>();
-			Chunk chunk = this.mc.theWorld.getChunkFromBlockCoords(x, z);
-			left.add(String.format("[%s]", Direction.directions[heading]));
+			Chunk chunk = this.mc.theWorld.getChunkFromBlockCoords(new BlockPos(x,0, z));
+			left.add(String.format("[%s]", EnumFacing.getHorizontal(heading)));
 			left.add(String.format("x: %d ", x));
 			left.add(String.format("y: %d ", y));
 			left.add(String.format("z: %d ", z));
@@ -81,7 +82,7 @@ public class HudController {
 			left.add(String.format("Days: %02d %s", days, moonPhases[world.getMoonPhase()]));
 
 			left.add(String.format("Time: %02d:%02d",(7+hours)%24, minutes));
-			FontRenderer fontRenderer = mc.fontRenderer;
+			FontRenderer fontRenderer = mc.fontRendererObj;
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glDisable(GL11.GL_LIGHTING);
 

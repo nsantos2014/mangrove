@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.mangrove.mod.maps.forge.MwForge;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.chunk.Chunk;
@@ -68,7 +68,7 @@ public class MwUtil {
 	}
 	
 	public static void printBoth(String msg) {
-		EntityClientPlayerMP thePlayer = Minecraft.getMinecraft().thePlayer;
+		EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
 		if (thePlayer != null) {
 			thePlayer.addChatMessage(new ChatComponentText(msg));
 		}
