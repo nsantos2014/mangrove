@@ -162,7 +162,7 @@ public class AutobenchContainer extends MGContainer
      */
     public void onCraftMatrixChanged(IInventory par1IInventory)
     {
-        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.autobench.getWorldObj()));
+        this.craftResult.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.autobench.getWorld()));
     }
 
     /**
@@ -172,7 +172,7 @@ public class AutobenchContainer extends MGContainer
     {
         super.onContainerClosed(par1EntityPlayer);
 
-        if (!this.autobench.getWorldObj().isRemote)
+        if (!this.autobench.getWorld().isRemote)
         {
             for (int i = 0; i < 9; ++i)
             {
@@ -253,9 +253,10 @@ public class AutobenchContainer extends MGContainer
         return itemstack;
     }
 
-    public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot)
+    @Override
+    public boolean canMergeSlot(ItemStack par1ItemStack, Slot par2Slot)
     {
-        return par2Slot.inventory != this.craftResult && super.func_94530_a(par1ItemStack, par2Slot);
+        return par2Slot.inventory != this.craftResult && super.canMergeSlot(par1ItemStack, par2Slot);
     }
 	public void setTemplate() {
 		

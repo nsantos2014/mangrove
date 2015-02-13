@@ -1,17 +1,18 @@
 package net.minecraft.mangrove.network;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.mangrove.core.ITileUpdatable;
 import net.minecraft.mangrove.core.json.JSON;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import com.google.gson.JsonObject;
-
-import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 public class TileEntityMessage implements IMessage{
 	private int packetId;
@@ -24,9 +25,9 @@ public class TileEntityMessage implements IMessage{
 	}
 	public TileEntityMessage(TileEntity tile){
 		this.packetId=0;
-		this.xCoord=tile.xCoord;
-		this.yCoord=tile.yCoord;
-		this.zCoord=tile.zCoord;
+		this.xCoord=tile.getPos().getX();
+		this.yCoord=tile.getPos().getY();
+		this.zCoord=tile.getPos().getZ();
 		if (tile instanceof ITileUpdatable) {
 			ITileUpdatable tileUpdatable = (ITileUpdatable) tile;
 			this.data=tileUpdatable.getTilePacketData();
@@ -34,9 +35,9 @@ public class TileEntityMessage implements IMessage{
 	}
 	public TileEntityMessage(TileEntity tile,JsonObject data){
 		this.packetId=0;
-		this.xCoord=tile.xCoord;
-		this.yCoord=tile.yCoord;
-		this.zCoord=tile.zCoord;
+		this.xCoord=tile.getPos().getX();
+		this.yCoord=tile.getPos().getY();
+		this.zCoord=tile.getPos().getZ();
 		this.data=data==null?JSON.newObject():data;
 	}
 	
@@ -68,7 +69,7 @@ public class TileEntityMessage implements IMessage{
 	public void handleClientSide(EntityPlayer player) {
 		final World world = player.worldObj;
 
-		final TileEntity te = world.getTileEntity(xCoord, yCoord, zCoord);
+		final TileEntity te = world.getTileEntity(new BlockPos(xCoord, yCoord, zCoord));
 		if (te instanceof ITileUpdatable) {
 			final ITileUpdatable tu = (ITileUpdatable) te;
 			try {
@@ -83,7 +84,7 @@ public class TileEntityMessage implements IMessage{
 	public void handleServerSide(EntityPlayer player) {
 		final World world = player.worldObj;
 
-		final TileEntity te = world.getTileEntity(xCoord, yCoord, zCoord);
+		final TileEntity te = world.getTileEntity(new BlockPos(xCoord, yCoord, zCoord));
 		if (te instanceof ITileUpdatable) {
 			final ITileUpdatable tu = (ITileUpdatable) te;
 			try {

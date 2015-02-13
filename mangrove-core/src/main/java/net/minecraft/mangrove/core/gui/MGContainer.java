@@ -20,11 +20,9 @@ import net.minecraft.mangrove.core.gui.slots.SlotBase;
 import net.minecraft.mangrove.core.gui.widgets.Widget;
 import net.minecraft.mangrove.core.utils.StackHelper;
 import net.minecraft.mangrove.network.GuiWidgetMessage;
-import net.minecraft.mangrove.network.GuiWidgetPacket;
 import net.minecraft.mangrove.network.NetBus;
 
-
-public class MGContainer extends Container{
+public class MGContainer extends Container {
 	private List<Widget> widgets = new ArrayList<Widget>();
 	private int inventorySize;
 	private int playerInvStartSlot;
@@ -33,57 +31,56 @@ public class MGContainer extends Container{
 	public MGContainer(int inventorySize) {
 		this.inventorySize = inventorySize;
 	}
-	
-	public MGContainer(IInventory tile,InventoryPlayer inventory,int yOffset,int inventorySize) {
+
+	public MGContainer(IInventory tile, InventoryPlayer inventory, int yOffset, int inventorySize) {
 		this.inventorySize = inventorySize;
-		
-		inventory.openInventory();		
-		drawTileInventory(tile,inventorySize);
+
+		inventory.openInventory(inventory.player);
+		drawTileInventory(tile, inventorySize);
 		//
-		drawPlayerInventory(inventory,yOffset,getInventorySize());
+		drawPlayerInventory(inventory, yOffset, getInventorySize());
 	}
+
 	@Override
 	public boolean canInteractWith(EntityPlayer p_75145_1_) {
 		return false;
 	}
 
-	public void setPlayerInventoryOffset(int xOffset,int yOffset){
-		final List<Slot> playerSlots=this.inventorySlots.subList(playerInvStartSlot, playerInvEndSlot);
-		final Iterator<Slot> it=playerSlots.iterator();
+	public void setPlayerInventoryOffset(int xOffset, int yOffset) {
+		final List<Slot> playerSlots = this.inventorySlots.subList(playerInvStartSlot, playerInvEndSlot);
+		final Iterator<Slot> it = playerSlots.iterator();
 		for (int i = 0; it.hasNext() && i < 3; ++i) {
-			for (int j = 0;it.hasNext() &&  j < 9; ++j) {
+			for (int j = 0; it.hasNext() && j < 9; ++j) {
 				final Slot slot = it.next();
 				slot.xDisplayPosition = xOffset + j * 18;
-				slot.yDisplayPosition = yOffset + i * 18;				
+				slot.yDisplayPosition = yOffset + i * 18;
 			}
 		}
-		for (int i = 0;it.hasNext() && i < 9; ++i) {
+		for (int i = 0; it.hasNext() && i < 9; ++i) {
 			final Slot slot = it.next();
 			slot.xDisplayPosition = xOffset + i * 18;
 			slot.yDisplayPosition = yOffset + 58;
 		}
 	}
-	
-	
-	
+
 	private void drawPlayerInventory(InventoryPlayer inventory, int yOffset, int slotOffset) {
-		this.playerInvStartSlot=inventorySlots.size();
+		this.playerInvStartSlot = inventorySlots.size();
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 9; ++j) {
 				int slotIndex = j + i * 9 + 9;
 				int x = 8 + j * 18;
 				int y = i * 18 + yOffset;
-				addSlotToContainer(new Slot(inventory, slotIndex,	x, y));
+				addSlotToContainer(new Slot(inventory, slotIndex, x, y));
 			}
 		}
 		for (int i = 0; i < 9; ++i) {
 			addSlotToContainer(new Slot(inventory, i, 8 + i * 18, 58 + yOffset));
 		}
-		this.playerInvEndSlot=inventorySlots.size();
+		this.playerInvEndSlot = inventorySlots.size();
 	}
-	
-	protected void drawTileInventory(IInventory inventory, int inventorySize){
-		
+
+	protected void drawTileInventory(IInventory inventory, int inventorySize) {
+
 	}
 
 	public List<Widget> getWidgets() {
@@ -100,15 +97,16 @@ public class MGContainer extends Container{
 	}
 
 	public void sendWidgetDataToClient(Widget widget, ICrafting player, byte[] data) {
-//		PacketGuiWidget pkt = new PacketGuiWidget(windowId, widgets.indexOf(widget), data);
-//		BuildCraftCore.instance.sendToPlayer((EntityPlayer) player, pkt);
+		// PacketGuiWidget pkt = new PacketGuiWidget(windowId,
+		// widgets.indexOf(widget), data);
+		// BuildCraftCore.instance.sendToPlayer((EntityPlayer) player, pkt);
 		NetBus.sendToServer(new GuiWidgetMessage(windowId, widgets.indexOf(widget), data));
 	}
 
 	public void handleWidgetClientData(int widgetId, byte[] data) {
 		final InputStream input = new ByteArrayInputStream(data);
 		final DataInputStream stream = new DataInputStream(input);
-		
+
 		try {
 			widgets.get(widgetId).handleClientPacketData(stream);
 		} catch (IOException e) {
@@ -117,12 +115,21 @@ public class MGContainer extends Container{
 	}
 
 	@Override
-	public void addCraftingToCrafters(ICrafting player) {
-		super.addCraftingToCrafters(player);
+	public void onCraftGuiOpened(ICrafting listener) {
+		// TODO Auto-generated method stub
+		super.onCraftGuiOpened(listener);
 		for (Widget widget : widgets) {
-			widget.initWidget(player);
+			widget.initWidget(listener);
 		}
 	}
+
+	// @Override
+	// public void addCraftingToCrafters(ICrafting player) {
+	// super.addCraftingToCrafters(player);
+	// for (Widget widget : widgets) {
+	// widget.initWidget(player);
+	// }
+	// }
 
 	@Override
 	public void detectAndSendChanges() {
@@ -274,7 +281,7 @@ public class MGContainer extends Container{
 		}
 		return false;
 	}
-	
+
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
 		ItemStack originalStack = null;
@@ -309,7 +316,7 @@ public class MGContainer extends Container{
 		}
 		return originalStack;
 	}
-	
+
 	public int getInventorySize() {
 		return inventorySize;
 	}

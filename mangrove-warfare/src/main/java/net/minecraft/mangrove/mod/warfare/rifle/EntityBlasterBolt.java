@@ -3,6 +3,7 @@ package net.minecraft.mangrove.mod.warfare.rifle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -23,7 +24,7 @@ public class EntityBlasterBolt extends EntityThrowable{
     }
     @Override
     protected void onImpact(MovingObjectPosition par1MovingObjectPosition){
-        this.worldObj.spawnParticle("snowballpoof", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+        this.worldObj.spawnParticle(EnumParticleTypes.SNOWBALL, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
         if( par1MovingObjectPosition.entityHit!=null){
             if( par1MovingObjectPosition.entityHit instanceof EntityLivingBase){
                 System.out.println("Health:"+((EntityLivingBase)par1MovingObjectPosition.entityHit).getHealth());

@@ -8,14 +8,13 @@
  */
 package net.minecraft.mangrove.core.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.Fluid;
 
 import org.lwjgl.opengl.GL11;
 
@@ -151,7 +150,7 @@ public abstract class GuiAdvancedInterface extends MGGui {
 //	}
 
 	public static RenderItem getItemRenderer () {
-		return itemRender;
+		return Minecraft.getMinecraft().getRenderItem();
 	}
 
     public int getXSize () {

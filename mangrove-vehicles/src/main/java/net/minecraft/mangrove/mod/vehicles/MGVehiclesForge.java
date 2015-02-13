@@ -3,7 +3,7 @@ package net.minecraft.mangrove.mod.vehicles;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.mangrove.GUIHandler;
+import net.minecraft.mangrove.core.GUIHandler;
 import net.minecraft.mangrove.mod.vehicles.mav.EntityMAV;
 import net.minecraft.mangrove.mod.vehicles.mav.gui.ContainerMAV;
 import net.minecraft.mangrove.mod.vehicles.mav.gui.GuiMAV;

@@ -2,7 +2,7 @@ package net.minecraft.mangrove.mod.vehicles.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.mangrove.core.gui.MGContainer;
+import net.minecraft.mangrove.core.core.gui.MGContainer;
 import net.minecraft.mangrove.mod.vehicles.proxy.IKeyControlable;
 import net.minecraft.mangrove.mod.vehicles.proxy.IKeyControlable.ID;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

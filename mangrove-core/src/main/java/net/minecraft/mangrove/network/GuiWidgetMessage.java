@@ -3,7 +3,7 @@ package net.minecraft.mangrove.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.mangrove.core.gui.MGContainer;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class GuiWidgetMessage implements IMessage {
 	private int windowId, widgetId;

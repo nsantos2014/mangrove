@@ -3,8 +3,8 @@ package net.minecraft.mangrove.mod.vehicles.mav.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.mangrove.core.gui.MGContainer;
-import net.minecraft.mangrove.core.gui.MGGui;
+import net.minecraft.mangrove.core.core.gui.MGContainer;
+import net.minecraft.mangrove.core.core.gui.MGGui;
 import net.minecraft.mangrove.mod.vehicles.mav.EntityMAV;
 import net.minecraft.util.ResourceLocation;
 

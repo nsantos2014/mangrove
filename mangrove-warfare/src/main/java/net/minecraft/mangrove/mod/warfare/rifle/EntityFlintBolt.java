@@ -3,6 +3,7 @@ package net.minecraft.mangrove.mod.warfare.rifle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -23,10 +24,10 @@ public class EntityFlintBolt extends EntityThrowable{
     }
     @Override
     protected void onImpact(MovingObjectPosition mop){
-        if( mop.entityHit instanceof EntityLivingBase){
-            System.out.println("Health:"+((EntityLivingBase)mop.entityHit).getHealth());        
-        }        
-        this.worldObj.spawnParticle("snowballpoof", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+//        if( mop.entityHit instanceof EntityLivingBase){
+//            System.out.println("Health:"+((EntityLivingBase)mop.entityHit).getHealth());        
+//        }        
+        this.worldObj.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
         if( mop.entityHit!=null){
             mop.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, this.getThrower()), (float)3.0);            
         }

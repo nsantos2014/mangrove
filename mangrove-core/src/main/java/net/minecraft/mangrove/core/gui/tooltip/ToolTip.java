@@ -8,9 +8,10 @@
  */
 package net.minecraft.mangrove.core.gui.tooltip;
 
-import com.google.common.collect.ForwardingList;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.ForwardingList;
 
 public class ToolTip extends ForwardingList<ToolTipLine> {
 

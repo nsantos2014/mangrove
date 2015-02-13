@@ -1,21 +1,17 @@
 package net.minecraft.mangrove.mod.house.block.crate.gui;
 
+import java.io.IOException;
+
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.mangrove.core.gui.MGGui;
 import net.minecraft.mangrove.mod.house.block.crate.TileEntityCrate;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiCrate extends MGGui{
@@ -77,7 +73,7 @@ public class GuiCrate extends MGGui{
         //this.drawTexturedModalRect(k, l, 0, 0, xSize, ySize);
         this.drawTexturedModalRect(k, l, 0, 0, xSize-8, 256);
         this.drawTexturedModalRect(k+xSize-8, l, 256-16, 0, 16, 256);
-        this.mc.getTextureManager().bindTexture(field_147001_a);
+        this.mc.getTextureManager().bindTexture(inventoryBackground);
         //this.drawTexturedModalRect(k, l, 0, 0, 352/2, 332/2);
         //this.mc.getTextureManager().bindTexture(craftingTableGuiTextures);
 		this.drawTexturedModalRect(k+6, l+80, 6, 80, xSize-6, ySize-70-8);
@@ -107,7 +103,7 @@ public class GuiCrate extends MGGui{
     }
     
     @Override
-    protected void actionPerformed(GuiButton btn) {    	
+    protected void actionPerformed(GuiButton btn) throws IOException {    	
     	super.actionPerformed(btn);
     	switch (btn.id) {
 		case 1:

@@ -3,15 +3,14 @@ package net.minecraft.mangrove.network;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 
 public class NetBus {
@@ -44,7 +43,7 @@ public class NetBus {
 	}
 	
 	public static void notify(String zone,String message){        
-        final EntityClientPlayerMP thePlayer = Minecraft.getMinecraft().thePlayer;
+        final EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
         if( thePlayer!=null){
             final ChatComponentText chatcomponenttext = new ChatComponentText(String.format("%s : %s", zone,message));
             thePlayer.addChatMessage(chatcomponenttext);

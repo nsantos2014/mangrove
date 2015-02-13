@@ -1,30 +1,28 @@
 package net.minecraft.mangrove.mod.house.block;
 
-import java.util.List;
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.mod.house.MGHouseForge;
 import net.minecraft.mangrove.mod.house.proxy.CommonProxy;
-import net.minecraft.util.Facing;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockGlassLamp extends Block {
 
 	private boolean field_149996_a;
 	private String field_149995_b;
 	
-	@SideOnly(Side.CLIENT)
-    protected IIcon blockInsideIcon;
+	protected String name = "glass_lamp";
 	
 //	private static final IIcon[] field_149998_a = new IIcon[16];
 
@@ -32,8 +30,10 @@ public class BlockGlassLamp extends Block {
 		super(Material.glass);
 		setHardness(3.5F);
 		setStepSound(Block.soundTypeGlass);
-		setBlockName("glass_lamp");
-		setBlockTextureName("glass");
+		
+        GameRegistry.registerBlock(this, name);
+		setUnlocalizedName(MGHouseForge.ID + "_" + name);		   
+		
 		setCreativeTab(CreativeTabs.tabDecorations);
 		setHarvestLevel("pickaxe", 0);
 		setLightLevel(1.0F);
@@ -47,33 +47,74 @@ public class BlockGlassLamp extends Block {
 	public boolean isOpaqueCube() {
 		return false;
 	}
+    @SideOnly(Side.CLIENT)
+    public EnumWorldBlockLayer getBlockLayer()
+    {
+        return EnumWorldBlockLayer.CUTOUT;
+    }
 
-	/**
-	 * Returns true if the given side of this block type should be rendered, if
-	 * the adjacent block is at the given coordinates. Args: blockAccess, x, y,
-	 * z, side
-	 */
-	@SideOnly(Side.CLIENT)
-	public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y,
-			int z, int side) {
-		Block block = blockAccess.getBlock(x, y, z);
+    public boolean isFullCube()
+    {
+        return false;
+    }
+    public int getRenderType(){
+        return 3;
+    }
+//
+//	@Override
+//	public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+//	    IBlockState blockState2 = worldIn.getBlockState(pos);
+//        Block block = blockState2.getBlock();
+//	    return super.shouldSideBeRendered(worldIn, pos, side);
+//	}
+	
+	 @SideOnly(Side.CLIENT)
+	    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+	    {
+	        IBlockState iblockstate = worldIn.getBlockState(pos);
+	        Block block = iblockstate.getBlock();
 
-		if (this == Blocks.glass /* || this == Blocks.stained_glass */) {
-			if (blockAccess.getBlockMetadata(x, y, z) != blockAccess
-					.getBlockMetadata(x - Facing.offsetsXForSide[side], y
-							- Facing.offsetsYForSide[side], z
-							- Facing.offsetsZForSide[side])) {
-				return true;
-			}
+	        if ((block == Blocks.glass) || (block == Blocks.stained_glass) )
+	        {
+	            if (worldIn.getBlockState(pos.offset(side.getOpposite())) != iblockstate)
+	            {
+	                return true;
+	            }
 
-			if (block == this) {
-				return false;
-			}
-		}
+	            if (block == this)
+	            {
+	                return false;
+	            }
+	        }
 
-		return !this.field_149996_a && block == this ? false : super
-				.shouldSideBeRendered(blockAccess, x, y, z, side);
-	}
+	        return /*!this.ignoreSimilarity &&*/ block == this ? false : super.shouldSideBeRendered(worldIn, pos, side);
+	    }
+//	/**
+//	 * Returns true if the given side of this block type should be rendered, if
+//	 * the adjacent block is at the given coordinates. Args: blockAccess, x, y,
+//	 * z, side
+//	 */
+//	@SideOnly(Side.CLIENT)
+//	public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y,
+//			int z, int side) {
+//		Block block = blockAccess.getBlock(x, y, z);
+//
+//		if (this == Blocks.glass /* || this == Blocks.stained_glass */) {
+//			if (blockAccess.getBlockMetadata(x, y, z) != blockAccess
+//					.getBlockMetadata(x - Facing.offsetsXForSide[side], y
+//							- Facing.offsetsYForSide[side], z
+//							- Facing.offsetsZForSide[side])) {
+//				return true;
+//			}
+//
+//			if (block == this) {
+//				return false;
+//			}
+//		}
+//
+//		return !this.field_149996_a && block == this ? false : super
+//				.shouldSideBeRendered(blockAccess, x, y, z, side);
+//	}
 
 //	/**
 //	 * Gets the block's texture. Args: side, meta
@@ -83,16 +124,16 @@ public class BlockGlassLamp extends Block {
 //		return field_149998_a[p_149691_2_ % field_149998_a.length];
 //	}
 	
-	/**
-	 * Gets the block's texture. Args: side, meta
-	 */
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta) {
-	    if( side==1){
-	        return blockInsideIcon;
-	    }
-		return blockIcon;
-	}
+//	/**
+//	 * Gets the block's texture. Args: side, meta
+//	 */
+//	@SideOnly(Side.CLIENT)
+//	public IIcon getIcon(int side, int meta) {
+//	    if( side==1){
+//	        return blockInsideIcon;
+//	    }
+//		return blockIcon;
+//	}
 
 	/**
 	 * Determines the damage on the item the block drops. Used in cloth and
@@ -126,14 +167,14 @@ public class BlockGlassLamp extends Block {
 //		}
 //	}
 
-	/**
-	 * Returns which pass should this block be rendered on. 0 for solids and 1
-	 * for alpha
-	 */
-	@SideOnly(Side.CLIENT)
-	public int getRenderBlockPass() {
-		return 1;
-	}
+//	/**
+//	 * Returns which pass should this block be rendered on. 0 for solids and 1
+//	 * for alpha
+//	 */
+//	@SideOnly(Side.CLIENT)
+//	public int getRenderBlockPass() {
+//		return 1;
+//	}
 
 //	@SideOnly(Side.CLIENT)
 //	public void registerBlockIcons(IIconRegister p_149651_1_) {
@@ -142,12 +183,12 @@ public class BlockGlassLamp extends Block {
 //					+ "_" + ItemDye.field_150921_b[func_149997_b(i)]);
 //		}
 //	}
-
-	 @SideOnly(Side.CLIENT)
-	 public void registerBlockIcons(IIconRegister p_149651_1_) {
-	     this.blockIcon = p_149651_1_.registerIcon("glass");
-	     this.blockInsideIcon = p_149651_1_.registerIcon("beacon");
-	 }
+//
+//	 @SideOnly(Side.CLIENT)
+//	 public void registerBlockIcons(IIconRegister p_149651_1_) {
+//	     this.blockIcon = p_149651_1_.registerIcon("glass");
+//	     this.blockInsideIcon = p_149651_1_.registerIcon("beacon");
+//	 }
 
 	/**
 	 * Return true if a player with Silk Touch can harvest this block directly,
@@ -157,14 +198,14 @@ public class BlockGlassLamp extends Block {
 		return true;
 	}
 
-	/**
-	 * If this block doesn't render as an ordinary block it will return False
-	 * (examples: signs, buttons, stairs, etc)
-	 */
-	public boolean renderAsNormalBlock() {
-		return false;
-	}
-	public int getRenderType() {
-        return CommonProxy.blockGlassLamp;
-    }
+//	/**
+//	 * If this block doesn't render as an ordinary block it will return False
+//	 * (examples: signs, buttons, stairs, etc)
+//	 */
+//	public boolean renderAsNormalBlock() {
+//		return false;
+//	}
+//	public int getRenderType() {
+//        return CommonProxy.blockGlassLamp;
+//    }
 }

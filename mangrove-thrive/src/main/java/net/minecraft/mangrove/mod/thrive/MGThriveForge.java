@@ -3,7 +3,7 @@ package net.minecraft.mangrove.mod.thrive;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.mangrove.GUIHandler;
+import net.minecraft.mangrove.core.GUIHandler;
 import net.minecraft.mangrove.mod.thrive.autobench.TileEntityAutobench;
 import net.minecraft.mangrove.mod.thrive.autobench.gui.AutobenchContainer;
 import net.minecraft.mangrove.mod.thrive.autobench.gui.AutobenchGui;
@@ -15,20 +15,20 @@ import net.minecraft.mangrove.mod.thrive.robot.gui.KernelGui;
 import net.minecraft.mangrove.mod.thrive.robot.miner.TileRobotMinerNode;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = MGThriveForge.ID, name = MGThriveForge.NAME, version = MGThriveForge.VERSION, useMetadata = false)
 public class MGThriveForge {
-	public static final String ID = "Mangrove|Thrive";
+	public static final String ID = "mgthrive";
 	public static final String NAME = "Mangrove Thrive";
 	public static final String VERSION = "0.0.1";
 	public static final String CLIENT_SIDE_PROXY = "net.minecraft.mangrove.mod.thrive.proxy.ClientProxy";
@@ -46,10 +46,14 @@ public class MGThriveForge {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent evt) {
-	    registerRobot();
-		registerRobotFarmer();
-		registerRobotMiner();
-		registerAutobench();	
+		FMLCommonHandler.instance().bus().register(this);
+	    MinecraftForge.EVENT_BUS.register(this);
+	    MinecraftForge.TERRAIN_GEN_BUS.register(this);
+		MGThriveBlocks.preInit();
+//	    registerRobot();
+//		registerRobotFarmer();
+//		registerRobotMiner();
+//		registerAutobench();	
 		
 	}
 	
@@ -57,8 +61,10 @@ public class MGThriveForge {
 	public void init(FMLInitializationEvent event) {
 		proxy.registerRenderers();
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, handler);
-		FMLCommonHandler.instance().bus().register(this);
-		MinecraftForge.EVENT_BUS.register(this);		
+		MGThriveBlocks.init();
+		MGThriveItems.init(event);
+//		FMLCommonHandler.instance().bus().register(this);
+//		MinecraftForge.EVENT_BUS.register(this);		
 	}
 	public void registerAutobench() {
 	    GameRegistry.registerBlock(MGThriveBlocks.autobench, "autobench");

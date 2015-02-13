@@ -3,10 +3,10 @@ package net.minecraft.mangrove.mod.vehicles.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.mangrove.core.gui.MGContainer;
+import net.minecraft.mangrove.core.core.gui.MGContainer;
+import net.minecraft.mangrove.core.network.AbstractPacket;
 import net.minecraft.mangrove.mod.vehicles.proxy.IKeyControlable;
 import net.minecraft.mangrove.mod.vehicles.proxy.IKeyControlable.ID;
-import net.minecraft.mangrove.network.AbstractPacket;
 
 public class KeyboardPacket extends AbstractPacket{
     public int key;

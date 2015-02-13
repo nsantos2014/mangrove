@@ -8,8 +8,10 @@ import java.util.TreeMap;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.INBTTagable;
+import net.minecraft.mangrove.core.inventory.slots.InvSlot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.TreeMultimap;
@@ -23,8 +25,8 @@ public class InventorySupport implements INBTTagable{
 	private int maxSize;
 	
 	private final Map<Integer, ItemStack> slots;
-	private SetMultimap<Integer, Integer> slotsBySide=null;
-	private Map<Integer, Map<Integer,InvSlot>> slotsMetadata;
+	private SetMultimap<EnumFacing, Integer> slotsBySide=null;
+	private Map<Integer, Map<EnumFacing,InvSlot>> slotsMetadata;
 	
 	
 //	private ItemStack[] items;
@@ -32,7 +34,7 @@ public class InventorySupport implements INBTTagable{
 	
 	private InventorySupport(){
 		this.slots=new TreeMap<Integer,ItemStack>();
-		this.slotsMetadata=new HashMap<Integer, Map<Integer,InvSlot>>();
+		this.slotsMetadata=new HashMap<Integer, Map<EnumFacing,InvSlot>>();
 	}
 	
 	public InventorySupport(int size,String inventoryName) {
@@ -61,26 +63,26 @@ public class InventorySupport implements INBTTagable{
 		return this.size;
 	}
 	
-	public void defineSlotRange(int slotStart,int length,ItemStack itemStack,Permission permission,int... sides){
+	public void defineSlotRange(int slotStart,int length,ItemStack itemStack,EnumPermission permission,EnumFacing... sides){
 		for( int i=0; i<length; i++){
 			defineSlot(slotStart+i, itemStack, permission, sides);
 		}
 		
 	}
-	public void defineSlot(int slot,ItemStack itemStack,Permission permission,int... sides){
+	public void defineSlot(int slot,ItemStack itemStack,EnumPermission permission,EnumFacing... sides){
 		this.size=Math.max(size, slot+1);
 		if( this.slotsBySide==null){
-			this.slotsBySide=TreeMultimap.<Integer, Integer>create();
+			this.slotsBySide=TreeMultimap.<EnumFacing, Integer>create();
 		}
-		for(int sideId:sides){
-			if( permission==Permission.NONE){
+		for(EnumFacing sideId:sides){
+			if( permission==EnumPermission.NONE){
 				slotsBySide.remove(sideId, slot);
 			}else{
 				slotsBySide.put(sideId, slot);
 			}
-			Map<Integer, InvSlot> slotMeta = this.slotsMetadata.get(slot);
+			Map<EnumFacing, InvSlot> slotMeta = this.slotsMetadata.get(slot);
 			if( slotMeta==null){
-				slotMeta=new HashMap<Integer,InvSlot>();
+				slotMeta=new HashMap<EnumFacing,InvSlot>();
 				this.slotsMetadata.put(slot, slotMeta);
 			}
 			InvSlot sideSlot = slotMeta.get(sideId);
@@ -282,7 +284,7 @@ public class InventorySupport implements INBTTagable{
         }
 	}
 
-	public int[] getSlotArray(int side) {
+	public int[] getSlotArray(EnumFacing side) {
 		if( this.slotsBySide==null){
 			int[] allSlots=new int[size];
 			for( int i=0; i<size;i++){
@@ -295,18 +297,18 @@ public class InventorySupport implements INBTTagable{
 //		return ArrayUtils.toPrimitive(list.toArray(new Integer[list.size()]));
 	}
 
-	public boolean canInsertItem(int slot, ItemStack item, int side) {
+	public boolean canInsertItem(int slot, ItemStack item, EnumFacing side) {
 		if( slotsBySide==null){
 			return true;
 		}
 		if(!slotsBySide.get(side).contains(slot)){
 			return false;
 		}
-		Map<Integer, InvSlot> slotMeta = slotsMetadata.get(slot);
+		Map<EnumFacing, InvSlot> slotMeta = slotsMetadata.get(slot);
 		if( slotMeta!=null){
 			InvSlot slotSideMeta = slotMeta.get(side);
 			if( slotSideMeta!=null){
-				if( slotSideMeta.getPermission()==Permission.NONE||slotSideMeta.getPermission()==Permission.EXTRACT ){
+				if( slotSideMeta.getPermission()==EnumPermission.NONE||slotSideMeta.getPermission()==EnumPermission.EXTRACT ){
 					return false;
 				}
 				if(item==null ){
@@ -332,18 +334,18 @@ public class InventorySupport implements INBTTagable{
 		return true;		
 	}
 
-	public boolean canExtractItem(int slot, ItemStack item, int side) {
+	public boolean canExtractItem(int slot, ItemStack item, EnumFacing side) {
 		if( slotsBySide==null){
 			return true;
 		}
 		if(!slotsBySide.get(side).contains(slot)){
 			return false;
 		}
-		Map<Integer, InvSlot> slotMeta = slotsMetadata.get(slot);
+		Map<EnumFacing, InvSlot> slotMeta = slotsMetadata.get(slot);
 		if( slotMeta!=null){
 			InvSlot slotSideMeta = slotMeta.get(side);
 			if( slotSideMeta!=null){
-				if( slotSideMeta.getPermission()==Permission.NONE||slotSideMeta.getPermission()==Permission.INSERT){
+				if( slotSideMeta.getPermission()==EnumPermission.NONE||slotSideMeta.getPermission()==EnumPermission.INSERT){
 					return false;
 				}
 				if(item==null ){

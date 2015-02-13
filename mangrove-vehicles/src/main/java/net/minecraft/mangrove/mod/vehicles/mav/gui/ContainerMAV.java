@@ -5,8 +5,8 @@ import java.awt.Point;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.mangrove.core.gui.MGContainer;
-import net.minecraft.mangrove.core.gui.slots.SlotBase;
+import net.minecraft.mangrove.core.core.gui.MGContainer;
+import net.minecraft.mangrove.core.core.gui.slots.SlotBase;
 import net.minecraft.mangrove.mod.vehicles.mav.EntityMAV;
 
 public class ContainerMAV extends MGContainer {

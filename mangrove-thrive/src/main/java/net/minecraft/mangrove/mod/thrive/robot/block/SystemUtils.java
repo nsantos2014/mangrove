@@ -1,134 +1,174 @@
 package net.minecraft.mangrove.mod.thrive.robot.block;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.mangrove.core.cs.CSPoint3i;
+import net.minecraft.client.renderer.EnumFaceDirection;
 import net.minecraft.mangrove.mod.thrive.robot.IRobotComponent;
 import net.minecraft.mangrove.mod.thrive.robot.IRobotConnection;
 import net.minecraft.mangrove.mod.thrive.robot.IRobotControl;
 import net.minecraft.mangrove.mod.thrive.robot.IRobotNode;
-import net.minecraft.util.Facing;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class SystemUtils {    
-    public static CSPoint3i findFirstControl(World world, int x, int y, int z){
-        return findFirstControl(world, x, y, z,new HashSet<CSPoint3i>());
+    public static BlockPos findFirstControl(World world, BlockPos blockPos){
+        return findFirstControl(world, blockPos,new HashSet<BlockPos>());
     }
-    public static CSPoint3i findFirstControl(World world, int x, int y, int z, Set<CSPoint3i> found){
+    public static BlockPos findFirstControl(World world, BlockPos blockPos, Set<BlockPos> found){
         if( found==null){
-            found=new HashSet<CSPoint3i>();
+            found=new HashSet<BlockPos>();
         }
-        Block current = world.getBlock(x, y, z);
-        CSPoint3i pThis = new CSPoint3i(x,y,z);
-        found.add(pThis);
+        Block current = world.getBlockState(blockPos).getBlock();
+
+        found.add(blockPos);
         
         if( current instanceof IRobotControl){
-            return pThis;
+            return blockPos;
         }
-        
-        for (int i1 = 0; i1 < 6; ++i1){
-            CSPoint3i p=new CSPoint3i();
-            p.x = x + Facing.offsetsXForSide[i1];
-            p.y= y + Facing.offsetsYForSide[i1];
-            p.z = z + Facing.offsetsZForSide[i1];
+        for( EnumFacing dir:EnumFacing.values()){
+            BlockPos p=blockPos.add(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
             if( !found.contains(p)){
-                Block j1 = world.getBlock(p.x, p.y, p.z);
-                if( j1 instanceof IRobotControl){
+                Block candidate = world.getBlockState(p).getBlock();
+                if( candidate instanceof IRobotControl){
                     return p;
                 }
-                if( j1 instanceof IRobotComponent){
-                    IRobotComponent component=(IRobotComponent)j1;
-                    //found.add(p);
-                    
-                    CSPoint3i pNew = findFirstControl(world, p.x, p.y, p.z, found);                    
+                if( candidate instanceof IRobotComponent){
+                    IRobotComponent component=(IRobotComponent)candidate;
+                    BlockPos pNew = findFirstControl(world, p, found);
                     if( pNew!=null){
                         return pNew;
                     }
                 }
             }
         }
+//        for (int i1 = 0; i1 < 6; ++i1){
+//            
+//            blockPos.add(EnumFacing.offsetsXForSide[i1],)
+//            CSPoint3i p=new CSPoint3i();
+//            
+//            p.x = x + Facing.offsetsXForSide[i1];
+//            p.y= y + Facing.offsetsYForSide[i1];
+//            p.z = z + Facing.offsetsZForSide[i1];
+//            if( !found.contains(p)){
+//                Block j1 = world.getBlock(p.x, p.y, p.z);
+//                if( j1 instanceof IRobotControl){
+//                    return p;
+//                }
+//                if( j1 instanceof IRobotComponent){
+//                    IRobotComponent component=(IRobotComponent)j1;
+//                    //found.add(p);
+//                    
+//                    CSPoint3i pNew = findFirstControl(world, p.x, p.y, p.z, found);                    
+//                    if( pNew!=null){
+//                        return pNew;
+//                    }
+//                }
+//            }
+//        }
         return null;
     }
-    public static Set<CSPoint3i> findAllControl(IBlockAccess world, int x, int y, int z){
-        return findAllControl(world, x, y, z,new HashSet<CSPoint3i>());
+    public static Set<BlockPos> findAllControl(IBlockAccess world, BlockPos blockPos){
+        return findAllControl(world, blockPos,new HashSet<BlockPos>());
     }
-    protected static Set<CSPoint3i> findAllControl(IBlockAccess world, int x, int y, int z, Set<CSPoint3i> found){
+    protected static Set<BlockPos> findAllControl(IBlockAccess world, BlockPos blockPos, Set<BlockPos> found){
         if( found==null){
-            found=new HashSet<CSPoint3i>();
+            found=new HashSet<BlockPos>();
         }
-        final Set<CSPoint3i> controlList=new HashSet<CSPoint3i>();
+        final Set<BlockPos> controlList=new HashSet<BlockPos>();
         
-        Block current = world.getBlock(x, y, z);
-        CSPoint3i pThis = new CSPoint3i(x,y,z);
-        found.add(pThis);
+        Block current = world.getBlockState(blockPos).getBlock();
+        found.add(blockPos);
         
-        if( current instanceof IRobotControl && !controlList.contains(pThis)){
-          controlList.add(pThis);
+        if( current instanceof IRobotControl && !controlList.contains(blockPos)){
+          controlList.add(blockPos);
         }
-        
-        
-        for (int i1 = 0; i1 < 6; ++i1){
-            CSPoint3i p=new CSPoint3i();
-            p.x = x + Facing.offsetsXForSide[i1];
-            p.y= y + Facing.offsetsYForSide[i1];
-            p.z = z + Facing.offsetsZForSide[i1];
+        for( EnumFacing dir:EnumFacing.values()){
+            BlockPos p=blockPos.add(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
             if( !found.contains(p)){
-                Block j1 = world.getBlock(p.x, p.y, p.z);
+                Block j1 = world.getBlockState(p).getBlock();
                 if( j1 instanceof IRobotControl  && !controlList.contains(p)){
                     controlList.add(p);
                 }
                 if( j1 instanceof IRobotConnection){
                     IRobotComponent component=(IRobotComponent)j1;
                     //found.add(p);
-                    controlList.addAll(findAllControl(world, p.x, p.y, p.z, found));                    
+                    controlList.addAll(findAllControl(world, p, found));                    
                 }
             }
         }
+        
+//        for (int i1 = 0; i1 < 6; ++i1){
+//            CSPoint3i p=new CSPoint3i();
+//            p.x = x + Facing.offsetsXForSide[i1];
+//            p.y= y + Facing.offsetsYForSide[i1];
+//            p.z = z + Facing.offsetsZForSide[i1];
+//            if( !found.contains(p)){
+//                Block j1 = world.getBlock(p.x, p.y, p.z);
+//                if( j1 instanceof IRobotControl  && !controlList.contains(p)){
+//                    controlList.add(p);
+//                }
+//                if( j1 instanceof IRobotConnection){
+//                    IRobotComponent component=(IRobotComponent)j1;
+//                    //found.add(p);
+//                    controlList.addAll(findAllControl(world, p.x, p.y, p.z, found));                    
+//                }
+//            }
+//        }
         return controlList;
     }
-    public static void updateNetwork(World world, int x, int y, int z){
-        updateNetwork(world, x, y, z,new HashSet<CSPoint3i>());
+    public static void updateNetwork(World world, BlockPos blockPos){
+        updateNetwork(world, blockPos,new HashSet<BlockPos>());
     }
-    public static void updateNetwork(World world, int x, int y, int z, Set<CSPoint3i> found){
+    public static void updateNetwork(World world, BlockPos blockPos, Set<BlockPos> found){
         if( found==null){
             return;
         }       
         
-        Block current = world.getBlock(x, y, z);
-        CSPoint3i pThis = new CSPoint3i(x,y,z);
-        
+        Block current = world.getBlockState(blockPos).getBlock();        
         
 //        if( current instanceof IRobotControl && !found.contains(pThis)){
-            found.add(pThis);
+            found.add(blockPos);
 //        }        
-        
-        for (int i1 = 0; i1 < 6; ++i1){
-            CSPoint3i p=new CSPoint3i();
-            p.x = x + Facing.offsetsXForSide[i1];
-            p.y= y + Facing.offsetsYForSide[i1];
-            p.z = z + Facing.offsetsZForSide[i1];
+        for( EnumFacing dir:EnumFacing.values()){
+            BlockPos p=blockPos.add(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
             if( !found.contains(p)){
-                Block j1 = world.getBlock(p.x, p.y, p.z);
+                Block j1 = world.getBlockState(p).getBlock();
                 if( j1 instanceof IRobotComponent){
                     IRobotComponent component=(IRobotComponent)j1;
                     //found.add(p);
-                    int meta = world.getBlockMetadata(p.x, p.y, p.z);
+//                        int meta = world.getBlockMetadata(p);
                     //world.setBlockMetadataWithNotify(p.x, p.y, p.z, meta, 2);
-                    component.updateNetwork(world, p.x, p.y, p.z);
-                    updateNetwork(world, p.x, p.y, p.z, found);                    
-                }
+                    component.updateNetwork(world, p);
+                    updateNetwork(world, p, found);                    
+                } 
             }
         }
+//        for (int i1 = 0; i1 < 6; ++i1){
+//            CSPoint3i p=new CSPoint3i();
+//            p.x = x + Facing.offsetsXForSide[i1];
+//            p.y= y + Facing.offsetsYForSide[i1];
+//            p.z = z + Facing.offsetsZForSide[i1];
+//            if( !found.contains(p)){
+//                Block j1 = world.getBlock(p.x, p.y, p.z);
+//                if( j1 instanceof IRobotComponent){
+//                    IRobotComponent component=(IRobotComponent)j1;
+//                    //found.add(p);
+//                    int meta = world.getBlockMetadata(p.x, p.y, p.z);
+//                    //world.setBlockMetadataWithNotify(p.x, p.y, p.z, meta, 2);
+//                    component.updateNetwork(world, p.x, p.y, p.z);
+//                    updateNetwork(world, p.x, p.y, p.z, found);                    
+//                }
+//            }
+//        }
     }
-    public static <T extends IRobotNode>boolean checkAllNodes(Class<T> nodeClass, World world, int x, int y, int z) {
-        final Set<CSPoint3i> nodeList=findAllNodes(world, x, y, z, new HashSet<CSPoint3i>());
-        for(CSPoint3i point:nodeList){
-            Block current = world.getBlock(point.x, point.y, point.z);
+    public static <T extends IRobotNode>boolean checkAllNodes(Class<T> nodeClass, World world, BlockPos blockPos) {
+        final Set<BlockPos> nodeList=findAllNodes(world, blockPos, new HashSet<BlockPos>());
+        for(BlockPos point:nodeList){
+            Block current = world.getBlockState(point).getBlock();
             if( !nodeClass.equals(current.getClass()) ){
                 return false;
             }
@@ -136,38 +176,50 @@ public class SystemUtils {
         return true;
     }
     
-    protected static Set<CSPoint3i> findAllNodes(IBlockAccess world, int x, int y, int z, Set<CSPoint3i> found){
+    protected static Set<BlockPos> findAllNodes(IBlockAccess world, BlockPos blockPos, Set<BlockPos> found){
         if( found==null){
-            found=new HashSet<CSPoint3i>();
+            found=new HashSet<BlockPos>();
         }
-        final Set<CSPoint3i> nodeList=new HashSet<CSPoint3i>();
+        final Set<BlockPos> nodeList=new HashSet<BlockPos>();
         
-        Block current = world.getBlock(x, y, z);
-        CSPoint3i pThis = new CSPoint3i(x,y,z);
-        found.add(pThis);
+        Block current = world.getBlockState(blockPos).getBlock();
         
-        if( current instanceof IRobotNode && !nodeList.contains(pThis)){
-          nodeList.add(pThis);
+        found.add(blockPos);        
+        if( current instanceof IRobotNode && !nodeList.contains(blockPos)){
+          nodeList.add(blockPos);
         }
         
-        
-        for (int i1 = 0; i1 < 6; ++i1){
-            CSPoint3i p=new CSPoint3i();
-            p.x = x + Facing.offsetsXForSide[i1];
-            p.y= y + Facing.offsetsYForSide[i1];
-            p.z = z + Facing.offsetsZForSide[i1];
+        for( EnumFacing dir:EnumFacing.values()){
+            BlockPos p=blockPos.add(dir.getFrontOffsetX(), dir.getFrontOffsetY(), dir.getFrontOffsetZ());
             if( !found.contains(p)){
-                Block j1 = world.getBlock(p.x, p.y, p.z);
+                Block j1 = world.getBlockState(p).getBlock();
                 if( j1 instanceof IRobotNode && !nodeList.contains(p)){
                     nodeList.add(p);
                 }
                 if( j1 instanceof IRobotConnection){
                     IRobotComponent component=(IRobotComponent)j1;
                     //found.add(p);
-                    nodeList.addAll(findAllNodes(world, p.x, p.y, p.z, found));                    
+                    nodeList.addAll(findAllNodes(world, p, found));                    
                 }
             }
         }
+//        for (int i1 = 0; i1 < 6; ++i1){
+//            CSPoint3i p=new CSPoint3i();
+//            p.x = x + Facing.offsetsXForSide[i1];
+//            p.y= y + Facing.offsetsYForSide[i1];
+//            p.z = z + Facing.offsetsZForSide[i1];
+//            if( !found.contains(p)){
+//                Block j1 = world.getBlock(p.x, p.y, p.z);
+//                if( j1 instanceof IRobotNode && !nodeList.contains(p)){
+//                    nodeList.add(p);
+//                }
+//                if( j1 instanceof IRobotConnection){
+//                    IRobotComponent component=(IRobotComponent)j1;
+//                    //found.add(p);
+//                    nodeList.addAll(findAllNodes(world, p.x, p.y, p.z, found));                    
+//                }
+//            }
+//        }
         return nodeList;
     }
     

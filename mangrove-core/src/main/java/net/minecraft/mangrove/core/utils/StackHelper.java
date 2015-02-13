@@ -8,6 +8,10 @@
  */
 package net.minecraft.mangrove.core.utils;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -87,13 +91,17 @@ public class StackHelper {
 			return true;
 
 		if (oreDictionary) {
-			int idBase = OreDictionary.getOreID(base);
-			if (idBase >= 0) {
-				for (ItemStack itemstack : OreDictionary.getOres(idBase)) {
-					if (comparison.getItem() == itemstack.getItem() && (itemstack.getItemDamage() == OreDictionary.WILDCARD_VALUE || comparison.getItemDamage() == itemstack.getItemDamage()))
-						return true;
-				}
+			int[] idBases = OreDictionary.getOreIDs(base);
+			for(int idBase:idBases){
+				if (idBase >= 0) {
+					final String oreName = OreDictionary.getOreName(idBase);
+					for (ItemStack itemstack : OreDictionary.getOres(oreName)) {
+						if (comparison.getItem() == itemstack.getItem() && (itemstack.getItemDamage() == OreDictionary.WILDCARD_VALUE || comparison.getItemDamage() == itemstack.getItemDamage()))
+							return true;
+					}
+				}	
 			}
+			
 		}
 
 		return false;
@@ -101,7 +109,8 @@ public class StackHelper {
 
 	public boolean isCraftingEquivalent(int oreID, ItemStack comparison) {
 		if (oreID >= 0) {
-			for (ItemStack itemstack : OreDictionary.getOres(oreID)) {
+			final String oreName = OreDictionary.getOreName(oreID);
+			for (ItemStack itemstack : OreDictionary.getOres(oreName)) {
 				if (comparison.getItem() == itemstack.getItem() && (itemstack.getItemDamage() == OreDictionary.WILDCARD_VALUE || comparison.getItemDamage() == itemstack.getItemDamage()))
 					return true;
 			}
@@ -147,7 +156,9 @@ public class StackHelper {
 			}
 		}
 		if (matchNBT) {
-			if (a.stackTagCompound != null && !a.stackTagCompound.equals(b.stackTagCompound)) {
+			NBTTagCompound aTagCompound = a.getTagCompound();
+			NBTTagCompound bTagCompound = b.getTagCompound();
+			if (aTagCompound != null && !aTagCompound.equals(bTagCompound)) {
 				return false;
 			}
 		}
@@ -161,4 +172,34 @@ public class StackHelper {
 	public boolean isWildcard(int damage) {
 		return damage == -1 || damage == OreDictionary.WILDCARD_VALUE;
 	}
+	
+	public static void packItemStackList(final List<ItemStack> stackList) {
+        if( stackList==null){
+            return;
+        }
+        for( int i=0; i< stackList.size(); i++) {
+            final ItemStack item=stackList.get(i);
+            final List<ItemStack> nextItems = stackList.subList(i+1, stackList.size());
+            final Iterator<ItemStack> it = nextItems.iterator();
+            final List<ItemStack> toRemove=new ArrayList<ItemStack>();
+            while(it.hasNext()){
+                final ItemStack next = it.next();
+                if( item.isItemEqual(next)){
+                    if( item.stackSize+next.stackSize > item.getMaxStackSize()){
+                        next.stackSize = item.getMaxStackSize()-item.stackSize;
+                        item.stackSize=item.getMaxStackSize();
+                    }else{
+                        item.stackSize+=next.stackSize;
+                        toRemove.add(next);
+                    }
+                    if( item.stackSize==64){
+                        break;
+                    }
+                }
+            }
+            if( !toRemove.isEmpty()){
+                stackList.removeAll(toRemove);
+            }
+        }
+    }
 }

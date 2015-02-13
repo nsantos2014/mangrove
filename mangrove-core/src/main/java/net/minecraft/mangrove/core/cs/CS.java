@@ -1,21 +1,25 @@
 package net.minecraft.mangrove.core.cs;
 
-import net.minecraftforge.common.util.ForgeDirection;
+
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.Vec3;
+import net.minecraft.util.Vec3i;
+
 
 public class CS {
-	public static final CS world=new CS(new CSPosition3i(),new CSPosition3d());
-	private CSPosition3i position;
-	private CSPosition3d positionDouble;
-	private CSAxis axis;	
-	static{
-		world.position.direction=ForgeDirection.SOUTH;
-		world.axis=CSAxis.Southing;
+	public static final CS world=new CS(new Vec3i(0,0,0),new Vec3(0.0,0.0,0.0),EnumFacing.SOUTH);
+	private EnumFacing direction;
+	private Vec3i position;
+	private Vec3 positionDouble;
+	private Axis axis;	
+	
+	public static CS subSystem(Vec3i position,EnumFacing direction) {
+		return new CS(position,new Vec3(position.getX(), position.getY(), position.getZ()),direction);
 	}
-	public static CS subSystem(CSPosition3i position) {
-		return new CS(position,new CSPosition3d(position.x, position.y, position.z, position.direction));
-	}
-	public static CS subSystem(CSPosition3d position) {
-		return new CS(new CSPosition3i(toInt(position.x), toInt(position.y), toInt(position.z), position.direction),position);	
+	public static CS subSystem(Vec3 position,EnumFacing direction) {
+		return new CS(new Vec3i(toInt(position.xCoord), toInt(position.yCoord), toInt(position.zCoord)),position,direction);	
 	}
 	
 	public static double toDouble(int i){
@@ -25,28 +29,62 @@ public class CS {
 		return (int)Math.round(d);
 	}
 	
-	private CS(CSPosition3i position, CSPosition3d csPosition3d){
+	private CS(Vec3i position, Vec3 csPosition3d,EnumFacing direction){
 		this.position = position;
 		this.positionDouble = csPosition3d;
-		this.axis=CSAxis.fromDirection(position.direction);
+		this.direction=direction;
+		this.axis=direction.getAxis();
 	}
+	public BlockPos toWorldBlockPos(Vec3i local) {
+	    Vec3i vec = toWorld(local);
+	    return new BlockPos(vec);
+	}
+	public BlockPos toWorldBlockPos(BlockPos local) {
+        Vec3i vec = toWorld(new Vec3i(local.getX(), local.getY(), local.getZ()));
+        return new BlockPos(vec);
+    }
 
-
-	public CSPosition3i toWorld(CSPosition3i local) {
-		final CSPosition3i worldPos=new CSPosition3i(this.position);
-		final CSMatrixInt mat = axis.getMatrixInt();
-		worldPos.x+=mat.get(0,0)*local.x+mat.get(0,1)*local.z;
-		worldPos.y+=local.y;
-		worldPos.z+=mat.get(1,0)*local.x+mat.get(1,1)*local.z;
-		return worldPos;
+	public Vec3i toWorld(Vec3i local) {
+		if( axis.isHorizontal() ){
+		    double[][] matrix;
+		    if( axis==Axis.X){
+		        matrix=T_MATRIX_X;
+		    }else {
+		        matrix=T_MATRIX_Z;
+		    }
+		    int x = toInt(matrix[0][0])*local.getX()+toInt(matrix[0][1])*local.getZ();
+	        int y = local.getY();
+	        int z = toInt(matrix[1][0])*local.getX()+toInt(matrix[1][1])*local.getZ();
+	        return new Vec3i(x, y, z);
+		}
+		
+		return local;
 	}
 	
-	public CSPosition3d toWorld(CSPosition3d local) {
-		final CSPosition3d worldPos=new CSPosition3d(this.positionDouble);
-		final CSMatrixDouble mat = axis.getMatrixDouble();
-		worldPos.x+=mat.get(0,0)*local.x+mat.get(0,1)*local.z;
-		worldPos.y+=local.y;
-		worldPos.z+=mat.get(1,0)*local.x+mat.get(1,1)*local.z;
-		return worldPos;
+	public Vec3 toWorld(Vec3 local) {
+	    if( axis.isHorizontal() ){
+            double[][] matrix;
+            if( axis==Axis.X){
+                matrix=T_MATRIX_X;
+            }else {
+                matrix=T_MATRIX_Z;
+            }
+            double x = matrix[0][0]*local.xCoord+matrix[0][1]*local.zCoord;
+            double y = local.yCoord;
+            double z = matrix[1][0]*local.xCoord+matrix[1][1]*local.zCoord;
+            return new Vec3(x, y, z);
+        }
+        
+        return local;
 	}
+	
+	double[][] T_MATRIX_X={
+	        {0.0,  1.0},  
+	         {1.0,  0.0}
+	        
+	};
+	double[][] T_MATRIX_Z={
+	        {  1.0,  0.0},  
+	        { 0.0,  1.0}     
+    };
 }

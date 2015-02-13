@@ -7,30 +7,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.vecmath.Point3d;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.core.ITileUpdatable;
+import net.minecraft.mangrove.core.inventory.EnumPermission;
+import net.minecraft.mangrove.core.inventory.tile.AbstractSidedInventoryTileEntity;
+import net.minecraft.mangrove.core.json.JSON;
+import net.minecraft.mangrove.core.utils.StackHelper;
+import net.minecraft.mangrove.network.NetBus;
+import net.minecraft.mangrove.network.TileEntityMessage;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.util.EnumFacing;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.mangrove.core.ITileUpdatable;
-import net.minecraft.mangrove.core.block.AbstractSidedInventoryTileEntity;
-import net.minecraft.mangrove.core.inventory.InvUtils;
-import net.minecraft.mangrove.core.inventory.Permission;
-import net.minecraft.mangrove.core.json.JSON;
-import net.minecraft.mangrove.network.NetBus;
-import net.minecraft.mangrove.network.TileEntityMessage;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-
-public class TileEntityAutobench extends AbstractSidedInventoryTileEntity implements ITileUpdatable {
+public class TileEntityAutobench extends AbstractSidedInventoryTileEntity implements ITileUpdatable,IUpdatePlayerListBox {
     public int transferCooldown;
     private boolean working = true;
 
@@ -44,15 +39,15 @@ public class TileEntityAutobench extends AbstractSidedInventoryTileEntity implem
     public TileEntityAutobench() {
         super();
         this.name = null;
-        inventorySupport.defineSlotRange(0, 9, null, Permission.INSERT, 0, 2, 3, 4, 5);
-        inventorySupport.defineSlotRange(9, 9, null, Permission.EXTRACT, 0, 2, 3, 4, 5);
-        inventorySupport.defineSlot(18, null, Permission.BOTH, -1);
+        inventorySupport.defineSlotRange(0, 9, null, EnumPermission.INSERT, EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST);
+        inventorySupport.defineSlotRange(9, 9, null, EnumPermission.EXTRACT,  EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST);
+        inventorySupport.defineSlot(18, null, EnumPermission.BOTH);
 
     }
 
     public String getName() {
         if (this.name == null) {
-            this.name = String.format("AutoBench (%d,%d,%d)", xCoord, yCoord, zCoord);
+            this.name = String.format("AutoBench (%d,%d,%d)", pos.getX(), pos.getY(), pos.getZ());
         }
         return this.name;
     }
@@ -107,9 +102,9 @@ public class TileEntityAutobench extends AbstractSidedInventoryTileEntity implem
         // slot.getValue().writeToNBT(nbttagcompound1);
 
     }
-
+    
     @Override
-    public void updateEntity() {
+    public void update() {
         if ((this.worldObj == null) || (this.worldObj.isRemote)) {
             return;
         }
@@ -278,7 +273,7 @@ public class TileEntityAutobench extends AbstractSidedInventoryTileEntity implem
 
     public void setTemplate(ItemStack itemStack, List<ItemStack> bom) {
         inventorySupport.setSlotContents(18, itemStack);
-        InvUtils.packItemStackList(bom);
+        StackHelper.packItemStackList(bom);
         int i = 19;
         for (ItemStack iStack : bom) {
             if (iStack != null) {

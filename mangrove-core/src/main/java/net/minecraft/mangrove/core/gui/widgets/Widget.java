@@ -17,8 +17,8 @@ import net.minecraft.mangrove.core.gui.MGContainer;
 import net.minecraft.mangrove.core.gui.MGGui;
 import net.minecraft.mangrove.core.gui.tooltip.IToolTipProvider;
 import net.minecraft.mangrove.core.gui.tooltip.ToolTip;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Widget implements IToolTipProvider {
 

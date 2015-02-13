@@ -1,18 +1,11 @@
 package net.minecraft.mangrove.core.gui.slots;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
-import net.minecraft.stats.AchievementList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class SlotCrafting extends SlotBase{
 	/** The craft matrix inventory linked to this result slot. */
@@ -99,7 +92,8 @@ public class SlotCrafting extends SlotBase{
                         continue;
                     }
 
-                    if (!itemstack1.getItem().doesContainerItemLeaveCraftingGrid(itemstack1) || !this.thePlayer.inventory.addItemStackToInventory(itemstack2))
+                    if (!this.thePlayer.inventory.addItemStackToInventory(itemstack2))                    	
+//                    if (!itemstack1.getItem().doesContainerItemLeaveCraftingGrid(itemstack1) || !this.thePlayer.inventory.addItemStackToInventory(itemstack2))
                     {
                         if (this.craftMatrix.getStackInSlot(i) == null)
                         {

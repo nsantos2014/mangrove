@@ -66,8 +66,8 @@ public class ContainerDelegate extends Container{
 		return container.slotClick(par1, par2, par3, par4EntityPlayer);
 	}
 
-	public boolean func_94530_a(ItemStack par1ItemStack, Slot par2Slot) {
-		return container.func_94530_a(par1ItemStack, par2Slot);
+	public boolean canMergeSlot(ItemStack par1ItemStack, Slot par2Slot) {
+		return container.canMergeSlot(par1ItemStack, par2Slot);
 	}
 
 	public void onContainerClosed(EntityPlayer par1EntityPlayer) {

@@ -11,11 +11,10 @@ package net.minecraft.mangrove.core.gui.button;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.mangrove.core.gui.tooltip.ToolTip;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiMultiButton extends GuiBetterButton {
@@ -38,7 +37,7 @@ public class GuiMultiButton extends GuiBetterButton {
 			return;
 		}
 		
-		FontRenderer fontrenderer = minecraft.fontRenderer;
+		FontRenderer fontrenderer = minecraft.fontRendererObj;
 		bindButtonTextures(minecraft);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		IMultiButtonState state = control.getButtonState();

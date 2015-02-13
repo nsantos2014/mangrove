@@ -1,21 +1,10 @@
 package net.minecraft.mangrove.mod.house.block.crate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.mangrove.core.block.AbstractSidedInventoryTileEntity;
-import net.minecraft.mangrove.core.inventory.Permission;
-import net.minecraft.nbt.NBTBase;
+import net.minecraft.mangrove.core.inventory.EnumPermission;
+import net.minecraft.mangrove.core.inventory.tile.AbstractSidedInventoryTileEntity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 
 public class TileEntityCrate extends AbstractSidedInventoryTileEntity {
 	private String name;
@@ -23,11 +12,11 @@ public class TileEntityCrate extends AbstractSidedInventoryTileEntity {
 	public TileEntityCrate() {
 		super();
 		this.name=null;
-		inventorySupport.defineSlotRange(0, 180, null, Permission.BOTH, 0,1,2,3,4,5);
+		inventorySupport.defineSlotRange(0, 180, null, EnumPermission.BOTH, EnumFacing.DOWN,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.SOUTH,EnumFacing.WEST,EnumFacing.EAST);
 	}
 	public String getName(){
 		if( this.name==null){
-			this.name=String.format("Crate (%d,%d,%d)",xCoord,yCoord,zCoord);
+			this.name=String.format("Crate (%d,%d,%d)",pos.getX(),pos.getY(),pos.getZ());
 		}
 		return this.name;
 	}
@@ -40,7 +29,7 @@ public class TileEntityCrate extends AbstractSidedInventoryTileEntity {
 		super.writeToNBT(tag);
 	}
 	
-	@Override
+//	@Override
 	public void updateEntity() {
 	}
 	

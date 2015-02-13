@@ -14,11 +14,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.mangrove.core.gui.tooltip.IToolTipProvider;
 import net.minecraft.mangrove.core.gui.tooltip.ToolTip;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiBetterButton extends GuiButton implements IToolTipProvider {
@@ -73,7 +72,7 @@ public class GuiBetterButton extends GuiButton implements IToolTipProvider {
 			return;
 		}
 		
-		FontRenderer fontrenderer = minecraft.fontRenderer;
+		FontRenderer fontrenderer = minecraft.fontRendererObj;
 		bindButtonTextures(minecraft);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int xOffset = texture.getX();

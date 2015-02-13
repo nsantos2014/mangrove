@@ -3,26 +3,26 @@ package net.minecraft.mangrove.mod.thrive.robot.entity;
 
 import java.io.IOException;
 
-import com.google.gson.JsonObject;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.mangrove.core.ITileUpdatable;
-import net.minecraft.mangrove.core.cs.CSPoint3i;
 import net.minecraft.mangrove.core.json.JSON;
 import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
 import net.minecraft.mangrove.mod.thrive.robot.block.SystemUtils;
 import net.minecraft.mangrove.network.NetBus;
 import net.minecraft.mangrove.network.TileEntityMessage;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 
-public abstract class AbstractTileRobotNode extends TileEntity implements ITileUpdatable {
+import com.google.gson.JsonObject;
+
+public abstract class AbstractTileRobotNode extends TileEntity implements ITileUpdatable,IUpdatePlayerListBox {
 	private Lifecycle stage = Lifecycle.Off;
 	private int tick = 0;
 	private int step = 0;
 	
 	private int maxStep = 1;
-    protected CSPoint3i controlPosition;	
+    protected BlockPos controlPosition;	
 	
 	public int getMaxStep() {
 		return maxStep;
@@ -48,9 +48,8 @@ public abstract class AbstractTileRobotNode extends TileEntity implements ITileU
 	}
 	
 	@Override
-	public final void updateEntity() {
-	    final CSPoint3i point=new CSPoint3i(xCoord,yCoord,zCoord);
-        this.controlPosition = SystemUtils.findFirstControl(worldObj, xCoord, yCoord, zCoord);
+	public final void update() {
+	    this.controlPosition = SystemUtils.findFirstControl(worldObj, pos);
         if( controlPosition==null){
             doStop();            
             return;

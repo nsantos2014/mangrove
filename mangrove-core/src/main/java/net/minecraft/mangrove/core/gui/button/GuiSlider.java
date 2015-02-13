@@ -25,7 +25,7 @@ public class GuiSlider extends GuiButton {
 		 * MouseListener.mouseDragged(MouseEvent e).
 		 */
 		protected void mouseDragged(Minecraft par1Minecraft, int x, int y) {
-			if (!field_146123_n) {
+			if (!enabled) {
 				return;
 			}
 

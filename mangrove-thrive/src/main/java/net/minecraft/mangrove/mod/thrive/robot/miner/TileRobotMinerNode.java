@@ -1,8 +1,6 @@
 package net.minecraft.mangrove.mod.thrive.robot.miner;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -10,21 +8,23 @@ import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.cs.CS;
-import net.minecraft.mangrove.core.cs.CSPosition3d;
-import net.minecraft.mangrove.core.cs.CSPosition3i;
-import net.minecraft.mangrove.core.inventory.ITransactor;
-import net.minecraft.mangrove.core.utils.BlockUtils;
+import net.minecraft.mangrove.core.inventory.transactor.ITransactor;
 import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
+import net.minecraft.mangrove.mod.thrive.robot.block.AbstractBlockNode;
 import net.minecraft.mangrove.mod.thrive.robot.entity.AbstractTileRobotNode;
 import net.minecraft.mangrove.mod.thrive.robot.entity.Lifecycle;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import com.google.gson.JsonObject;
 
@@ -32,8 +32,8 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
     public static final Set<Block> drillableBlocks = new HashSet<Block>();
 
     private final Random field_149933_a = new Random();
-    protected CSPosition3i position;
-    protected CSPosition3i local;
+    protected BlockPos position;
+    protected BlockPos local;
     protected int it = 0;
     protected CS positionCS;
     protected CS localCS;
@@ -86,45 +86,47 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
         this.local = null;
         incStep();
         setupCS();
-        for (; depth < yCoord; depth++) {
-            this.local.y = -depth;
-            final CSPosition3i worldPos = localCS.toWorld(local);
-            final Block block = this.worldObj.getBlock(worldPos.x, worldPos.y, worldPos.z);
-            if (block.isAir(this.worldObj, worldPos.x, worldPos.y, worldPos.z)) {
-                System.out.println("Block Air(" + worldPos.x + "," + worldPos.y + "," + worldPos.z + "): " + block);
+        for (; depth < pos.getY(); depth++) {
+//            this.local.y = -depth;
+            this.local.add(0,-depth,0);
+            final BlockPos worldPos = localCS.toWorldBlockPos(local);
+            final IBlockState blockState = this.worldObj.getBlockState(worldPos);
+            final Block block =blockState.getBlock() ;
+            if (block.isAir(this.worldObj, worldPos)) {
+                System.out.println("Block Air(" + worldPos.getX() + "," + worldPos.getY() + "," + worldPos.getZ() + "): " + block);
                 // return false;
-            } else if (isWater(block, this.worldObj, worldPos.x, worldPos.y, worldPos.z)) {
-                System.out.println("Block Air(" + worldPos.x + "," + worldPos.y + "," + worldPos.z + "): " + block);
+            } else if (isWater(block, this.worldObj, worldPos)) {
+                System.out.println("Block Air(" + worldPos.getX() + "," + worldPos.getY() + "," + worldPos.getZ() + "): " + block);
                 // return false;
             } else {
                 if (drillableBlocks.contains(block)) {
-                    System.out.println("Block Drillable (" + worldPos.x + "," + worldPos.y + "," + worldPos.z + "): " + block);
+                    System.out.println("Block Drillable (" + worldPos.getX() + "," + worldPos.getY() + "," + worldPos.getZ() + "): " + block);
                     return true;
                 }
 
-                System.out.println("Block Not Drillable (" + worldPos.x + "," + worldPos.y + "," + worldPos.z + "): " + block);
+                System.out.println("Block Not Drillable (" + worldPos.getX() + "," + worldPos.getY() + "," + worldPos.getZ() + "): " + block);
                 return false;
             }
         }
         return false;
     }
 
-    private boolean isWater(Block block, World worldObj, int x, int y, int z) {
+    private boolean isWater(Block block, World worldObj, BlockPos blockPos) {
         return block.getMaterial() == Material.water;
     }
 
     private void setupCS() {
+        EnumFacing facing = (EnumFacing) this.worldObj.getBlockState(this.pos).getValue(AbstractBlockNode.FACING);
         if (this.localCS == null) {
-            this.position = new CSPosition3i(xCoord, yCoord, zCoord, BlockUtils.getForgeDirectionFromMetadata(this.getBlockMetadata()));
-            this.positionCS = CS.subSystem(this.position);
+//            this.position = new CSPosition3i(xCoord, yCoord, zCoord, BlockUtils.getForgeDirectionFromMetadata(this.getBlockMetadata()));
+            this.positionCS = CS.subSystem(this.pos,facing);
             // //////////////////////////////////
-            this.position = positionCS.toWorld(new CSPosition3i(getStep(), -this.depth, 0, position.direction));
-            this.localCS = CS.subSystem(this.position);
+            this.position = this.pos.add(getStep(), -this.depth, 0);
+            this.localCS = CS.subSystem(this.position,facing);
         }
         // ////////////////////////////////
         if (this.local == null) {
-            this.local = new CSPosition3i();
-            this.local.direction = position.direction;
+            this.local = new BlockPos(0,0,0);
         }
     }
 
@@ -133,16 +135,17 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
         this.localCS = null;
         this.local = null;
         setupCS();
-        final CSPosition3i worldPos = localCS.toWorld(local);
-        final Block block = this.worldObj.getBlock(worldPos.x, worldPos.y, worldPos.z);
-        int meta = worldObj.getBlockMetadata(worldPos.x, worldPos.y, worldPos.z);
-
+        final BlockPos worldPos = localCS.toWorldBlockPos(local);
+        IBlockState blockState = this.worldObj.getBlockState(worldPos);
+        
+        final Block block = blockState.getBlock();
+        
         if (drillableBlocks.contains(block)) {
             // final ITransactor transactor = null;
             final ITransactor transactor = MGThriveBlocks.robot_kernel.getTransactor(worldObj, controlPosition);
-            final ArrayList<ItemStack> drops = block.getDrops(worldObj, worldPos.x, worldPos.y + 1, worldPos.z, meta, 0);
+            final List<ItemStack> drops = block.getDrops(worldObj, worldPos, blockState, 0);
 
-            System.out.println("Block Drilling (" + worldPos.x + "," + worldPos.y + "," + worldPos.z + "): " + block + " drops:" + drops);
+            System.out.println("Block Drilling (" + worldPos.getX() + "," + worldPos.getY() + "," + worldPos.getZ() + "): " + block + " drops:" + drops);
             // worldObj.destroyBlockInWorldPartially(minerId, worldPos.x,
             // worldPos.y, worldPos.z, -1);
 
@@ -166,24 +169,24 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
             // // }
             // }
 
-            worldObj.playAuxSFXAtEntity(null, 2001, worldPos.x, worldPos.y, worldPos.z, Block.getIdFromBlock(block) + (meta << 12));
+//            worldObj.playAuxSFXAtEntity(null, 2001, worldPos.x, worldPos.y, worldPos.z, Block.getIdFromBlock(block) + (meta << 12));
 
-            if (block.hasTileEntity(meta)) {
-                worldObj.removeTileEntity(worldPos.x, worldPos.y, worldPos.z);
+            if (block.hasTileEntity(blockState)) {
+                worldObj.removeTileEntity(worldPos);
             }
 
-            worldObj.setBlockToAir(worldPos.x, worldPos.y, worldPos.z);
+            worldObj.setBlockToAir(worldPos);
 
             if (transactor != null) {
                 for (ItemStack iStack : drops) {
-                    ItemStack stack = transactor.add(iStack, ForgeDirection.UP, true);
+                    ItemStack stack = transactor.add(iStack, EnumFacing.UP, true);
                     if (stack.stackSize < iStack.stackSize) {
                         iStack.stackSize -= stack.stackSize;
                         spawnDrop(worldPos, iStack);
                     }
                 }
 
-                AxisAlignedBB axis = AxisAlignedBB.getBoundingBox(worldPos.x - 2, worldPos.y - 2, worldPos.z - 2, worldPos.x + 3, worldPos.y + 3, worldPos.z + 3);
+                AxisAlignedBB axis = AxisAlignedBB.fromBounds(worldPos.getX() - 2, worldPos.getY() - 2, worldPos.getZ() - 2, worldPos.getX() + 3, worldPos.getY() + 3, worldPos.getZ() + 3);
                 List result = worldObj.getEntitiesWithinAABB(EntityItem.class, axis);
                 for (int ii = 0; ii < result.size(); ii++) {
                     if (result.get(ii) instanceof EntityItem) {
@@ -197,7 +200,7 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
                             continue;
                         }
                         entity.worldObj.removeEntity(entity);
-                        ItemStack stack = transactor.add(iStack, ForgeDirection.UP, true);
+                        ItemStack stack = transactor.add(iStack, EnumFacing.UP, true);
                         if (stack.stackSize < iStack.stackSize) {
                             iStack.stackSize -= stack.stackSize;
                             spawnDrop(worldPos, iStack);
@@ -209,7 +212,7 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
                 spawnCropsByDefault(worldPos, drops);
             }
 
-            block.breakBlock(worldObj, worldPos.x, worldPos.y, worldPos.z, block, 0);
+            block.breakBlock(worldObj, worldPos, blockState);
             this.markDirty();
             return true;
         }
@@ -247,19 +250,19 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
     // }
     // }
 
-    private void spawnCropsByDefault(final CSPosition3i worldPos, final List<ItemStack> drops) {
+    private void spawnCropsByDefault(final BlockPos worldPos, final List<ItemStack> drops) {
         for (ItemStack iStack : drops) {
             spawnDrop(worldPos, iStack);
         }
     }
 
-    private void spawnDrop(final CSPosition3i worldPos, ItemStack iStack) {
+    private void spawnDrop(final BlockPos worldPos, ItemStack iStack) {
         if (iStack != null) {
             float f = this.field_149933_a.nextFloat() * 0.8F + 0.1F;
             float f1 = this.field_149933_a.nextFloat() * 0.8F + 0.1F;
             float f2 = this.field_149933_a.nextFloat() * 0.8F + 0.1F;
 
-            final EntityItem entityitem = new EntityItem(worldObj, (double) ((float) worldPos.x + f), (double) ((float) worldPos.y + 1 + f1), (double) ((float) worldPos.z + f2),
+            final EntityItem entityitem = new EntityItem(worldObj, (double) ((float) worldPos.getX() + f), (double) ((float) worldPos.getY() + 1 + f1), (double) ((float) worldPos.getZ() + f2),
                     iStack);
 
             float f3 = 0.05F;
@@ -297,30 +300,31 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
         this.local = null;
         setupCS();
 //        this.local.y = -depth;
-        final CSPosition3i x=new CSPosition3i();        
+//        final CSPosition3i x=new CSPosition3i();        
         //this.local.y = -depth;
-        final CSPosition3i worldPos = localCS.toWorld(x);
-        ForgeDirection direction = position.direction;
+//        final CSPosition3i worldPos = localCS.toWorld(x);
+//        ForgeDirection direction = position.direction;
         
-        final CSPosition3d position = new CSPosition3d(worldPos);
-        System.out.println("renderScene:" + clientTick + ":" + getStep() + ": " + position);
+        final Vec3 position = new Vec3(this.position.getX(),this.position.getY(),this.position.getZ());
+//        System.out.println("renderScene:" + clientTick + ":" + getStep() + ": " + position);
         
-        worldObj.spawnParticle("happyVillager", position.x + 0.25, position.y + 1.5, position.z + 0.25, 0.5D, 1.0D, 0.5D);
-        worldObj.spawnParticle("happyVillager", position.x + 0.25, position.y + 1.5, position.z + 0.75, 0.5D, 1.0D, 0.5D);
-        worldObj.spawnParticle("happyVillager", position.x + 0.50, position.y + 1.1, position.z + 0.50, 0.5D, 1.0D, 0.5D);
-        worldObj.spawnParticle("happyVillager", position.x + 0.75, position.y + 1.5, position.z + 0.25, 0.5D, 1.0D, 0.5D);
-        worldObj.spawnParticle("happyVillager", position.x + 0.75, position.y + 1.5, position.z + 0.75, 0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, position.xCoord + 0.25, position.yCoord + 1.5, position.zCoord + 0.25, 0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, position.xCoord + 0.25, position.yCoord + 1.5, position.zCoord + 0.75, 0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, position.xCoord + 0.50, position.yCoord + 1.1, position.zCoord + 0.50, 0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, position.xCoord + 0.75, position.yCoord + 1.5, position.zCoord + 0.25, 0.5D, 1.0D, 0.5D);
+        worldObj.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, position.xCoord + 0.75, position.yCoord + 1.5, position.zCoord + 0.75, 0.5D, 1.0D, 0.5D);
 
 
-        x.x=1;
+        BlockPos x=new BlockPos(1,0,0);
+        
         
 //        x.z=position2.direction.offsetX;        
-        final CSPosition3i world2Pos = positionCS.toWorld(x);
+        final BlockPos world2Pos = positionCS.toWorldBlockPos(x);
         
 //        world2Pos.x=direction.getOpposite().offsetX;
 //        world2Pos.z=direction.getOpposite().offsetZ; 
         
-        final CSPosition3d position2 = new CSPosition3d(world2Pos);
+//        final CSPosition3d position2 = new CSPosition3d(world2Pos);
         
 //        ForgeDirection rotateAroundYY = position2.direction.getRotation(ForgeDirection.UP);
 //        System.out.println("Rotate : "+rotateAroundYY);
@@ -332,61 +336,61 @@ public class TileRobotMinerNode extends AbstractTileRobotNode {
 //        worldObj.spawnParticle("reddust", position2.x + direction.offsetZ*0.25, position2.y + 0.75, position2.z + direction.offsetX*0.25, 1.0D, -0.5D, 0.5D);
 //        worldObj.spawnParticle("reddust", position2.x + direction.offsetZ*0.75, position2.y + 0.75, position2.z + direction.offsetX*0.75, 1.0D, -0.5D, 0.5D);
 
-        
-        double offsetY = 0.25;
-        double offsetX = 0.1;        
-        double offsetZ = 0.5;
-        
-        double dY = 0.0D;
-        double dX = 0.0D;        
-        double dZ = 0.0D;
-        
-        switch(direction){
-        case NORTH:
-            offsetZ = 0.9;            
-            offsetX = 0.25;
-//            dZ = 1.0D;
-            break;
-        case SOUTH:
-            offsetZ = 0.1;
-            offsetX = 0.25;
-//            dZ = 1.0D;
-            break;
-        case EAST:
-            offsetZ = 0.25;
-            offsetX = 0.1;
-//            dX = 1.0D;
-            break;
-        case WEST:
-            offsetZ = 0.25;
-            offsetX = 0.9;
-//            dX = 1.0D;
-            break;
-        default:
-            break;
-        }
-                
-        switch(direction){
-        case NORTH:
-        case SOUTH:
-            for( int i=1; i< 4; i++){
-                for( int j=1; j< 4; j++){
-                    worldObj.spawnParticle("reddust", position2.x + i*offsetX, position2.y + j*offsetY, position2.z + offsetZ, dX, dY, dZ);
-                }
-            }
-            break;
-        case EAST:
-        case WEST:
-            for( int i=1; i< 4; i++){
-                for( int j=1; j< 4; j++){
-                    worldObj.spawnParticle("reddust", position2.x + offsetX, position2.y + j*offsetY, position2.z + i*offsetZ, dX, dY, dZ);
-                }
-            }
-            break;
-        default:
-            break;
-        }
-        
+        //TODO
+//        double offsetY = 0.25;
+//        double offsetX = 0.1;        
+//        double offsetZ = 0.5;
+//        
+//        double dY = 0.0D;
+//        double dX = 0.0D;        
+//        double dZ = 0.0D;
+//        
+//        switch(direction){
+//        case NORTH:
+//            offsetZ = 0.9;            
+//            offsetX = 0.25;
+////            dZ = 1.0D;
+//            break;
+//        case SOUTH:
+//            offsetZ = 0.1;
+//            offsetX = 0.25;
+////            dZ = 1.0D;
+//            break;
+//        case EAST:
+//            offsetZ = 0.25;
+//            offsetX = 0.1;
+////            dX = 1.0D;
+//            break;
+//        case WEST:
+//            offsetZ = 0.25;
+//            offsetX = 0.9;
+////            dX = 1.0D;
+//            break;
+//        default:
+//            break;
+//        }
+//                
+//        switch(direction){
+//        case NORTH:
+//        case SOUTH:
+//            for( int i=1; i< 4; i++){
+//                for( int j=1; j< 4; j++){
+//                    worldObj.spawnParticle("reddust", position2.x + i*offsetX, position2.y + j*offsetY, position2.z + offsetZ, dX, dY, dZ);
+//                }
+//            }
+//            break;
+//        case EAST:
+//        case WEST:
+//            for( int i=1; i< 4; i++){
+//                for( int j=1; j< 4; j++){
+//                    worldObj.spawnParticle("reddust", position2.x + offsetX, position2.y + j*offsetY, position2.z + i*offsetZ, dX, dY, dZ);
+//                }
+//            }
+//            break;
+//        default:
+//            break;
+//        }
+//        
         
         return true;
     }

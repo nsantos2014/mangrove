@@ -87,6 +87,6 @@ public class ContainerProcessing extends MGContainer {
 	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
 		super.onContainerClosed(par1EntityPlayer);
 
-		this.tile.closeInventory();
+		this.tile.closeInventory(par1EntityPlayer);
 	}
 }

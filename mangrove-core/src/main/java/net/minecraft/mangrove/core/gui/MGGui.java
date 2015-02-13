@@ -8,6 +8,7 @@
  */
 package net.minecraft.mangrove.core.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,7 +25,6 @@ import net.minecraft.mangrove.core.gui.tooltip.ToolTip;
 import net.minecraft.mangrove.core.gui.tooltip.ToolTipLine;
 import net.minecraft.mangrove.core.gui.widgets.Widget;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -152,7 +152,7 @@ public abstract class MGGui extends GuiContainer {
 
 	// / MOUSE CLICKS
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		int mX = mouseX - guiLeft;
 		int mY = mouseY - guiTop;
 
@@ -187,8 +187,8 @@ public abstract class MGGui extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseMovedOrUp(int mouseX, int mouseY, int eventType) {
-		super.mouseMovedOrUp(mouseX, mouseY, eventType);
+	protected void mouseReleased(int mouseX, int mouseY, int eventType) {
+		super.mouseReleased(mouseX, mouseY, eventType);
 
 		int mX = mouseX - guiLeft;
 		int mY = mouseY - guiTop;
@@ -463,10 +463,10 @@ public abstract class MGGui extends GuiContainer {
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
 		}
 
-		protected void drawIcon(IIcon icon, int x, int y) {
-
-			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
-			drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
-		}
+//		protected void drawIcon(IIcon icon, int x, int y) {
+//
+//			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
+//			drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
+//		}
 	}
 }

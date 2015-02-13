@@ -3,7 +3,6 @@ package net.minecraft.mangrove.core.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class AdvancedSlot {
@@ -24,13 +23,14 @@ public abstract class AdvancedSlot {
 			return "";
 	}
 
-	public IIcon getIcon() {
-		return null;
-	}
+//	public IIcon getIcon() {
+//		return null;
+//	}
 
-	public ResourceLocation getTexture() {
-		return TextureMap.locationItemsTexture;
-	}
+//	public ResourceLocation getTexture() {
+//		Minecraft.getMinecraft().getTextureManager()
+//		return TextureMap.locationItemsTexture;
+//	}
 
 	public ItemStack getItemStack() {
 		return null;
@@ -48,11 +48,11 @@ public abstract class AdvancedSlot {
 
 		if (getItemStack() != null) {
 			drawStack(getItemStack());
-		} else if (getIcon() != null) {
+		} /*else if (getIcon() != null) {
 			mc.renderEngine.bindTexture(getTexture());
 			//System.out.printf("Drawing advanced sprite %s (%d,%d) at %d %d\n", getIcon().getIconName(), getIcon().getOriginX(),getIcon().getOriginY(),cornerX + x, cornerY + y);
 			gui.drawTexturedModelRectFromIcon(cornerX + x, cornerY + y, getIcon(), 16, 16);
-		}
+		}*/
 
 	}
 
@@ -64,8 +64,8 @@ public abstract class AdvancedSlot {
 			int cornerY = (gui.height - gui.getYSize()) / 2;
 
 			GuiAdvancedInterface.getItemRenderer().zLevel = 200F;
-			GuiAdvancedInterface.getItemRenderer().renderItemAndEffectIntoGUI(gui.getFontRenderer (), mc.renderEngine, item, cornerX + x, cornerY + y);
-			GuiAdvancedInterface.getItemRenderer().renderItemOverlayIntoGUI(gui.getFontRenderer (), mc.renderEngine, item, cornerX + x, cornerY + y);
+			GuiAdvancedInterface.getItemRenderer().renderItemAndEffectIntoGUI(item, cornerX + x, cornerY + y);
+			GuiAdvancedInterface.getItemRenderer().renderItemOverlayIntoGUI(gui.getFontRenderer (), item, cornerX + x, cornerY + y,"");
 			GuiAdvancedInterface.getItemRenderer().zLevel = 0.0F;
 		}
 	}

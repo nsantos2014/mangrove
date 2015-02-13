@@ -8,9 +8,8 @@ public class BlockRobotMinerNode extends AbstractBlockNode{
 
 
 	public BlockRobotMinerNode() {
-		super();
+		super("robot_miner_head");
 		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-		setBlockName("miner_node");
 	}
 
 	@Override

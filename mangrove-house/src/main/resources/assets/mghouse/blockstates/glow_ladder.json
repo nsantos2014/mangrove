@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "mghouse:glow_ladder" },
+        "facing=east":  { "model": "mghouse:glow_ladder", "y": 90 },
+        "facing=south": { "model": "mghouse:glow_ladder", "y": 180 },
+        "facing=west":  { "model": "mghouse:glow_ladder", "y": 270 }
+    }
+}

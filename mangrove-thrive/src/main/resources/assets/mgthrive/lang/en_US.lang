@@ -1,0 +1,7 @@
+tile.mgthrive_autobench.name=Autobench
+tile.mgthrive_robot_link.name=Robot Link
+tile.mgthrive_robot_kernel.name=Robot Kernel
+tile.mgthrive_farmer_node.name=Robot Farmer Node
+tile.mgthrive_miner_node.name=Robot Miner Node
+tile.mgthrive_hopperduct.name=Duct
+tile.mgthrive_gratedhopper.name=Grated Hopper
