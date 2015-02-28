@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 
@@ -40,6 +41,7 @@ public static final Craftpedia instance=new Craftpedia();
 	}
 	public void registerKeys(){
 		ClientRegistry.registerKeyBinding(this.toggleXrayGui);
+		FMLCommonHandler.instance().bus().register(this);
 	}
 	
 	@SubscribeEvent

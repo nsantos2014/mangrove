@@ -49,11 +49,11 @@ public abstract class AbstractBlockDuct extends BlockContainer{
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2,int par3, int par4) {
-        float x1 = 0.25F;
+        float x1 = 0.2F;
         float x2 = 1.0F - x1;
-        float y1 = 0.25F;
+        float y1 = 0.2F;
         float y2 = 1.0F - y1;
-        float z1 = 0.25F;
+        float z1 = 0.2F;
         float z2 = 1.0F - z1;
 
         if (isDuctReceivingFrom(par1IBlockAccess, par2 - 1, par3, par4, 5))

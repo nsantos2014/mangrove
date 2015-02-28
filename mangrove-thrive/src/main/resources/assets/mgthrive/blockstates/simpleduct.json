@@ -1,0 +1,48 @@
+{
+    "variants": {
+        "inventory"                 :{"model": "beacon"},
+        
+        "input=up,output=up"        :{"model": "beacon"},
+        "input=up,output=down"      :{"model": "beacon"},
+        "input=up,output=north"     :{"model": "beacon"},
+        "input=up,output=south"     :{"model": "beacon"},
+        "input=up,output=east"      :{"model": "beacon"},
+        "input=up,output=west"      :{"model": "beacon"},
+                                    
+        "input=down,output=up"      :{"model": "beacon"},
+        "input=down,output=down"    :{"model": "beacon"},
+        "input=down,output=north"   :{"model": "beacon"},
+        "input=down,output=south"   :{"model": "beacon"},
+        "input=down,output=east"    :{"model": "beacon"},
+        "input=down,output=west"    :{"model": "beacon"},    
+                                    
+        "input=north,output=up"     :{"model": "beacon"},
+        "input=north,output=down"   :{"model": "beacon"},
+        "input=north,output=north"  :{"model": "beacon"},
+        "input=north,output=south"  :{"model": "allium"},
+        "input=north,output=east"   :{"model": "beacon"},
+        "input=north,output=west"   :{"model": "beacon"},
+                                    
+        "input=south,output=up"     :{"model": "beacon"},
+        "input=south,output=down"   :{"model": "beacon"},
+        "input=south,output=north"  :{"model": "allium"},
+        "input=south,output=south"  :{"model": "beacon"},
+        "input=south,output=east"   :{"model": "beacon"},
+        "input=south,output=west"   :{"model": "beacon"},
+                                    
+        "input=east,output=up"      :{"model": "beacon"},
+        "input=east,output=down"    :{"model": "beacon"},
+        "input=east,output=north"   :{"model": "beacon"},
+        "input=east,output=south"   :{"model": "beacon"},
+        "input=east,output=east"    :{"model": "beacon"},
+        "input=east,output=west"    :{"model": "allium"},
+                                    
+        "input=west,output=up"      :{"model": "beacon"},
+        "input=west,output=down"    :{"model": "beacon"},
+        "input=west,output=north"   :{"model": "beacon"},
+        "input=west,output=south"   :{"model": "beacon"},
+        "input=west,output=east"    :{"model": "allium"},
+        "input=west,output=west"    :{"model": "beacon"}
+    
+    }
+}

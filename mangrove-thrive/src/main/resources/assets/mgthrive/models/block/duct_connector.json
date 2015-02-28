@@ -1,0 +1,7 @@
+{
+    "parent": "mgthrive:block/base_duct",
+    "textures": {
+        "texture": "minecraft:blocks/comparator_on",
+        "connection":"minecraft:blocks/wool_colored_green"
+    }
+}

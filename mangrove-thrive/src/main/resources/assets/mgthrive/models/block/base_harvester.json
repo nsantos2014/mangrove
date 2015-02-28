@@ -1,0 +1,60 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "minecraft:blocks/glass",
+        "glass": "minecraft:blocks/glass",
+        "obsidian": "minecraft:blocks/obsidian",
+        "beacon": "minecraft:blocks/wheat_stage_7",
+        "front":"minecraft:blocks/log_spruce_top"
+    },
+    "elements": [
+        {   "__comment": "Glass shell",
+            "from": [ 2, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#glass" },
+                "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#glass" },
+                "north": { "uv": [ 0, 0, 16, 16 ], "texture": "#glass" },
+                "south": { "uv": [ 0, 0, 16, 16 ], "texture": "#glass" },
+                "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#glass" },
+                "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#glass" }
+            }
+        },
+        {   "__comment": "Harvester Back",
+            "from": [ 0, 1, 1 ],
+            "to": [ 2, 15, 15 ],
+            "faces": {
+                "down":  { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "up":    { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "north": { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "south": { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "west":  { "uv": [ 2,  2, 14, 14 ], "texture": "#obsidian" },
+                "east":  { "uv": [ 2,  2, 14, 14 ], "texture": "#obsidian" }
+            }
+        },
+        {   "__comment": "Harvester Front",
+            "from": [ 13, 2, 2 ],
+            "to": [ 15.9, 14, 14 ],
+            "faces": {
+                "down":  { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "up":    { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "north": { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "south": { "uv": [ 14, 2, 16, 14 ], "texture": "#obsidian" },
+                "west":  { "uv": [ 0, 0, 16, 16 ], "texture": "#front" },
+                "east":  { "uv": [ 0, 0, 16, 16 ], "texture": "#front" }
+            }
+        },
+        {   "__comment": "Inner beacon texture",
+            "from": [ 2, 4, 4 ],
+            "to": [ 14, 12, 12 ],
+            "faces": {
+                "down":  { "uv": [ 4, 4, 12, 12 ], "texture": "#beacon" },
+                "up":    { "uv": [ 4, 4, 12, 12 ], "texture": "#beacon" },
+                "north": { "uv": [ 4, 2, 12, 14 ], "texture": "#beacon" },
+                "south": { "uv": [ 4, 2, 12, 14 ], "texture": "#beacon" },
+                "west":  { "uv": [ 2, 2, 14, 14 ], "texture": "#beacon" },
+                "east":  { "uv": [ 2, 2, 14, 14 ], "texture": "#beacon" }
+            }
+        }
+    ]
+}

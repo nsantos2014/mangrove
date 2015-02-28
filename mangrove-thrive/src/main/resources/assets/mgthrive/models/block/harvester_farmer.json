@@ -1,0 +1,10 @@
+{
+    "parent": "mgthrive:block/base_harvester",
+    "textures": {
+        "particle": "minecraft:blocks/glass",
+        "glass": "minecraft:blocks/glass",
+        "obsidian": "minecraft:blocks/stone_diorite",
+        "beacon": "minecraft:blocks/wool_colored_green",
+        "front":"minecraft:blocks/log_spruce_top"
+    }
+}

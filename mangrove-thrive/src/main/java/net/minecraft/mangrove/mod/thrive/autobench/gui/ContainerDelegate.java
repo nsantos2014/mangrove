@@ -29,8 +29,8 @@ public class ContainerDelegate extends Container{
 //		this.container=template;
 	}
 	
-	public void addCraftingToCrafters(ICrafting par1iCrafting) {
-		container.addCraftingToCrafters(par1iCrafting);
+	public void onCraftGuiOpened(ICrafting par1iCrafting) {
+		container.onCraftGuiOpened(par1iCrafting);
 	}
 
 	public List getInventory() {
@@ -94,13 +94,13 @@ public class ContainerDelegate extends Container{
 		return container.getNextTransactionID(par1InventoryPlayer);
 	}
 
-	public boolean isPlayerNotUsingContainer(EntityPlayer par1EntityPlayer) {
-		return container.isPlayerNotUsingContainer(par1EntityPlayer);
-	}
-
-	public void setPlayerIsPresent(EntityPlayer par1EntityPlayer, boolean par2) {
-		container.setPlayerIsPresent(par1EntityPlayer, par2);
-	}
+//	public boolean isPlayerNotUsingContainer(EntityPlayer par1EntityPlayer) {
+//		return container.isPlayerNotUsingContainer(par1EntityPlayer);
+//	}
+//
+//	public void setPlayerIsPresent(EntityPlayer par1EntityPlayer, boolean par2) {
+//		container.setPlayerIsPresent(par1EntityPlayer, par2);
+//	}
 
 	public boolean canInteractWith(EntityPlayer var1) {
 		return container.canInteractWith(var1);

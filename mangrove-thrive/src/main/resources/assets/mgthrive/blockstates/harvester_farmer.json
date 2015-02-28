@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "normal": { "model": "mgthrive:harvester_farmer"},
+        "facing=west"  : { "model": "mgthrive:harvester_farmer"},
+        "facing=east"  : { "model": "mgthrive:harvester_farmer", "y"=180, "uvlock": false},
+        "facing=north" : { "model": "mgthrive:harvester_farmer", "y"=90, "uvlock": false},        
+        "facing=south" : { "model": "mgthrive:harvester_farmer", "y"=270, "uvlock": false}
+    }
+}

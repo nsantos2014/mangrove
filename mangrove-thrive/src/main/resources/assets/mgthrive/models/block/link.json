@@ -1,0 +1,6 @@
+{
+    parent:"mgthrive:block/knot_link",
+    "textures": {
+        "texture": "minecraft:blocks/planks_oak"        
+    }
+}

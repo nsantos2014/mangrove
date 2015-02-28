@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "normal": { "model": "mgthrive:link"},
+        "inventory": { "model": "mgthrive:link"}
+    }
+}
