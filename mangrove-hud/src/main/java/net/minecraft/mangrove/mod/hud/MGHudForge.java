@@ -1,7 +1,11 @@
 package net.minecraft.mangrove.mod.hud;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.mangrove.mod.hud.minimap.Mw;
 import net.minecraft.mangrove.mod.hud.minimap.forge.CommonProxy;
+import net.minecraft.world.gen.MapGenBase;
+import net.minecraft.world.gen.structure.MapGenStronghold;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
@@ -84,6 +90,41 @@ public class MGHudForge {
     }
     @SubscribeEvent
     public void onInitWorld(InitMapGenEvent event){
-        System.out.println("Event : "+event.type+":"+event.newGen);
+        MapGenBase newGen = event.newGen;
+        	Class<? extends MapGenBase> class1 = newGen.getClass();
+			System.out.println("Event : "+event.type+":"+newGen+":"+Arrays.asList(class1.getFields()));
+		try {
+			for(Field method:class1.getDeclaredFields()){
+				System.out.println("Field  : "+method);
+			}
+			for(Method method:class1.getDeclaredMethods()){
+				System.out.println("Method : "+method);
+			}
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if( newGen instanceof MapGenStronghold){
+			try {
+				Method method = class1.getDeclaredMethod("getCoordList");
+				method.setAccessible(true);
+				System.out.println("Field  : "+method.invoke(newGen));
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
     }
 }

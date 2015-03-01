@@ -1,5 +1,5 @@
 {
-    "parent": "mgthrive:block/storage_junction",
+    "parent": "mgthrive:block/storage_junction_on",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

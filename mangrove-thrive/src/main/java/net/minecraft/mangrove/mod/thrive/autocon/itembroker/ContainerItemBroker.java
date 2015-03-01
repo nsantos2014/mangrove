@@ -122,4 +122,9 @@ public class ContainerItemBroker extends Container {
 	// public IInventory getLowerChestInventory() {
 	// return this.lowerChestInventory;
 	// }
+	@Override
+	public boolean enchantItem(EntityPlayer playerIn, int id) {
+		// TODO Auto-generated method stub
+		return super.enchantItem(playerIn, id);
+	}
 }

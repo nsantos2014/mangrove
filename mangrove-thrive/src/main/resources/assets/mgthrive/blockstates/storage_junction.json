@@ -1,5 +1,14 @@
 {
     "variants": {
-        "normal": { "model": "mgthrive:storage_junction"}
+        "normal": { "model": "mgthrive:storage_junction"},
+        
+        "facing=north,powered=true":{ "model": "mgthrive:storage_junction_on"},
+        "facing=south,powered=true":{ "model": "mgthrive:storage_junction_on"},
+        "facing=east,powered=true":{ "model": "mgthrive:storage_junction_on"},
+        "facing=west,powered=true":{ "model": "mgthrive:storage_junction_on"},
+        "facing=north,powered=false":{ "model": "mgthrive:storage_junction_off"},
+        "facing=south,powered=false":{ "model": "mgthrive:storage_junction_off"},
+        "facing=east,powered=false":{ "model": "mgthrive:storage_junction_off"},
+        "facing=west,powered=false":{ "model": "mgthrive:storage_junction_off"}
     }
 }

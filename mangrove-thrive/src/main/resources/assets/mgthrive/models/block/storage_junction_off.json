@@ -1,0 +1,9 @@
+{
+    parent:"mgthrive:block/automated_control",
+    "textures": {
+        "particle": "minecraft:blocks/glass",
+        "glass": "minecraft:blocks/glass",
+        "obsidian": "minecraft:blocks/obsidian",
+        "beacon": "minecraft:blocks/obsidian"
+    }
+}

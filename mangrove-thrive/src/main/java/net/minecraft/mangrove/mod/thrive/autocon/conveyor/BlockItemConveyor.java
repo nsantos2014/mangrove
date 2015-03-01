@@ -26,15 +26,16 @@ public class BlockItemConveyor extends AbstractBlockDuct{
 //		super.onNeighborChange(worldIn, pos, neighborPos);
 ////		System.out.println("Neighbor Block changed");
 //		TileEntity tile = worldIn.getTileEntity(pos);
-//		if (tile instanceof TileTransportDuct) {
-//			TileTransportDuct itemBroker = (TileTransportDuct) tile;
+//		if (tile instanceof TileItemConveyor) {
+//			TileItemConveyor itemBroker = (TileItemConveyor) tile;
 //			
 //			for(EnumFacing facing:EnumFacing.values()){
 //				BlockPos offset = pos.offset(facing);
 //				TileEntity testTile = worldIn.getTileEntity(offset);
-//				if (testTile instanceof TileTransportDuct) {
-//					TileTransportDuct testTransport = (TileTransportDuct) testTile;
-//					itemBroker.addConnection
+//				Block testBlock = worldIn.getBlockState(neighborPos).getBlock();
+//				if (testTile instanceof TileItemConveyor) {
+//					TileItemConveyor testTransport = (TileItemConveyor) testTile;
+//					itemBroker.updateConnectorStatus(facing,testBlock==MGThriveBlocks.duct_conveyor);
 //					
 //				}
 //			}
