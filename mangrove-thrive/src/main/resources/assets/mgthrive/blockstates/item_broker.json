@@ -1,5 +1,13 @@
 {
     "variants": {
-        "normal": { "model": "mgthrive:item_broker"}
+        "facing=north,powered=false": { "model": "mgthrive:item_broker_off", "y"=180, "uvlock": false},
+        "facing=south,powered=false": { "model": "mgthrive:item_broker_off", "y"=0,   "uvlock": false},
+        "facing=east,powered=false":  { "model": "mgthrive:item_broker_off", "y"=270, "uvlock": false},
+        "facing=west,powered=false":  { "model": "mgthrive:item_broker_off", "y"=90,  "uvlock": false},
+        
+        "facing=north,powered=true":  { "model": "mgthrive:item_broker_on",   "y"=180, "uvlock": false},
+        "facing=south,powered=true":  { "model": "mgthrive:item_broker_on",   "y"=0,   "uvlock": false},
+        "facing=east,powered=true":   { "model": "mgthrive:item_broker_on",   "y"=270, "uvlock": false},
+        "facing=west,powered=true":   { "model": "mgthrive:item_broker_on",   "y"=90,  "uvlock": false}
     }
 }

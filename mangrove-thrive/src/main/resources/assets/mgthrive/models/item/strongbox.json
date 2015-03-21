@@ -1,5 +1,5 @@
 {
-    "parent": "mgthrive:block/autobench_on",
+    "parent": "mgthrive:block/strongbox",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

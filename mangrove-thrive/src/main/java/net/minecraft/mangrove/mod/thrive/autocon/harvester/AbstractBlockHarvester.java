@@ -1,5 +1,7 @@
 package net.minecraft.mangrove.mod.thrive.autocon.harvester;
 
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -8,8 +10,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
 import net.minecraft.mangrove.mod.thrive.autocon.AbstractBlockAutocon;
 import net.minecraft.mangrove.mod.thrive.autocon.AbstractTileAutocon;
+import net.minecraft.mangrove.mod.thrive.autocon.SearchItem;
+import net.minecraft.mangrove.mod.thrive.autocon.SearchUtil;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.BlockPos;
@@ -18,7 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class AbstractBlockHarvester extends AbstractBlockAutocon {
+public abstract class AbstractBlockHarvester extends AbstractBlockAutocon{
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
 	protected AbstractBlockHarvester(String name) {
@@ -36,6 +42,7 @@ public abstract class AbstractBlockHarvester extends AbstractBlockAutocon {
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
 		this.setDefaultFacing(worldIn, pos, state);
 	}
+		
 
 	private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote) {

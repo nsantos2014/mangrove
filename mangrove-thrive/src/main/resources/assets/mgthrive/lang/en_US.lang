@@ -1,4 +1,12 @@
+tile.mgthrive_strongbox.name=Strongbox
 tile.mgthrive_autobench.name=Autobench
+tile.mgthrive_harvester_farmer.name=Automated Farmer
+tile.mgthrive_harvester_miner.name=Automated Miner
+tile.mgthrive_duct_conveyor.name=Conveyor
+tile.mgthrive_duct_connector.name=Connector
+tile.mgthrive_item_broker.name=Item Broker
+tile.mgthrive_storage_junction.name=Storage Junction
+#--------
 tile.mgthrive_robot_link.name=Robot Link
 tile.mgthrive_robot_kernel.name=Robot Kernel
 tile.mgthrive_farmer_node.name=Robot Farmer Node
@@ -6,9 +14,3 @@ tile.mgthrive_miner_node.name=Robot Miner Node
 tile.mgthrive_hopperduct.name=Duct
 tile.mgthrive_gratedhopper.name=Grated Hopper
 # ----
-tile.mgthrive_harvester_farmer.name=Automated Farmer
-tile.mgthrive_harvester_miner.name=Automated Miner
-tile.mgthrive_duct_conveyor.name=Conveyor
-tile.mgthrive_duct_connector.name=Connector
-tile.mgthrive_item_broker.name=Item Broker
-tile.mgthrive_storage_junction.name=Storage Junction

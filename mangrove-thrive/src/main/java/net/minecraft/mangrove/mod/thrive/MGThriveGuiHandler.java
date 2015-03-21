@@ -3,6 +3,9 @@ package net.minecraft.mangrove.mod.thrive;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.mangrove.core.GUIHandler;
+import net.minecraft.mangrove.mod.thrive.autocon.autobench.ContainerAutobench;
+import net.minecraft.mangrove.mod.thrive.autocon.autobench.GuiAutobench;
+import net.minecraft.mangrove.mod.thrive.autocon.autobench.TileEntityAutobench;
 import net.minecraft.mangrove.mod.thrive.autocon.itembroker.ContainerItemBroker;
 import net.minecraft.mangrove.mod.thrive.autocon.itembroker.GuiItemBroker;
 import net.minecraft.mangrove.mod.thrive.autocon.itembroker.TileItemBroker;
@@ -16,6 +19,9 @@ public class MGThriveGuiHandler extends GUIHandler implements IGuiHandler{
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		final TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));// getBlockTileEntity
+		if( tile instanceof TileEntityAutobench){
+			return new ContainerAutobench(player.inventory, world, new BlockPos(x, y, z));
+		}
 		if( tile instanceof TileItemBroker){
 			return new ContainerItemBroker((TileItemBroker) tile,player.inventory, player);
 		}
@@ -25,6 +31,9 @@ public class MGThriveGuiHandler extends GUIHandler implements IGuiHandler{
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		final TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));// getBlockTileEntity
+		if( tile instanceof TileEntityAutobench){
+			return new GuiAutobench(player.inventory, world,new BlockPos(x, y, z));
+		}
 		if( tile instanceof TileItemBroker){
 			return new GuiItemBroker((TileItemBroker) tile,player.inventory);
 		}

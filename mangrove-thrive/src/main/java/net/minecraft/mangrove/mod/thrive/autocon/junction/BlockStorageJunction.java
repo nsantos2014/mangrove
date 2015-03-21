@@ -101,14 +101,14 @@ public class BlockStorageJunction extends AbstractBlockAutocon {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer
 				.getHorizontalFacing().getOpposite()).withProperty(POWERED, worldIn.isBlockPowered(pos)), 2);
 
-		if (stack.hasDisplayName()) {
-			TileEntity tileentity = worldIn.getTileEntity(pos);
-
-			if (tileentity instanceof TileStorageJunction) {
-				((TileStorageJunction) tileentity).setCustomInventoryName(stack
-						.getDisplayName());
-			}
-		}
+//		if (stack.hasDisplayName()) {
+//			TileEntity tileentity = worldIn.getTileEntity(pos);
+//
+////			if (tileentity instanceof TileStorageJunction) {
+////				((TileStorageJunction) tileentity).setCustomInventoryName(stack
+////						.getDisplayName());
+////			}
+//		}
 	}
 
 	@Override

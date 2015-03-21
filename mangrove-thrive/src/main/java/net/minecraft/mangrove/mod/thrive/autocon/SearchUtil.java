@@ -13,11 +13,11 @@ import net.minecraft.world.World;
 public class SearchUtil {
 	
 	
-	public static List<SearchItem> findAllBlockFrom(final World world, final BlockPos blockPos,final AbstractBlockDuct networktype,final Block block){
-		return findAllBlockFrom(world,1,blockPos,networktype,block,new HashSet<BlockPos>());
+	public static List<SearchItem> findAllBlockFrom(final World world, final BlockPos blockPos,final AbstractBlockDuct networktype,final Block... blocks){
+		return findAllBlockFrom(world,1,blockPos,networktype,new HashSet<BlockPos>(),blocks);
 	}
 
-	private static List<SearchItem> findAllBlockFrom(final World world, int weight, final BlockPos blockPos,final AbstractBlockDuct networktype,final Block blockMatch, final HashSet<BlockPos> uniqueBlockPos) {
+	private static List<SearchItem> findAllBlockFrom(final World world, int weight, final BlockPos blockPos,final AbstractBlockDuct networktype, final HashSet<BlockPos> uniqueBlockPos,final Block... blockMatches) {
 		final List<SearchItem> blockList=new ArrayList<SearchItem>();
 		for(EnumFacing facing:EnumFacing.values()){
 			final BlockPos offset = blockPos.offset(facing);
@@ -26,11 +26,13 @@ public class SearchUtil {
 			}
 			uniqueBlockPos.add(offset);
 			final Block block = world.getBlockState(offset).getBlock();
-			if( blockMatch==block){				
-				blockList.add(new SearchItem(offset, facing, weight));
+			for(Block blockMatch:blockMatches){
+				if( blockMatch==block){				
+					blockList.add(new SearchItem(offset, facing, weight));
+				}
 			}
 			if( block==networktype){
-				blockList.addAll(findAllBlockFrom(world, weight+1,offset, networktype, blockMatch,uniqueBlockPos));
+				blockList.addAll(findAllBlockFrom(world, weight+1,offset, networktype, uniqueBlockPos,blockMatches));
 			}
 		}
 		return blockList;

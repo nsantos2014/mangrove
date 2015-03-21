@@ -1,4 +1,4 @@
-package net.minecraft.mangrove.mod.thrive.autobench.gui;
+package net.minecraft.mangrove.mod.thrive.old.autobench;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class AutobenchContainer extends MGContainer
 	private SlotCrafting slotTemplate;
 	private SlotBase slotOperate;
     
-    public AutobenchContainer(InventoryPlayer par1InventoryPlayer, TileEntityAutobench autobench){
+    public AutobenchContainer(TileEntityAutobench autobench,InventoryPlayer par1InventoryPlayer){
     	super(autobench,par1InventoryPlayer,84,0);
         this.autobench = autobench;		
        

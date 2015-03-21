@@ -22,21 +22,19 @@ public class MGThriveItems {
 			ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
 			
 			
-			itemModelMesher.register(
-					Item.getItemFromBlock(MGThriveBlocks.duct_conveyor), 0,
-					new ModelResourceLocation(MGThriveForge.ID + ":"
-							+ MGThriveBlocks.duct_conveyor.getName(), "inventory"));
-			itemModelMesher.register(
-					Item.getItemFromBlock(MGThriveBlocks.duct_connector), 0,
-					new ModelResourceLocation(MGThriveForge.ID + ":"
-							+ MGThriveBlocks.duct_connector.getName(), "inventory"));
+			
 			
 			// blocks
 			
 			itemModelMesher.register(
 					Item.getItemFromBlock(MGThriveBlocks.autobench), 0,
 					new ModelResourceLocation(MGThriveForge.ID + ":"
-							+ "autobench", "inventory"));
+							+ MGThriveBlocks.autobench.getName(), "inventory"));
+			
+			itemModelMesher.register(
+					Item.getItemFromBlock(MGThriveBlocks.strongbox), 0,
+					new ModelResourceLocation(MGThriveForge.ID + ":"
+							+ MGThriveBlocks.strongbox.getName(), "inventory"));
 			
 //			itemModelMesher.register(
 //					Item.getItemFromBlock(MGThriveBlocks.simpleduct), 0,
@@ -99,6 +97,15 @@ public class MGThriveItems {
 					new ModelResourceLocation(MGThriveForge.ID + ":"
 							+ MGThriveBlocks.storage_junction.getName(), "inventory"));
 			
+			itemModelMesher.register(
+					Item.getItemFromBlock(MGThriveBlocks.duct_conveyor), 0,
+					new ModelResourceLocation(MGThriveForge.ID + ":"
+							+ MGThriveBlocks.duct_conveyor.getName(), "inventory"));
+			
+			itemModelMesher.register(
+					Item.getItemFromBlock(MGThriveBlocks.duct_connector), 0,
+					new ModelResourceLocation(MGThriveForge.ID + ":"
+							+ MGThriveBlocks.duct_connector.getName(), "inventory"));
 			
 			
 			itemModelMesher.register(
@@ -116,11 +123,11 @@ public class MGThriveItems {
 			// ModelResourceLocation(Reference.MODID + ":" + ((ItemTutorial)
 			// tutorialItem).getName(), "inventory"));
 		}
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(
-				MGThriveBlocks.autobench, 1), new Object[] {
-				Boolean.valueOf(true), "www", "waw", "www",
-				Character.valueOf('a'), Blocks.crafting_table,
-				Character.valueOf('w'), Blocks.planks }));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(
+//				MGThriveBlocks.autobench, 1), new Object[] {
+//				Boolean.valueOf(true), "www", "waw", "www",
+//				Character.valueOf('a'), Blocks.crafting_table,
+//				Character.valueOf('w'), Blocks.planks }));
 
 	}
 }

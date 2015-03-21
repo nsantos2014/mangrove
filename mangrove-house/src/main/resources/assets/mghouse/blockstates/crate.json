@@ -1,5 +1,9 @@
 {
     "variants": {
-        "normal": { "model": "mghouse:crate"}
+        "normal": { "model": "mghouse:crate"},
+        "north": { "model": "mghouse:crate"},
+        "south": { "model": "mghouse:crate"},
+        "east": { "model": "mghouse:crate"},
+        "west": { "model": "mghouse:crate"}
     }
 }

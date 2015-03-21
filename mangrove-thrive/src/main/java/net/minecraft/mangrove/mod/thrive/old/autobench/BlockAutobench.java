@@ -1,4 +1,4 @@
-package net.minecraft.mangrove.mod.thrive.autobench;
+package net.minecraft.mangrove.mod.thrive.old.autobench;
 
 import java.util.List;
 
@@ -35,8 +35,6 @@ public class BlockAutobench extends AbstractBlockInventory {
 		GameRegistry.registerBlock(this, name);
 		setUnlocalizedName(MGThriveForge.ID + "_" + name);
 		setCreativeTab(CreativeTabs.tabRedstone);
-		// setBlockName("autobench");
-		// setBlockTextureName("crafting_table");
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 		setHardness(2.0F);
 		setResistance(8.0F);
@@ -68,25 +66,6 @@ public class BlockAutobench extends AbstractBlockInventory {
 		return 3;
 	}
 
-	// /**
-	// * Gets the block's texture. Args: side, meta
-	// */
-	// @SideOnly(Side.CLIENT)
-	// public IIcon getIcon(int side, int meta){
-	// return side == 1 ? this.blockIconTop : (side == 0 ?
-	// Blocks.planks.getBlockTextureFromSide(side) : (side != 2 && side != 4 ?
-	// this.blockIcon : this.blockIconFront));
-	// }
-	//
-	// @SideOnly(Side.CLIENT)
-	// public void registerBlockIcons(IIconRegister register){
-	// this.blockIcon = register.registerIcon(this.getTextureName() + "_side");
-	// this.blockIconTop = register.registerIcon(this.getTextureName() +
-	// "_top");
-	// this.blockIconFront = register.registerIcon(this.getTextureName() +
-	// "_front");
-	// }
-
 	@Override
 	public boolean canPlaceBlockAt(World world, BlockPos blockPos) {
 		return super.canPlaceBlockAt(world, blockPos);
@@ -105,7 +84,6 @@ public class BlockAutobench extends AbstractBlockInventory {
 			return false;
 		}
 		if (!worldIn.isRemote) {
-			// TileEntity entity = world.getTileEntity(x, y, z);
 			playerIn.openGui(MGThriveForge.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
 		}
@@ -160,18 +138,6 @@ public class BlockAutobench extends AbstractBlockInventory {
 		int powered = worldIn.isBlockIndirectlyGettingPowered(pos);
 
 	}
-	// private void updateMetadata(IBlockAccess World, int par2, int par3, int
-	// par4) {
-	// int l = par1World.getBlockMetadata(par2, par3, par4);
-	// int i1 = BlockUtils.getDirectionFromMetadata(l);
-	// boolean flag = !(((World)
-	// par1World).isBlockIndirectlyGettingPowered(par2, par3, par4));
-	// boolean flag1 = BlockUtils.getIsBlockNotPoweredFromMetadata(l);
-	//
-	// if (flag == flag1)
-	// return;
-	// ((World) par1World).setBlockMetadataWithNotify(par2, par3, par4, i1
-	// | ((flag) ? 0 : 8), 4);
-	// }
+	
 
 }

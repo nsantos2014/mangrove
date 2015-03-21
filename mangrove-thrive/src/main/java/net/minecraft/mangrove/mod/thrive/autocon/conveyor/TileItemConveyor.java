@@ -4,6 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
 import net.minecraft.mangrove.mod.thrive.autocon.AbstractTileDuct;
+import net.minecraft.mangrove.mod.thrive.autocon.autobench.TileEntityAutobench;
 import net.minecraft.mangrove.mod.thrive.autocon.itembroker.TileItemBroker;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -23,6 +24,10 @@ public class TileItemConveyor extends AbstractTileDuct {
 			TileEntity sidetile = worldObj.getTileEntity(sidepos);
 			if (sidetile instanceof TileItemBroker) {
 				TileItemBroker tileItemBroker = (TileItemBroker) sidetile;
+				return tileItemBroker.isSideConnected(facing.getOpposite());
+			}
+			if (sidetile instanceof TileEntityAutobench) {
+				TileEntityAutobench tileItemBroker = (TileEntityAutobench) sidetile;
 				return tileItemBroker.isSideConnected(facing.getOpposite());
 			}
 			

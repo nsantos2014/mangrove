@@ -1,5 +1,5 @@
 {
-    "parent": "mgthrive:block/item_broker",
+    "parent": "mgthrive:block/item_broker_on",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

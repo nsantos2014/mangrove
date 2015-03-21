@@ -15,6 +15,7 @@ import java.util.Collection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -67,14 +68,14 @@ public abstract class MGGui extends GuiContainer {
 		super.drawScreen(mouseX, mouseY, par3);
 		int left = this.guiLeft;
 		int top = this.guiTop;
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
 
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) left, (float) top, 0.0F);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		RenderHelper.disableStandardItemLighting();
-
+		
 		InventoryPlayer playerInv = this.mc.thePlayer.inventory;
 
 		if (playerInv.getItemStack() == null) {
@@ -84,8 +85,9 @@ public abstract class MGGui extends GuiContainer {
 		}
 
 		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		RenderHelper.enableStandardItemLighting();
 	}
 
 	private void drawToolTips(Collection objects, int mouseX, int mouseY) {
@@ -109,7 +111,7 @@ public abstract class MGGui extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		// GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bindTexture(texture);
 		int x = (width - xSize) / 2;
 		int y = (height - ySize) / 2;
@@ -463,10 +465,10 @@ public abstract class MGGui extends GuiContainer {
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
 		}
 
-//		protected void drawIcon(IIcon icon, int x, int y) {
-//
-//			GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
-//			drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
-//		}
+		// protected void drawIcon(IIcon icon, int x, int y) {
+		//
+		// GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0F);
+		// drawTexturedModelRectFromIcon(x, y, icon, 16, 16);
+		// }
 	}
 }
