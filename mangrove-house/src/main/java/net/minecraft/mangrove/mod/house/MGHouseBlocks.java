@@ -12,7 +12,7 @@ public class MGHouseBlocks {
 	public static BlockGlassLamp glass_lamp=null;
 	public static BlockGlowLadder glow_ladder=null;
 //	public static final BlockBoatDoor boat_door=new BlockBoatDoor();
-	public static BlockCrate crate=null;
+//	public static BlockCrate crate=null;
 	
 //	public static final BlockDuct duct=new BlockDuct();    
 //    public static final BlockGratedHopper duct_filter=new BlockGratedHopper();
@@ -20,12 +20,12 @@ public class MGHouseBlocks {
 	 public static void preInit() {
 	    glass_lamp=new BlockGlassLamp();
 	    glow_ladder=new BlockGlowLadder();
-	    crate = new BlockCrate();
-	    TileEntity.addMapping(TileEntityCrate.class, "crate");
+//	    crate = new BlockCrate();
+//	    TileEntity.addMapping(TileEntityCrate.class, "crate");
 	}
 	 
 	 public static void init(){
-	     MGHouseForge.handler.registerClass(TileEntityCrate.class, ContainerCrate.class, GuiCrate.class);
+//	     MGHouseForge.handler.registerClass(TileEntityCrate.class, ContainerCrate.class, GuiCrate.class);
 	     
 	 }
 	 

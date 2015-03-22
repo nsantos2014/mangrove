@@ -17,7 +17,7 @@ public class TileEntityStrongbox extends AbstractSidedInventoryTileEntity{
 	public TileEntityStrongbox() {
 		super();
 		this.name = null;
-		inventorySupport.defineSlotRange(0, 180, null, EnumPermission.BOTH, EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST);
+		inventorySupport.defineSlotRange(0, 200, null, EnumPermission.BOTH, EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST);
 	}
 
 	public String getName() {

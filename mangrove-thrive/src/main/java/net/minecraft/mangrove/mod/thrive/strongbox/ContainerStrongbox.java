@@ -5,6 +5,7 @@ import java.awt.Point;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
 import net.minecraft.mangrove.core.gui.MGContainer;
 import net.minecraft.mangrove.core.gui.slots.SlotBase;
 
@@ -20,6 +21,7 @@ public class ContainerStrongbox extends MGContainer {
 		this.tile = tile;
 
 		this.onCraftMatrixChanged(this.tile);
+		setPlayerInventoryOffset(22,120);
 	}
 	@Override
 	protected void drawTileInventory(IInventory inventory, int inventorySize) {
@@ -32,8 +34,8 @@ public class ContainerStrongbox extends MGContainer {
 		for (l = 0; l < 3; ++l) {
 			for (i1 = 0; i1 < 3; ++i1) {
 				final int idx = i1 + l * 3;
-				final int x = 9 + i1 * 18;
-				final int y = 18 + l * 18;
+				final int x = 22 + i1 * 18;
+				final int y = 22 + l * 18;
 
 				invPositions[idx] = new Point(x, y);
 
@@ -45,6 +47,16 @@ public class ContainerStrongbox extends MGContainer {
 			final SlotBase slot = new SlotBase(inventory, l, 6000, 6000);
 			this.addSlotToContainer(slot);
 		}
+//		
+//		for (j = 0; j < 3; ++j) {
+//			for (k = 0; k < 9; ++k) {
+//				this.addSlotToContainer(new Slot(playerInventory, k + j * 9 + 9, 22 + k * 18, 120 + j * 18));
+//			}
+//		}
+//
+//		for (j = 0; j < 9; ++j) {
+//			this.addSlotToContainer(new Slot(playerInventory, j, 22 + j * 18, 178));
+//		}
 	}
 	
 	public int getStartPos() {

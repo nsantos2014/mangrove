@@ -24,7 +24,7 @@ public class MGHouseItems {
 
 			// blocks
 			ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
-			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.crate), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "crate", "inventory"));
+//			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.crate), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "crate", "inventory"));
 			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.glass_lamp), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "glass_lamp", "inventory"));
 			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.glow_ladder), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "glow_ladder", "inventory"));
 
@@ -34,8 +34,8 @@ public class MGHouseItems {
 			// tutorialItem).getName(), "inventory"));
 		}
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.crate), new Object[] { Boolean.valueOf(true), "www", "wiw", "www", Character.valueOf('i'),
-				Items.iron_ingot, Character.valueOf('w'), "plankWood" }));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.crate), new Object[] { Boolean.valueOf(true), "www", "wiw", "www", Character.valueOf('i'),
+//				Items.iron_ingot, Character.valueOf('w'), "plankWood" }));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.glass_lamp, 8), Boolean.valueOf(true), "ggg", "grg", "ggg", Character.valueOf('g'), Blocks.glass,
 				Character.valueOf('r'), Blocks.redstone_ore));

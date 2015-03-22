@@ -251,7 +251,7 @@ public class InventorySupport implements INBTTagable{
         //this.hopperItemStacks = new ItemStack[this.getSizeInventory()];        
         for (int i = 0; i < nbttaglist.tagCount(); ++i){
             NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-            byte slot = nbttagcompound1.getByte("Slot");
+            int slot = nbttagcompound1.getInteger("Slot");
 //            ensureSize(this.hopperItemStacks,slot);
             setSlotContents(slot,ItemStack.loadItemStackFromNBT(nbttagcompound1));            
         }
@@ -273,7 +273,7 @@ public class InventorySupport implements INBTTagable{
 		for (int i = 0; i < size; ++i) {
 			for(Entry<Integer, ItemStack> slot:slots.entrySet()){
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-				nbttagcompound1.setByte("Slot", slot.getKey().byteValue());
+				nbttagcompound1.setInteger("Slot", slot.getKey().intValue());
 				slot.getValue().writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
 			}			

@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemCloth;
@@ -52,6 +53,7 @@ public class CraftpediaGui extends GuiScreen{
 //	private List<String> invisibleIdList = new ArrayList<String>();
 	private int listPos = 0;
 	private final List<IRecipe> recipeList = new ArrayList<>();
+	private GuiTextField searchbar;
 	
 	private static final Point[] slotPos=new Point[]{
 		
@@ -64,7 +66,7 @@ public class CraftpediaGui extends GuiScreen{
 		while (it.hasNext()) {
 			final IRecipe recipe = (IRecipe) it.next();
 			if( recipe.getRecipeOutput()==null){
-				System.out.println("Found an null receipt : "+recipe);
+				System.out.println("Found a null receipt : "+recipe);
 			}else{
 				this.recipeList.add(recipe);
 			}
@@ -94,6 +96,13 @@ public class CraftpediaGui extends GuiScreen{
 		this.exit = new GuiButton(0, width / 9 * 7, height - 22, 70, 20, "Exit");
 		
 		Keyboard.enableRepeatEvents(true);
+		
+		this.searchbar = new GuiTextField(1,this.fontRendererObj, 220, 45, 120,
+				this.fontRendererObj.FONT_HEIGHT);
+		this.searchbar.setMaxStringLength(30);
+		this.searchbar.setCanLoseFocus(false);
+		this.searchbar.setFocused(true);
+		this.searchbar.setTextColor(16777215);
 //		String[] blockListCache = modInstance.blockList;
 //		for (int i = 0; i < blockListCache.length; ++i) {
 //			this.invisibleIdList.add(blockListCache[i]);
@@ -136,16 +145,22 @@ public class CraftpediaGui extends GuiScreen{
 	}
 	
 	@Override
-	protected void keyTyped(char par1, int par2) throws IOException {
-		super.keyTyped(par1, par2);
-		if (par2 != 1 && par2 != 14 && par2 != 29 && par2 != 157) {
-			if (((par2 == 200) || (par1 == 'w') || (par1 == 'W')) && (this.listPos > 0)) {
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		 if (this.searchbar.isFocused() )
+	        {
+	            this.searchbar.textboxKeyTyped(typedChar, keyCode);
+	            System.out.println("What to search:"+this.searchbar.getText());
+	        }
+//		this.searchbar.textboxKeyTyped(typedChar, keyCode);
+		super.keyTyped(typedChar, keyCode);
+		if (keyCode != 1 && keyCode != 14 && keyCode != 29 && keyCode != 157) {
+			if (((keyCode == 200) || (typedChar == 'w') || (typedChar == 'W')) && (this.listPos > 0)) {
 				--this.listPos;
 			}
-			else if (((par2 == 208) || (par1 == 's') || (par1 == 'S')) && (this.listPos < this.recipeList.size() - 1)) {
+			else if (((keyCode == 208) || (typedChar == 's') || (typedChar == 'S')) && (this.listPos < this.recipeList.size() - 1)) {
 				++this.listPos;
 			}
-			else if (par2 == 28) {
+			else if (keyCode == 28) {
 //				if ((this.invisibleIdList.indexOf(this.idList.get(this.listPos)) >= 0)) {
 //					this.invisibleIdList.remove(this.idList.get(this.listPos));
 //				}
@@ -178,7 +193,10 @@ public class CraftpediaGui extends GuiScreen{
 		int width = this.width;
 		int height = this.height;
 		drawBackground(0);
-
+		
+		this.searchbar.drawTextBox();
+		
+		
 //		int left = this.width / 2 + 100;
 //		int right = this.width / 2 - 100;
 //		int iconLeft = this.width / 2 - 97;
@@ -199,7 +217,7 @@ public class CraftpediaGui extends GuiScreen{
 		this.mc.getTextureManager().bindTexture(inventory);
 		this.drawTexturedModalRect(this.width/2+18, 96, 6, 80, 164, 82);		
 		 GL11.glEnable(GL11.GL_LIGHTING);
-		for (int i = 0; i < 40; ++i) {
+		for (int i = 0; i < 20; ++i) {
 			if (renderPosition >= 0 && renderPosition < this.recipeList.size()) {
 				final IRecipe recipe = this.recipeList.get(renderPosition);
 				if( renderPosition == this.listPos){
@@ -218,8 +236,7 @@ public class CraftpediaGui extends GuiScreen{
 							renderRecipeComponent(calcPoint((this.width/2)+20, 100,idx,recipeSize,sRecipe.getRecipeOutput()), obj);
 							idx++;
 						}
-					}
-					if (recipe instanceof ShapedOreRecipe) {
+					}else if (recipe instanceof ShapedOreRecipe) {
 						final ShapedOreRecipe sRecipe = (ShapedOreRecipe) recipe;
 						
 						final int recipeSize = sRecipe.getRecipeSize();
@@ -231,8 +248,7 @@ public class CraftpediaGui extends GuiScreen{
 							renderRecipeComponent(calcPoint((this.width/2)+20, 100,idx,recipeSize,sRecipe.getRecipeOutput()), obj);
 							idx++;
 						}
-					}
-					if (recipe instanceof ShapelessOreRecipe) {
+					}else if (recipe instanceof ShapelessOreRecipe) {
 						final ShapelessOreRecipe sRecipe = (ShapelessOreRecipe) recipe;
 					
 						int recipeSize = sRecipe.getRecipeSize();
@@ -244,8 +260,7 @@ public class CraftpediaGui extends GuiScreen{
 							renderRecipeComponent(calcPoint((this.width/2)+20, 100,idx,recipeSize,sRecipe.getRecipeOutput()), obj);
 							idx++;
 						}
-					}
-					if (recipe instanceof ShapelessRecipes) {
+					}else if (recipe instanceof ShapelessRecipes) {
 						final ShapelessRecipes sRecipe = (ShapelessRecipes) recipe;
 						
 						int recipeSize = sRecipe.getRecipeSize();
@@ -325,6 +340,7 @@ public class CraftpediaGui extends GuiScreen{
 //			}
 			++renderPosition;
 		}
+		
 		super.drawScreen(x, y, par3);
 	}
 

@@ -66,20 +66,20 @@ public class MGHouseForge {
 		
 	}
 	public void registerCrate(){
-		GameRegistry.registerBlock(MGHouseBlocks.crate,"crate");
-		handler.registerClass(TileEntityCrate.class, ContainerCrate.class, GuiCrate.class);
+//		GameRegistry.registerBlock(MGHouseBlocks.crate,"crate");
+//		handler.registerClass(TileEntityCrate.class, ContainerCrate.class, GuiCrate.class);
 //		harvester.setLightLevel(0.9f);
 //		LanguageRegistry.addName(crate, "Crate");
-		TileEntity.addMapping(TileEntityCrate.class, "Crate");
+//		TileEntity.addMapping(TileEntityCrate.class, "Crate");
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.crate), new Object[] {
-				Boolean.valueOf(true),
-				 "www", 
-				 "wiw", 
-				 "www", 
-				 Character.valueOf('i'), Items.iron_ingot, 
-				Character.valueOf('w'),	"plankWood" 
-		}));
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.crate), new Object[] {
+//				Boolean.valueOf(true),
+//				 "www", 
+//				 "wiw", 
+//				 "www", 
+//				 Character.valueOf('i'), Items.iron_ingot, 
+//				Character.valueOf('w'),	"plankWood" 
+//		}));
 	}
 	public void registerGlassLamp(){
 		GameRegistry.registerBlock(MGHouseBlocks.glass_lamp, "glass_lamp");

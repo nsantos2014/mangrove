@@ -117,6 +117,7 @@ public class MGThriveBlocks {
 				.line(Blocks.planks, Blocks.crafting_table, Blocks.planks)
 				.line(Blocks.planks, Blocks.planks, Blocks.planks).build()
 		);
+		
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.strongbox)
 				.line(Blocks.planks, Blocks.planks, Blocks.planks)
 				.line(Blocks.planks, Blocks.hopper, Blocks.planks)
