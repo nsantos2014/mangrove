@@ -3,6 +3,8 @@ package net.minecraft.mangrove.mod.thrive.proxy;
 import net.minecraft.mangrove.mod.thrive.autocon.TESRDuct;
 import net.minecraft.mangrove.mod.thrive.autocon.connector.TileHeadConnector;
 import net.minecraft.mangrove.mod.thrive.autocon.conveyor.TileItemConveyor;
+import net.minecraft.mangrove.mod.thrive.cistern.TESRCistern;
+import net.minecraft.mangrove.mod.thrive.cistern.TileCistern;
 import net.minecraft.mangrove.mod.thrive.duct.simpleduct.TESRSimpleDuct;
 import net.minecraft.mangrove.mod.thrive.duct.simpleduct.TileSimpleDuct;
 import net.minecraft.mangrove.mod.thrive.link.TESRLink;
@@ -17,9 +19,12 @@ public class ClientProxy extends CommonProxy{
 //	private BlockRobotNodeRenderer blockFarmerNodeRender=new BlockRobotNodeRenderer();
 	
 	private TESRSimpleDuct tesrSimpleDuct=new TESRSimpleDuct();
-	
+
 	private TESRLink tesrLink=new TESRLink();
+	
 	private TESRDuct tesrDuct=new TESRDuct();
+	
+	private TESRCistern tesrCistern=new TESRCistern();
 	
 	public void registerRenderers() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSimpleDuct.class, tesrSimpleDuct);
@@ -27,6 +32,9 @@ public class ClientProxy extends CommonProxy{
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileItemConveyor.class, tesrDuct);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileHeadConnector.class, tesrDuct);
+		
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCistern.class, tesrCistern);
+		
 //		harvesterRendererID=RenderingRegistry.getNextAvailableRenderId();
 //		RenderingRegistry.registerBlockHandler(harvesterRendererID,this.harvesterRenderer);
 //		//-----------------------------------------------------------------------------------

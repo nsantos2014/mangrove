@@ -11,7 +11,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 public class TileHeadConnector extends AbstractTileDuct {
-	private static final ResourceLocation glassCyan = new ResourceLocation("textures/blocks/wool_colored_green.png");
+	private static final ResourceLocation glassCyan = new ResourceLocation("textures/blocks/wool_colored_cyan.png");
 	private static final ResourceLocation commandBeam = new ResourceLocation("textures/blocks/comparator_on.png");
 	
 	@Override

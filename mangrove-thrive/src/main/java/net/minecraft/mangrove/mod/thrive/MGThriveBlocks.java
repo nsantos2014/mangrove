@@ -10,6 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.core.MGCoreItems;
 import net.minecraft.mangrove.core.recipes.RecipeBuilder;
 import net.minecraft.mangrove.mod.thrive.autocon.autobench.ContainerAutobench;
 import net.minecraft.mangrove.mod.thrive.autocon.autobench.GuiAutobench;
@@ -29,6 +30,8 @@ import net.minecraft.mangrove.mod.thrive.autocon.junction.BlockStorageJunction;
 import net.minecraft.mangrove.mod.thrive.autocon.junction.ContainerStorageJunction;
 import net.minecraft.mangrove.mod.thrive.autocon.junction.GuiStorageJunction;
 import net.minecraft.mangrove.mod.thrive.autocon.junction.TileStorageJunction;
+import net.minecraft.mangrove.mod.thrive.cistern.BlockCistern;
+import net.minecraft.mangrove.mod.thrive.cistern.TileCistern;
 import net.minecraft.mangrove.mod.thrive.duct.AbstractBlockDuct;
 import net.minecraft.mangrove.mod.thrive.duct.simpleduct.BlockSimpleDuct;
 import net.minecraft.mangrove.mod.thrive.duct.simpleduct.TileSimpleDuct;
@@ -49,16 +52,14 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class MGThriveBlocks {
 
+	public static BlockStrongbox strongbox = null;
+	public static BlockCistern cistern = null;
+	
 	public static BlockSimpleDuct simpleduct = null;
 	public static BlockKernel robot_kernel = null;
 	public static BlockLink robot_link = null;
 	public static BlockRobotFarmerNode farmer_node = null;
 	public static BlockRobotMinerNode miner_node = null;
-
-	
-	public static BlockStrongbox strongbox = null;
-
-	
 
 	public static BlockItemConveyor duct_conveyor = null;
 
@@ -73,6 +74,7 @@ public class MGThriveBlocks {
 
 	public static void preInit() {
 
+		cistern=new BlockCistern();
 		strongbox=new BlockStrongbox();
 		
 		autobench = new BlockAutobench();
@@ -89,6 +91,11 @@ public class MGThriveBlocks {
 
 	public static void init() {
 
+		TileEntity.addMapping(TileCistern.class, cistern.getName());
+		
+		TileEntity.addMapping(TileEntityStrongbox.class, strongbox.getName());
+		TileEntity.addMapping(TileEntityAutobench.class, autobench.getName());
+		
 		TileEntity.addMapping(TileItemConveyor.class, duct_conveyor.getName());
 		TileEntity.addMapping(TileHeadConnector.class, duct_connector.getName());
 
@@ -98,19 +105,26 @@ public class MGThriveBlocks {
 		TileEntity.addMapping(TileHarvesterFarmer.class, harvester_farmer.getName());
 		TileEntity.addMapping(TileHarvesterMiner.class, harvester_miner.getName());
 
-		TileEntity.addMapping(TileEntityStrongbox.class, "strongbox");
-		TileEntity.addMapping(TileEntityAutobench.class, "autobench");
+		
 
 		MGThriveForge.handler.registerClass(TileStorageJunction.class, ContainerStorageJunction.class, GuiStorageJunction.class);
 //		MGThriveForge.handler.registerClass(TileEntityAutobench.class, ContainerAutobench.class, GuiAutobench.class);
 		MGThriveForge.handler.registerClass(TileEntityStrongbox.class, ContainerStrongbox.class, GuiStrongbox.class);
 
-		ItemStack woolCyan = new ItemStack(Blocks.wool,1,EnumDyeColor.CYAN.getMetadata());
-		ItemStack woolGreen = new ItemStack(Blocks.wool,1,EnumDyeColor.GREEN.getMetadata());
+//		ItemStack woolCyan = new ItemStack(Blocks.wool,1,EnumDyeColor.CYAN.getMetadata());
+//		ItemStack woolGreen = new ItemStack(Blocks.wool,1,EnumDyeColor.GREEN.getMetadata());
 		ItemStack stoneGranite = new ItemStack(Blocks.stone,1,BlockStone.EnumType.GRANITE.getMetadata());
 		ItemStack stoneDiorite = new ItemStack(Blocks.stone,1,BlockStone.EnumType.DIORITE.getMetadata());
 		ItemStack logSpruce = new ItemStack(Blocks.log,1 , BlockPlanks.EnumType.SPRUCE.getMetadata());
 		ItemStack logOak = new ItemStack(Blocks.log,1 , BlockPlanks.EnumType.OAK.getMetadata());
+		ItemStack blueDye=new ItemStack(Items.dye, EnumDyeColor.BLUE.getMetadata(), EnumDyeColor.BLUE.getDyeDamage());
+		ItemStack greenDye=new ItemStack(Items.dye, EnumDyeColor.GREEN.getMetadata(), EnumDyeColor.GREEN.getDyeDamage());
+		
+		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.cistern)
+				.line(MGCoreItems.hardconium_rod, null, MGCoreItems.hardconium_rod)
+				.line(MGCoreItems.hardconium_rod, null, MGCoreItems.hardconium_rod)
+				.line(MGCoreItems.hardconium_rod, MGCoreItems.hardconium_rod, MGCoreItems.hardconium_rod).build()
+		);
 		
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.autobench)
 				.line(Blocks.planks, Blocks.planks, Blocks.planks)
@@ -118,23 +132,20 @@ public class MGThriveBlocks {
 				.line(Blocks.planks, Blocks.planks, Blocks.planks).build()
 		);
 		
-		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.strongbox)
-				.line(Blocks.planks, Blocks.planks, Blocks.planks)
-				.line(Blocks.planks, Blocks.hopper, Blocks.planks)
-				.line(Blocks.planks, Blocks.planks, Blocks.planks).build()
-		);
 		
 		
-		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.duct_conveyor,8)
-				.line(null, woolCyan, null)
-				.line(woolCyan, Blocks.hopper, woolCyan)
-				.line(null, woolCyan, null).build()
-		);
+		
 		
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.duct_connector,8)
-				.line(null, woolGreen, null)
-				.line(woolGreen, Blocks.hopper, woolGreen)
-				.line(null, woolGreen, null).build()
+				.line(null, blueDye, null)
+				.line(blueDye, Blocks.hopper, blueDye)
+				.line(null, blueDye, null).build()
+		);
+		
+		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.duct_conveyor,8)
+				.line(null, greenDye, null)
+				.line(greenDye, Blocks.hopper, greenDye)
+				.line(null, greenDye, null).build()
 		);
 
 		
@@ -152,12 +163,12 @@ public class MGThriveBlocks {
 		
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.harvester_farmer)
 				.line(stoneDiorite,Blocks.glass,Blocks.glass )
-				.line(stoneDiorite, woolGreen, logSpruce)
+				.line(stoneDiorite, greenDye, logSpruce)
 				.line(stoneDiorite, Blocks.glass, Blocks.glass).build()
 		);
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.harvester_miner)
 				.line(stoneGranite,Blocks.glass,Blocks.glass )
-				.line(stoneGranite, woolCyan, logOak)
+				.line(stoneGranite, blueDye, logOak)
 				.line(stoneGranite, Blocks.glass, Blocks.glass).build()
 		);
 	}

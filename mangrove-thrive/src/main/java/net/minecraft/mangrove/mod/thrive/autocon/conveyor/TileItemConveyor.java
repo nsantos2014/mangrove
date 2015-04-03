@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class TileItemConveyor extends AbstractTileDuct {
 //	private static final ResourceLocation beaconBeam = new ResourceLocation("textures/entity/beacon_beam.png");
-	private static final ResourceLocation glassCyan = new ResourceLocation("textures/blocks/wool_colored_cyan.png");
+	private static final ResourceLocation glassCyan = new ResourceLocation("textures/blocks/wool_colored_green.png");
 	private static final ResourceLocation commandBeam = new ResourceLocation("textures/blocks/command_block.png");
 	
 	@Override

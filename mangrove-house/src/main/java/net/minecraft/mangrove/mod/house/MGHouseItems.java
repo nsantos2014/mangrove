@@ -8,6 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.core.recipes.RecipeBuilder;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -37,9 +38,22 @@ public class MGHouseItems {
 //		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.crate), new Object[] { Boolean.valueOf(true), "www", "wiw", "www", Character.valueOf('i'),
 //				Items.iron_ingot, Character.valueOf('w'), "plankWood" }));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.glass_lamp, 8), Boolean.valueOf(true), "ggg", "grg", "ggg", Character.valueOf('g'), Blocks.glass,
-				Character.valueOf('r'), Blocks.redstone_ore));
-		GameRegistry.addRecipe(new ItemStack(MGHouseBlocks.glow_ladder, 4), new Object[] { "T", "L", 'T', new ItemStack(Blocks.torch), 'L', new ItemStack(Blocks.ladder) });
+		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGHouseBlocks.glass_lamp, 8)
+				.line( Blocks.glass,  Blocks.glass,  Blocks.glass)
+				.line( Blocks.glass, Blocks.redstone_ore,  Blocks.glass)
+				.line( Blocks.glass,  Blocks.glass,  Blocks.glass)
+				.build()
+		);
+		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGHouseBlocks.glow_ladder, 4)
+				.line( null,  null,  null)
+				.line( null, Blocks.ladder,  null)
+				.line( null,  Blocks.torch,  null)
+				.build()
+		);
+		
+//		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(MGHouseBlocks.glass_lamp, 8), Boolean.valueOf(true), "ggg", "grg", "ggg", Character.valueOf('g'), Blocks.glass,
+//				Character.valueOf('r'), Blocks.redstone_ore));
+//		GameRegistry.addRecipe(new ItemStack(MGHouseBlocks.glow_ladder, 4), new Object[] { "T", "L", 'T', new ItemStack(Blocks.torch), 'L', new ItemStack(Blocks.ladder) });
 
 	}
 }

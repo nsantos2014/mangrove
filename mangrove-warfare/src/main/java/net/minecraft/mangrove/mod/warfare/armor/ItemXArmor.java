@@ -214,8 +214,15 @@ public class ItemXArmor extends ItemArmor{
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
         if( this==MGWarfareItems.x_helmet){
-            player.addPotionEffect(new PotionEffect(Potion.waterBreathing.getId(), 1));
-            player.addPotionEffect(new PotionEffect(Potion.nightVision.getId(), 1));
+            player.addPotionEffect(new PotionEffect(Potion.waterBreathing.getId(), 10,0,false,false));
+            player.addPotionEffect(new PotionEffect(Potion.nightVision.getId(), 10,0,false,false));
+        }else if( this==MGWarfareItems.x_boots){
+        	player.addPotionEffect(new PotionEffect(Potion.moveSpeed.getId(), 10,0,false,false));
+        	player.addPotionEffect(new PotionEffect(Potion.jump.getId(), 10,0,false,false));
+        }else if( this==MGWarfareItems.x_chestplate){
+        	player.addPotionEffect(new PotionEffect(Potion.fireResistance.getId(), 10,0,false,false));
+        	player.addPotionEffect(new PotionEffect(Potion.absorption.getId(), 10,0,false,false));
+        	
         }
         super.onArmorTick(world, player, itemStack);
     }

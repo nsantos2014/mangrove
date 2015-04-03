@@ -42,8 +42,8 @@ public class GuiStrongbox2 extends GuiContainer {
 
 	private TileEntityStrongbox crate;
 
-	private GuiButton nextPageButton;
-	private GuiButton prevPageButton;
+//	private GuiButton nextPageButton;
+//	private GuiButton prevPageButton;
 
 	private ContainerStrongbox2 container;
 	private float currentScroll = 0.0f;
@@ -73,12 +73,12 @@ public class GuiStrongbox2 extends GuiContainer {
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 
-		this.prevPageButton = new GuiButton(0, k + (xSize / 2) - 25, l + 60,
-				20, 20, "<");
-		this.nextPageButton = new GuiButton(1, k + (xSize / 2) + 30, l + 60,
-				20, 20, ">");
-		buttonList.add(prevPageButton);
-		buttonList.add(nextPageButton);
+//		this.prevPageButton = new GuiButton(0, k + (xSize / 2) - 25, l + 60,
+//				20, 20, "<");
+//		this.nextPageButton = new GuiButton(1, k + (xSize / 2) + 30, l + 60,
+//				20, 20, ">");
+//		buttonList.add(prevPageButton);
+//		buttonList.add(nextPageButton);
 
 		this.scrollBar = new Scrollbar(1, k + 170, l + 22, 88);
 		// buttonList.add(scrollBar);

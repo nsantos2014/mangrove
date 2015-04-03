@@ -6,8 +6,11 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.core.items.ItemHardconium;
+import net.minecraft.mangrove.core.recipes.RecipeBuilder;
 import net.minecraft.mangrove.mod.warfare.armor.ItemXArmor;
 import net.minecraft.mangrove.mod.warfare.surpass.AbstractItemSurpass;
 import net.minecraft.mangrove.mod.warfare.surpass.ItemDiamondSurpass;
@@ -18,30 +21,31 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraft.mangrove.core.MGCoreItems;
 
 public class MGWarfareItems {
-    //public static final ArmorMaterial ATER = EnumHelper.addArmorMaterial("ATER", "chainmail", 44, new int[] { 3, 8, 6, 3 }, 50);
+    
 
     public static AbstractItemSurpass woodenSurpass;
     public static AbstractItemSurpass ironSurpass;
     public static AbstractItemSurpass diamondSurpass;
+    
+ 
     public static ItemXArmor x_helmet;
     public static ItemXArmor x_chestplate;
     public static ItemXArmor x_leggings;
     public static ItemXArmor x_boots;
 
-    // name, harvestLevel, durability, miningSpeed, damageVsEntities,
-    // enchantability
-
     public static void preInit() {
+    	
         woodenSurpass = new ItemWoodenSurpass();
         ironSurpass = new ItemIronSurpass();
         diamondSurpass = new ItemDiamondSurpass();
 
-        x_helmet = new ItemXArmor(ArmorMaterial.CHAIN, "diamond_helmet", 1, 0);
-        x_chestplate = new ItemXArmor(ArmorMaterial.CHAIN, "diamond_chestplate", 1, 1);
-        x_leggings = new ItemXArmor(ArmorMaterial.CHAIN, "diamond_leggings", 1, 2);
-        x_boots = new ItemXArmor(ArmorMaterial.CHAIN, "diamond_boots", 1, 3);
+        x_helmet = new ItemXArmor(MGCoreItems.HARDCONIUM, "diamond_helmet", 1, 0);
+        x_chestplate = new ItemXArmor(MGCoreItems.HARDCONIUM, "diamond_chestplate", 1, 1);
+        x_leggings = new ItemXArmor(MGCoreItems.HARDCONIUM, "diamond_leggings", 1, 2);
+        x_boots = new ItemXArmor(MGCoreItems.HARDCONIUM, "diamond_boots", 1, 3);
     }
 
     public static void registerArmor(FMLInitializationEvent event) {
@@ -53,6 +57,26 @@ public class MGWarfareItems {
             itemModelMesher.register(MGWarfareItems.x_leggings, 0, new ModelResourceLocation(MGWarfareForge.ID + ":" + "diamond_leggings", "inventory"));
             itemModelMesher.register(MGWarfareItems.x_boots, 0, new ModelResourceLocation(MGWarfareForge.ID + ":" + "diamond_boots", "inventory"));
         }
+        GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(x_helmet)
+        	.line(MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod)
+        	.line(MGCoreItems.hardconium_rod,null,MGCoreItems.hardconium_rod)
+        	.line(null,null,null).build()
+        );
+        GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(x_chestplate)
+            	.line(MGCoreItems.hardconium_rod,null,MGCoreItems.hardconium_rod)
+            	.line(MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod)
+            	.line(MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod).build()
+            );
+        GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(x_leggings)
+            	.line(MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod,MGCoreItems.hardconium_rod)
+            	.line(MGCoreItems.hardconium_rod,null,MGCoreItems.hardconium_rod)
+            	.line(MGCoreItems.hardconium_rod,null,MGCoreItems.hardconium_rod).build()
+            );
+        GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(x_boots)
+            	.line(null,null,null)
+            	.line(MGCoreItems.hardconium_rod,null,MGCoreItems.hardconium_rod)
+            	.line(MGCoreItems.hardconium_rod,null,MGCoreItems.hardconium_rod).build()
+            );
     }
 
     public static void registerSurpass(FMLInitializationEvent event) {

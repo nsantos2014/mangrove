@@ -42,9 +42,15 @@ public class MGHudController {
 	private static final ResourceLocation MOON_PHASES = new ResourceLocation(
 			"mghud", "textures/hud/hud.png");
 
-	private static String[] moonPhases = { "Full Moon", "Waning Gibbous",
-			"Last Quarter", "Waning Crescent", "New Moon", "Waxing Crescent",
-			"First Quarter", "Waxing Gibbous" };
+	private static String[] moonPhases = { 
+			"Full Moon"			,	 
+			"Waning Gibbous"	,
+			"Last Quarter"		, 
+			"Waning Crescent"	, 
+			"New Moon"			, 
+			"Waxing Crescent"	,
+			"First Quarter"		, 
+			"Waxing Gibbous"	 };
 
 	public MGHudController(Minecraft mc) {
 		this.mc = mc;
@@ -66,9 +72,9 @@ public class MGHudController {
 			return;
 		}
 
-		WorldClient world = mc.theWorld;
+		final WorldClient world = mc.theWorld;
 
-		EntityPlayerSP player = mc.thePlayer;
+		final EntityPlayerSP player = mc.thePlayer;
 
 		if (!mc.gameSettings.showDebugInfo && (world != null)
 				&& (player != null)) {
@@ -77,49 +83,73 @@ public class MGHudController {
 			int z = MathHelper.floor_double(mc.thePlayer.posZ);
 			int heading = MathHelper
 					.floor_double((double) (mc.thePlayer.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-			renderDirection(heading);
-			renderClock(world, mc.fontRendererObj);
+			
+//			GlStateManager.disableLighting();
+			GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+			
+			this.mc.getTextureManager().bindTexture(MOON_PHASES);
+			this.drawTexturedModalRect(0, 0, 0, 150, 168, 106);
+			
+			GlStateManager.pushMatrix();
+			renderClock(world, mc.fontRendererObj,EnumDyeColor.BLUE.getMapColor().colorValue);
+			GlStateManager.popMatrix();
+			
+			GlStateManager.pushMatrix();
+			renderDirection(heading,x,y,z,mc.fontRendererObj, EnumDyeColor.RED.getMapColor().colorValue);
+			GlStateManager.popMatrix();
+			
+//			GlStateManager.enableLighting();
 
-			ArrayList<String> left = new ArrayList<String>();
-			Chunk chunk = this.mc.theWorld
-					.getChunkFromBlockCoords(new BlockPos(x, 0, z));
-			left.add(String.format("[%s]", EnumFacing.getHorizontal(heading)));
-
-			left.add(String.format("x: %d ", x));
-			left.add(String.format("y: %d ", y));
-			left.add(String.format("z: %d ", z));
-
-			FontRenderer fontRenderer = mc.fontRendererObj;
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			GL11.glDisable(GL11.GL_LIGHTING);
-
-			for (int i = 0; i < left.size(); i++) {
-				String msg = left.get(i);
-				if (msg == null)
-					continue;
-				fontRenderer.drawStringWithShadow(msg, 2, 2 + i * 10, 0xFFFFFF);
-			}
+//			ArrayList<String> left = new ArrayList<String>();
+////			Chunk chunk = this.mc.theWorld
+////					.getChunkFromBlockCoords(new BlockPos(x, 0, z));
+//			left.add(String.format("[%s]", EnumFacing.getHorizontal(heading)));
+//
+//			left.add(String.format("x: %d ", x));
+//			left.add(String.format("y: %d ", y));
+//			left.add(String.format("z: %d ", z));
+//
+//			FontRenderer fontRenderer = mc.fontRendererObj;
+//			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//			GL11.glDisable(GL11.GL_LIGHTING);
+//
+//			for (int i = 0; i < left.size(); i++) {
+//				String msg = left.get(i);
+//				if (msg == null)
+//					continue;
+//				fontRenderer.drawStringWithShadow(msg, 2, 80 + i * 10, 0xFFFFFF);
+//			}
 		}
 	}
 
-	private void renderDirection(int heading) {
+	private void renderDirection(int heading, int x, int y, int z, final FontRenderer fontRendererObj, int color) {
 		EnumFacing faceDir = EnumFacing.getHorizontal(heading);
-
-		GL11.glPushMatrix();
-		this.mc.getTextureManager().bindTexture(MOON_PHASES);
-		this.drawTexturedModalRect(0, 0, faceDir.ordinal()*16, 0, 16, 16);
 		
-		GL11.glTranslatef(100, 100, 0);
-		GL11.glScalef(0.5f, 0.5f, 1.0f);
-		int offset = 0;
-
-		Render.drawCentredString(0, 0, 0, "[%s]", faceDir.getName());
-
+		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		this.mc.getTextureManager().bindTexture(MOON_PHASES);
+//		this.drawTexturedModalRect(112, 17, faceDir.ordinal()*16, 0, 16, 16);
+		this.drawTexturedModalRect(63, 17, faceDir.ordinal()*16, 0, 16, 16);
+		
+		GL11.glPushMatrix();
+//		GL11.glTranslatef(63, 18, 0);
+		GL11.glTranslatef(64, 5, 0);
+//		GL11.glScalef(0.9f, 0.9f, 1.0f);
+		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+		fontRendererObj.drawString(	String.format("%d,%d,%d ", x,y,z), 0, 0,color, false);
 		GL11.glPopMatrix();
+		
+		GL11.glPushMatrix();
+//		GL11.glTranslatef(100, 32, 0);
+		GL11.glTranslatef(43, 28, 0);
+		GL11.glScalef(0.5f, 0.5f, 1.0f);
+		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+		fontRendererObj.drawString(	String.format("%s", faceDir.getName()), 0, 0,0, false);
+		GL11.glPopMatrix();				
 
 	}
 
-	private void renderClock(World world, FontRenderer fontRendererObj) {
+	private void renderClock(final World world, final FontRenderer fontRendererObj, final int colorValue) {
 
 		int moonPhase = world.getMoonPhase();
 		long time = world.getWorldTime();
@@ -128,38 +158,47 @@ public class MGHudController {
 		long hours = ((dayticks / 1000)) % 24;
 		long minutes = (dayticks % 1000) * 6 / 100;
 		// long seconds= (dayticks % 1000) * 6 % 100;
-		GlStateManager.disableLighting();
-		GL11.glPushMatrix();
-		GL11.glTranslatef(100, 5, 0);
-		GL11.glScalef(0.8f, 0.8f, 1.0f);
+		
+//		GL11.glPushMatrix();
+		
+		
 		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
-		fontRendererObj.drawString(String.format("%04d days", days), 0, 0,
-				EnumDyeColor.SILVER.getMapColor().colorValue, true);
-		GL11.glPopMatrix();
+		
 
 		GL11.glPushMatrix();
-		
-		this.mc.getTextureManager().bindTexture(MOON_PHASES);
-		this.drawTexturedModalRect(100, 20, 0, 20, 16, 16);
-		
-		GL11.glTranslatef(100, 20, 0);
-		GL11.glScalef(0.8f, 0.8f, 1.0f);
-		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
-		fontRendererObj.drawString(
-				String.format("%s", moonPhases[world.getMoonPhase()]), 0, 0,
-				EnumDyeColor.SILVER.getMapColor().colorValue, true);
-		GL11.glPopMatrix();
-
-		GL11.glPushMatrix();
-		GL11.glTranslatef(200, 5, 0);
+		GL11.glTranslatef(5, 5, 0);
 		GL11.glScalef(2.0f, 2.0f, 1.0f);
-		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+//		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
 		fontRendererObj.drawString(
 				String.format("%02d:%02d", (7 + hours) % 24, minutes), 0, 0,
-				EnumDyeColor.LIGHT_BLUE.getMapColor().colorValue, true);
-
+				colorValue, false);
 		GL11.glPopMatrix();
-		GlStateManager.enableLighting();
+		
+		GL11.glPushMatrix();
+//		GL11.glTranslatef(63, 5, 0);
+//		GL11.glTranslatef(63, 18, 0);
+		GL11.glTranslatef(85, 18, 0);
+		GL11.glScalef(0.8f, 0.8f, 1.0f);
+//		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+		fontRendererObj.drawString(String.format("%6d days", days), 0, 0, colorValue, false);
+		GL11.glPopMatrix();
+		
+		GL11.glPushMatrix();
+		GL11.glTranslatef(7, 82, 0);
+		GL11.glScalef(0.8f, 0.6f, 1.0f);
+		GL11.glRotatef(-90f, 0, 0, 1);
+//		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+		fontRendererObj.drawString(
+				String.format("%-16s", moonPhases[moonPhase]), 0, 0,
+				colorValue, false);
+		GL11.glPopMatrix();
+		
+		GL11.glColor4d(1.0f, 1.0f, 1.0f, 1.0f);
+		this.mc.getTextureManager().bindTexture(MOON_PHASES);
+//		this.drawTexturedModalRect(62, 50, 0+moonPhase*16, 20, 16, 16);
+		this.drawTexturedModalRect(21, 27, 0+moonPhase*16, 20, 16, 16);
+		
+		
 	}
 
 	public void drawTexturedModalRect(int x, int y, int textureX, int textureY,

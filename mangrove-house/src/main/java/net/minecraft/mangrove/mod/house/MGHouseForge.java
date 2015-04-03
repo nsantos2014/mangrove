@@ -4,7 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.GUIHandler;
-import net.minecraft.mangrove.core.MangroveForge;
+import net.minecraft.mangrove.core.MGCoreForge;
 import net.minecraft.mangrove.mod.house.block.crate.TileEntityCrate;
 import net.minecraft.mangrove.mod.house.block.crate.gui.ContainerCrate;
 import net.minecraft.mangrove.mod.house.block.crate.gui.GuiCrate;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid=MGHouseForge.ID, name=MGHouseForge.NAME,version=MGHouseForge.VERSION,useMetadata=false,dependencies="required-after:"+MangroveForge.ID)
+@Mod(modid=MGHouseForge.ID, name=MGHouseForge.NAME,version=MGHouseForge.VERSION,useMetadata=false,dependencies="required-after:"+MGCoreForge.ID)
 public class MGHouseForge {
 	public static final String ID = "mghouse";
     public static final String NAME = "Mangrove House";
