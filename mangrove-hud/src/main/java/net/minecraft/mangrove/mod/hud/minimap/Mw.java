@@ -1,6 +1,7 @@
 package net.minecraft.mangrove.mod.hud.minimap;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import net.minecraft.mangrove.mod.hud.minimap.tasks.CloseRegionManagerTask;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.Chunk;
 
 /*
@@ -106,7 +108,7 @@ public class Mw {
 	public int defaultTeleportHeight = 80;
 	public int maxZoom = 5;
 	public int minZoom = -5;
-	public boolean useSavedBlockColours = false;
+	public boolean useSavedBlockColours = true;
 	public int maxChunkSaveDistSq = 128 * 128;
 	public boolean mapPixelSnapEnabled = true;
 	public int textureSize = 2048;
@@ -485,11 +487,38 @@ public class Mw {
 				MwUtil.log("error: no such directory %s", this.saveDirOverride);
 			}
 		}
+		String name;
+		if(!this.multiplayer){
+			try {
+	            Field field = server.getClass().getDeclaredField("theWorldSettings");
+	            field.setAccessible(true);
+	            final WorldSettings worldSettings = (WorldSettings)field.get(server);
+	            name=Long.toHexString(worldSettings.getSeed()).toUpperCase();
+            } catch (NoSuchFieldException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	            name=worldName;
+            } catch (SecurityException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	            name=worldName;
+            } catch (IllegalArgumentException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	            name=worldName;
+            } catch (IllegalAccessException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	            name=worldName;
+            }
+		}else{
+			name=worldName;
+		}
 		
 		if (this.multiplayer) {
 			this.worldDir = new File(new File(saveDir, "mapwriter_mp_worlds"), this.worldName);
 		} else {
-			this.worldDir = new File(new File(saveDir, "mapwriter_sp_worlds"), this.worldName);
+			this.worldDir = new File(new File(saveDir, "mapwriter_sp_worlds"), name/*this.worldName*/);
 		}
 		
 		this.loadWorldConfig();

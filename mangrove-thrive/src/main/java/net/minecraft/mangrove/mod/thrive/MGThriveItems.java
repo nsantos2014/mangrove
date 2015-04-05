@@ -1,6 +1,7 @@
 package net.minecraft.mangrove.mod.thrive;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -10,20 +11,36 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.recipes.RecipeBuilder;
+import net.minecraft.mangrove.mod.thrive.probe.ItemProbe;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class MGThriveItems {
-
+	
+	public static ItemProbe probe;
+	
+	
 	public static void init(FMLInitializationEvent event) {
+		probe=new ItemProbe();
+		
 		if (event.getSide() == Side.CLIENT) {
 			RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 			ItemModelMesher itemModelMesher = renderItem.getItemModelMesher();
 			
 			// blocks
 			
+//			itemModelMesher.register(
+//					probe, 0,
+//					new ModelResourceLocation(MGThriveForge.ID + ":"
+//							+ MGThriveItems.probe.getName(), "inventory"));
+			itemModelMesher.register(
+					probe,new ItemMeshDefinition(){
+	            public ModelResourceLocation getModelLocation(ItemStack stack){
+	                return new ModelResourceLocation("filled_map", "inventory");
+	            }
+	        });
 			itemModelMesher.register(
 					Item.getItemFromBlock(MGThriveBlocks.strongbox), 0,
 					new ModelResourceLocation(MGThriveForge.ID + ":"

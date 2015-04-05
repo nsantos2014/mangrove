@@ -250,7 +250,8 @@ public class TESRCistern extends TileEntitySpecialRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		bindTexture(TextureMap.locationBlocksTexture);
+//		bindTexture(TextureMap.locationBlocksTexture);
+		bindTexture(tile.getFluidTexture());
 //		RenderUtils.setGLColorFromInt(color);
 
 		GL11.glTranslatef((float) x + 0.125F, (float) y + 0.5F, (float) z + 0.125F);
@@ -300,20 +301,18 @@ public class TESRCistern extends TileEntitySpecialRenderer {
 		 worldrenderer.startDrawingQuads();
 		this.bindTexture(tile.getFluidTexture());
 		
-		
-		
 		AxisAlignedBB bounds = AxisAlignedBB.fromBounds(0.125f, 0.1875f+level, 0.125f, 0.875f, 0.1875f+level, 0.875f);
 //		AxisAlignedBB bounds = AxisAlignedBB.fromBounds(0.126f, 0.75f, 0.126f, 0.874f, 1.00f, 0.874f);
-		worldrenderer.setColorOpaque_F(1.0F, 1.0F, 1.0F);
+		worldrenderer.setColorOpaque_F(1.0F, 1.0F, 0.1F);
 		
-//		renderUpFace(bounds, worldrenderer, scale, scale);
+		renderUpFace(bounds, worldrenderer, 1, .1f);
 		
 
-		worldrenderer.addVertexWithUV(bounds.maxX, bounds.maxY, bounds.minZ, 1.0f, 1.0);
-		worldrenderer.addVertexWithUV(bounds.minX, bounds.maxY, bounds.minZ, 0.0f, 1.0);
-		worldrenderer.addVertexWithUV(bounds.minX, bounds.maxY, bounds.maxZ, 0.0f, 0.0);
-		worldrenderer.addVertexWithUV(bounds.maxX, bounds.maxY, bounds.maxZ, 1.0f, 0.0);
-		
+//		worldrenderer.addVertexWithUV(bounds.maxX, bounds.maxY, bounds.minZ, 1.0f, 1.0);
+//		worldrenderer.addVertexWithUV(bounds.minX, bounds.maxY, bounds.minZ, 0.0f, 1.0);
+//		worldrenderer.addVertexWithUV(bounds.minX, bounds.maxY, bounds.maxZ, 0.0f, 0.0);
+//		worldrenderer.addVertexWithUV(bounds.maxX, bounds.maxY, bounds.maxZ, 1.0f, 0.0);
+//		
 		tessellator.draw();
 
 		GlStateManager.enableLighting();

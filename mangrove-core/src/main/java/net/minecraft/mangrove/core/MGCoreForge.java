@@ -5,6 +5,8 @@ import java.util.Map;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.items.ItemHardconium;
 import net.minecraft.mangrove.network.GuiWidgetMessage;
@@ -134,6 +136,13 @@ public class MGCoreForge {
 			new Object[] { "XXX", "XXX", "XXX", 
 			'X',Blocks.cobblestone 
 		}));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Items.dye, 1,EnumDyeColor.BLUE.getMetadata()), 
+				new Object[] { "LB", 
+				'L',new ItemStack(Items.dye, 1,EnumDyeColor.LIGHT_BLUE.getMetadata()),
+				'B',new ItemStack(Items.dye, 1,EnumDyeColor.BLACK.getMetadata())
+			}));
+		
 		
 //		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(Blocks.gravel,4), 
 //			new Object[] { "DDD", "D D", "DDD", 

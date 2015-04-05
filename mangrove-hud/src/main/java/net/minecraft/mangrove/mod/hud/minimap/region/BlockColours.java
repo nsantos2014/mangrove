@@ -22,6 +22,7 @@ public class BlockColours {
 	public static final String blockSectionString = "[blocks]";
 	
 	private int[] bcArray = new int[MAX_BLOCKS * MAX_META];
+//	private int[] bcArray = new int[MAX_BLOCKS * MAX_META];
 	private int[] waterMultiplierArray = new int[MAX_BIOMES];
 	private int[] grassMultiplierArray = new int[MAX_BIOMES];
 	private int[] foliageMultiplierArray = new int[MAX_BIOMES];

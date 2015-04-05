@@ -8,11 +8,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,139 +30,80 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import org.lwjgl.input.Keyboard;
 
 public class Craftpedia {
-public static final Craftpedia instance=new Craftpedia();
-	
-//	private KeyBinding toggleXrayBinding;
-	private KeyBinding toggleXrayGui;
-	
-	public static ArrayList<Craftpedia> blocks = new ArrayList();
-	
-	public int r;
-	public int g;
-	public int b;
-	public int a;
-	public int meta;
-	public String id = "";
-	public boolean enabled = true;
+	public static final Craftpedia instance = new Craftpedia();
 
+	private final List<CraftpediaRecipe> recipeList = new ArrayList<>();
+	private final List<String> nameList=new ArrayList<String>();
+
+	private ExecutorService executorService;
+
+	private Future<Integer> lastSubmit;
+	
 	private Craftpedia() {
-		this.toggleXrayGui = new KeyBinding("Toggle Craftpedia", Keyboard.KEY_F6, "Craftpedia");
-	}
-	public void registerKeys(){
-		ClientRegistry.registerKeyBinding(this.toggleXrayGui);
-		FMLCommonHandler.instance().bus().register(this);
-	}
-	
-	@SubscribeEvent
-	public void keyboardEvent(InputEvent.KeyInputEvent key) {
-		if (!(Minecraft.getMinecraft().currentScreen instanceof GuiScreen)) {
-//			if (this.toggleXrayBinding.getIsKeyPressed()) {
-//				toggleXray = !(toggleXray);
-//				if (toggleXray)
-//					cooldownTicks = 0;
-//				else
-//					GL11.glDeleteLists(displayListid, 1);
-//			}
-
-			if (this.toggleXrayGui.isPressed())
-				CraftpediaGui.show();
-		}
-	}
-//	public Craftpedia(int r, int g, int b, int a, int meta, String id,
-//			boolean enabled) {
-//		this.r = r;
-//		this.g = g;
-//		this.b = b;
-//		this.a = a;
-//		this.id = id;
-//		this.meta = meta;
-//		this.enabled = enabled;
-//	}
-
-	public String toString() {
-		return this.r + " " + this.g + " " + this.b + " " + this.a + " "
-				+ this.meta + " " + this.id + " " + this.enabled;
-	}
-
-	public static Craftpedia fromString(String s) {
-		Craftpedia result = new Craftpedia();
-		String[] info = s.split(" ");
-		result.r = Integer.parseInt(info[0]);
-		result.g = Integer.parseInt(info[1]);
-		result.b = Integer.parseInt(info[2]);
-		result.a = Integer.parseInt(info[3]);
-		result.meta = Integer.parseInt(info[4]);
-		result.id = info[5];
-		result.enabled = Boolean.parseBoolean(info[6]);
-		return result;
-	}
-
-//	public static void setStandardList() {
-//		ArrayList block = new ArrayList();
-//		block.add(new Craftpedia(0, 0, 128, 200, -1, "minecraft:lapis_ore",
-//				true));
-//		block.add(new Craftpedia(255, 0, 0, 200, -1, "minecraft:redstone_ore",
-//				true));
-//		block.add(new Craftpedia(255, 255, 0, 200, -1, "minecraft:gold_ore",
-//				true));
-//		block.add(new Craftpedia(0, 255, 0, 200, -1, "minecraft:emerald_ore",
-//				true));
-//		block.add(new Craftpedia(0, 191, 255, 200, -1, "minecraft:diamond_ore",
-//				true));
-//
-//		blocks = block;
-//		try {
-//			save();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-	public static void removeInvalidBlocks() {
-		for (int i = 0; i < blocks.size(); ++i) {
-			Craftpedia block = (Craftpedia) blocks.get(i);
-			if (Block.blockRegistry.containsKey(block.id))
-				continue;
-			blocks.remove(block);
+		 executorService = Executors.newFixedThreadPool(1);
+		final Iterator it = CraftingManager.getInstance().getRecipeList().iterator();
+		while (it.hasNext()) {
+			final IRecipe recipe = (IRecipe) it.next();
+			if( recipe.getRecipeOutput()==null){
+				System.out.println("Found a null receipt : "+recipe);
+			}else{
+				CraftpediaRecipe craftpediaRecipe = CraftpediaRecipe.of(recipe);
+				this.nameList.add(craftpediaRecipe.getOutputName());
+				this.recipeList.add(craftpediaRecipe);
+			}
 		}
 	}
 
-	public static void init() {
+	public int size() {
+		return this.recipeList.size();
+	}
+
+	public CraftpediaRecipe get(int renderPosition) {
+		return this.recipeList.get(renderPosition);
+	}
+
+	public int find(String text,int fromPos) {
+		if( lastSubmit!=null){
+			lastSubmit.cancel(true);
+		}
 		try {
-			load();
-		} catch (Exception e) {
+			lastSubmit = this.executorService.submit(new SearchCallable(text,fromPos));
+			return lastSubmit.get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		removeInvalidBlocks();
-		if (blocks.size() != 0)
-			return;
-//		setStandardList();
+		return -1;
 	}
 
-	private static void load() throws Exception {
-		File toLoad = new File(Minecraft.getMinecraft().mcDataDir,"XRayBlocks.dat");
-		if ((toLoad.exists()) && (!(toLoad.isDirectory()))) {
-			ArrayList block = new ArrayList();
-			BufferedReader br = new BufferedReader(new FileReader(toLoad));
-			String s;
-			for (; (s = br.readLine()) != null; block.add(fromString(s)))
-				;
-			br.close();
-			blocks = block;
-		}
-	}
+	private class SearchCallable implements Callable<Integer>{
 
-	static void save() throws IOException {
-		File toSave = new File(Minecraft.getMinecraft().mcDataDir,"XRayBlocks.dat");
-		if (toSave.exists()) {
-			toSave.delete();
+		private String text;
+		private int fromIndex;
+		private int toIndex;
+
+		public SearchCallable(final String text, int fromPos) {
+			this.text = text;
+			this.fromIndex = fromPos<0?0:fromPos;
+			this.toIndex=fromPos<0?-fromPos: nameList.size();
 		}
-		BufferedWriter bw = new BufferedWriter(new FileWriter(toSave));
-		for (int i = 0; i < blocks.size(); ++i) {
-			bw.write(((Craftpedia) blocks.get(i)).toString());
-			bw.newLine();
+
+		@Override
+		public Integer call() throws Exception {
+			
+			int i=fromIndex;
+			for(final String name:nameList.subList(fromIndex, toIndex)){
+				if(name.startsWith(text)){
+					System.out.println("Found : '"+name+"' at "+i);
+					return i;
+				}
+				i++;
+			}
+			return -1;
 		}
-		bw.flush();
-		bw.close();
+		
 	}
 }

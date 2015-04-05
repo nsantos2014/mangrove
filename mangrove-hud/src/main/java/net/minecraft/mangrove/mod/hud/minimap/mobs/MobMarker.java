@@ -3,8 +3,11 @@ package net.minecraft.mangrove.mod.hud.minimap.mobs;
 import java.awt.Point;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.mangrove.mod.hud.minimap.Render;
@@ -52,11 +55,19 @@ public class MobMarker {
         double halfMSize = mapMode.markerSize / 2.0;
         
         net.minecraft.client.renderer.entity.Render renderer = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entityLiving);
-        
-        Render.setColour(borderColour);        
-        Render.drawRect(p.x - halfMSize, p.y - halfMSize, mSize, mSize);
-        Render.setColour(0xff0C0C0F);
-        Render.drawRect(p.x - halfMSize + 0.5, p.y - halfMSize + 0.5, mSize - 1.0, mSize - 1.0);
+        GlStateManager.pushMatrix();
+        GlStateManager.pushAttrib();
+       
+        Render.setColour(0xffffffff);
+        GL11.glTranslated(p.x- halfMSize, p.y -halfMSize, 0.0f);
+        GL11.glScalef(5f, 5f, 0.0f);
+        renderer.doRender(entityLiving, 0, 0, 0, 0, 0);
+        GlStateManager.popAttrib();
+        GlStateManager.popMatrix();
+//        Render.setColour(borderColour);        
+//        Render.drawRect(p.x - halfMSize, p.y - halfMSize, mSize, mSize);
+//        Render.setColour(0xff0C0C0F);
+//        Render.drawRect(p.x - halfMSize + 0.5, p.y - halfMSize + 0.5, mSize - 1.0, mSize - 1.0);
     }
     
 }

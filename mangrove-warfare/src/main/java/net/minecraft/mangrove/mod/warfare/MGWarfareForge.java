@@ -1,12 +1,16 @@
 package net.minecraft.mangrove.mod.warfare;
 
 import static net.minecraftforge.common.ChestGenHooks.STRONGHOLD_CORRIDOR;
+
+import java.util.Random;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.mod.warfare.proxy.CommonProxy;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -44,7 +48,33 @@ public class MGWarfareForge {
     	MGWarfareItems.registerSurpass(event);
     	MGWarfareItems.registerArmor(event);
     	
-    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 1, 10000));
+    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 21, 521){
+    		@Override
+    		protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
+    			int size = newInventory.getSizeInventory();
+    			for( int i=0; i< size; i++){
+    				ItemStack iStack=newInventory.getStackInSlot(i);
+    				if( iStack.getItem()==MGWarfareItems.woodenSurpass){
+    					return new ItemStack[0];		
+    				}
+    			}
+    			return new ItemStack[]{new ItemStack(MGWarfareItems.woodenSurpass)};
+    		}
+    	});
+    	
+    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 91, 5121){
+    		@Override
+    		protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
+    			int size = newInventory.getSizeInventory();
+    			for( int i=0; i< size; i++){
+    				ItemStack iStack=newInventory.getStackInSlot(i);
+    				if( iStack!=null && iStack.getItem()==MGWarfareItems.woodenSurpass){
+    					return new ItemStack[0];		
+    				}
+    			}
+    			return new ItemStack[]{new ItemStack(MGWarfareItems.woodenSurpass)};
+    		}
+    	});
     	
 //		ChestGenHooks.getInfo(ChestGenHooks.BONUS_CHEST).addItem(surplus);
 //        registerXArmor();

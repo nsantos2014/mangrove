@@ -8,6 +8,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 
@@ -184,6 +185,9 @@ public class MwChunk implements IChunk {
 	public int getBlockAndMetadata(int x, int y, int z) {
 		IBlockState istate = get(x, y, z);
 		Block block = istate.getBlock();
+		if( block.getMaterial()==Material.water){
+//			System.out.println("block:"+block);
+		}
 		int blockId=Block.getIdFromBlock(block);
 		int meta= block.getMetaFromState(istate);
 		return ((blockId &0x0ff)<<4)| (meta & 0xf); 

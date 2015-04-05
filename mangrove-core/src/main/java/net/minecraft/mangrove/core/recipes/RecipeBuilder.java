@@ -46,6 +46,10 @@ public class RecipeBuilder {
 		this.itemStack=new ItemStack(item,amount,meta);
 		return this;
 	}
+	public RecipeBuilder of(ItemStack itemStack) {
+		this.itemStack=itemStack.copy();
+	    return this;
+    }
 	public RecipeBuilder mirror(){
 		this.mirrored=true;
 		return this;
@@ -126,4 +130,5 @@ public class RecipeBuilder {
 	public static RecipeBuilder newRecipe(){
 		return new RecipeBuilder();
 	}
+	
 }

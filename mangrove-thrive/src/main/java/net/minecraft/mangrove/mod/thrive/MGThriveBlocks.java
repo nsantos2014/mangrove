@@ -94,6 +94,7 @@ public class MGThriveBlocks {
 		TileEntity.addMapping(TileCistern.class, cistern.getName());
 		
 		TileEntity.addMapping(TileEntityStrongbox.class, strongbox.getName());
+		
 		TileEntity.addMapping(TileEntityAutobench.class, autobench.getName());
 		
 		TileEntity.addMapping(TileItemConveyor.class, duct_conveyor.getName());
@@ -125,6 +126,12 @@ public class MGThriveBlocks {
 				.line(MGCoreItems.hardconium_rod, null, MGCoreItems.hardconium_rod)
 				.line(MGCoreItems.hardconium_rod, MGCoreItems.hardconium_rod, MGCoreItems.hardconium_rod).build()
 		);
+		
+ 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.strongbox)
+ 				.line(Blocks.planks, Blocks.planks, Blocks.planks)
+ 				.line(Blocks.planks, Blocks.hopper, Blocks.planks)
+ 				.line(Blocks.planks, Blocks.planks, Blocks.planks).build()
+ 				);
 		
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.autobench)
 				.line(Blocks.planks, Blocks.planks, Blocks.planks)

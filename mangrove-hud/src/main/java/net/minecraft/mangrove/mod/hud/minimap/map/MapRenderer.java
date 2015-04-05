@@ -3,6 +3,7 @@ package net.minecraft.mangrove.mod.hud.minimap.map;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.mangrove.mod.hud.MGHudForge;
 import net.minecraft.mangrove.mod.hud.minimap.Mw;
 import net.minecraft.mangrove.mod.hud.minimap.Render;
@@ -132,6 +133,8 @@ public class MapRenderer {
 			GL11.glPopMatrix();			
 		}
 		
+		this.mw.mobManager.draw(this.mapMode, this.mapView, 0xff000000);
+		
 		if (this.mapMode.circular) {
 			Render.disableStencil();
 		}
@@ -185,7 +188,7 @@ public class MapRenderer {
 		// draw markers
 		this.mw.markerManager.drawMarkers(this.mapMode, this.mapView);
 		
-		this.mw.mobManager.draw(this.mapMode, this.mapView, 0xff000000);
+		
 		// draw player trail
 		if (this.mw.playerTrail.enabled) {
 			this.mw.playerTrail.draw(this.mapMode, this.mapView);
@@ -265,6 +268,7 @@ public class MapRenderer {
 		
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
+		GlStateManager.disableLighting();
 		
 		// translate to center of minimap
 		// z is -2000 so that it is drawn above the 3D world, but below GUI
@@ -278,11 +282,12 @@ public class MapRenderer {
 			this.drawBorder();
 		}
 		this.drawIcons();
-		
+//		this.mw.mobManager.draw(this.mapMode, this.mapView, 0xff000000);
 		this.drawCoords();
 		
-		// some shader mods seem to need depth testing re-enabled
+		// some shader mods seem to need depth testing re-enabled		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}
 	
