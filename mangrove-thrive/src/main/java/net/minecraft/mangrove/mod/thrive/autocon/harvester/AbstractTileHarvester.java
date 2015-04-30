@@ -96,7 +96,7 @@ public abstract class AbstractTileHarvester extends AbstractTileAutocon implemen
 			break;
 		default:
 			if (tick % 128 == 0) {
-				System.out.println("Server Side Stage=" + stage);
+//				System.out.println("Server Side Stage=" + stage);
 				fireServerLifecycleEvent();
 			}
 			break;
@@ -107,7 +107,7 @@ public abstract class AbstractTileHarvester extends AbstractTileAutocon implemen
 		switch (stage) {
 		case RenderScene:
 			if (tick % _stageDuration(stage) == 0) {
-				System.out.println("Render scene");
+//				System.out.println("Render scene");
 				if (renderScene(tick)) {
 					this.stage = Lifecycle.Execute;
 					fireClientLifecycleEvent();
@@ -132,7 +132,7 @@ public abstract class AbstractTileHarvester extends AbstractTileAutocon implemen
 			break;
 		case RenderFailScene:
 			if (tick % _stageDuration(stage) == 0) {
-				System.out.println("Failure");
+//				System.out.println("Failure");
 				if (renderFailure(tick)) {
 					this.stage = Lifecycle.Init;
 					fireClientLifecycleEvent();
@@ -141,7 +141,7 @@ public abstract class AbstractTileHarvester extends AbstractTileAutocon implemen
 			break;
 		default:
 			if (tick % 128 == 0) {
-				System.out.println("Cient Side Stage=" + stage);
+//				System.out.println("Cient Side Stage=" + stage);
 				fireClientLifecycleEvent();
 			}
 			return;

@@ -46,6 +46,17 @@ public class MGThriveItems {
 					new ModelResourceLocation(MGThriveForge.ID + ":"
 							+ MGThriveBlocks.strongbox.getName(), "inventory"));
 			
+			
+			
+			itemModelMesher.register(
+					Item.getItemFromBlock(MGThriveBlocks.pump), 0,
+					new ModelResourceLocation(MGThriveForge.ID + ":"
+							+ MGThriveBlocks.pump.getName(), "inventory"));
+			
+			itemModelMesher.register(
+					Item.getItemFromBlock(MGThriveBlocks.cistern), 0,
+					new ModelResourceLocation(MGThriveForge.ID + ":"
+							+ MGThriveBlocks.cistern.getName(), "inventory"));
 			itemModelMesher.register(
 					Item.getItemFromBlock(MGThriveBlocks.cistern), 0,
 					new ModelResourceLocation(MGThriveForge.ID + ":"

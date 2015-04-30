@@ -20,6 +20,7 @@ import net.minecraft.mangrove.mod.thrive.MGThriveBlocks;
 import net.minecraft.mangrove.mod.thrive.autocon.AbstractTileAutocon;
 import net.minecraft.mangrove.mod.thrive.autocon.SearchItem;
 import net.minecraft.mangrove.mod.thrive.autocon.SearchUtil;
+import net.minecraft.mangrove.mod.thrive.autocon.autobench.BlockAutobench;
 import net.minecraft.mangrove.network.NetBus;
 import net.minecraft.mangrove.network.TileEntityMessage;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,7 +50,13 @@ public class TileItemBroker extends AbstractTileAutocon implements ITileUpdatabl
 
 	@Override
 	public void update() {
-		if (!worldObj.isRemote) {
+		if ((this.worldObj == null) || (this.worldObj.isRemote)) {
+			return;
+		}
+
+		if (!isPowered()) {
+			return;
+		}
 			if (tick % 32 == 0) {
 				final List<ConnectionConfig> inletConnections = this.brokerSupport.getConnections(EnumConnectionState.INLET);
 				final List<ConnectionConfig> outletConnections = this.brokerSupport.getConnections(EnumConnectionState.OUTLET);
@@ -60,8 +67,13 @@ public class TileItemBroker extends AbstractTileAutocon implements ITileUpdatabl
 				}
 			}
 			tick++;
-		}
 	}
+	
+	public boolean isPowered() {
+		return (Boolean) worldObj.getBlockState(pos).getValue(
+				BlockAutobench.POWERED);
+	}
+
 
 	private void process(List<ConnectionConfig> inletConnections, List<ConnectionConfig> outletConnections) {
 		processor.startProcessing();

@@ -13,6 +13,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
+import net.minecraft.mangrove.core.inventory.transactor.ITransactor;
+import net.minecraft.mangrove.core.inventory.transactor.Transactor;
 import net.minecraft.mangrove.mod.thrive.MGThriveForge;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -111,12 +113,30 @@ public class BlockCistern extends Block implements ITileEntityProvider {
 					if( itemBucket==Items.bucket){
 						//check if can retrieve 
 						if(tileCistern.canRetrieve()){
-							playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, new ItemStack(tileCistern.retrieve()));	
+							
+							if( itemstack.stackSize==1){
+								playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, new ItemStack(tileCistern.retrieve()));
+							}else{
+								int slot=-1;
+								for( int i=0;i<36; i++){
+									ItemStack slotContent = playerIn.inventory.getStackInSlot(i);
+									if( slotContent==null){
+										slot=i;
+										break;
+									}
+								}
+								if( slot>=0){
+									playerIn.inventory.setInventorySlotContents(slot, new ItemStack(tileCistern.retrieve()));
+								}
+//								itemstack.stackSize--;
+							}
+							playerIn.inventory.markDirty();
 						}
 						 
 					}else{
 						if(tileCistern.canPlace(itemBucket)){
 							playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, new ItemStack(tileCistern.place(itemBucket)));	
+							playerIn.inventory.markDirty();
 						}
 					}
 				}

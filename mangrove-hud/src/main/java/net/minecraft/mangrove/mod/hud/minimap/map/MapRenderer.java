@@ -287,7 +287,7 @@ public class MapRenderer {
 		
 		// some shader mods seem to need depth testing re-enabled		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GlStateManager.enableLighting();
+//		GlStateManager.enableLighting();
 		GL11.glPopMatrix();
 	}
 	

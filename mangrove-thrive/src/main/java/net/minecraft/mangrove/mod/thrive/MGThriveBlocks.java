@@ -30,6 +30,8 @@ import net.minecraft.mangrove.mod.thrive.autocon.junction.BlockStorageJunction;
 import net.minecraft.mangrove.mod.thrive.autocon.junction.ContainerStorageJunction;
 import net.minecraft.mangrove.mod.thrive.autocon.junction.GuiStorageJunction;
 import net.minecraft.mangrove.mod.thrive.autocon.junction.TileStorageJunction;
+import net.minecraft.mangrove.mod.thrive.autocon.pump.BlockPump;
+import net.minecraft.mangrove.mod.thrive.autocon.pump.TilePump;
 import net.minecraft.mangrove.mod.thrive.cistern.BlockCistern;
 import net.minecraft.mangrove.mod.thrive.cistern.TileCistern;
 import net.minecraft.mangrove.mod.thrive.duct.AbstractBlockDuct;
@@ -55,6 +57,8 @@ public class MGThriveBlocks {
 	public static BlockStrongbox strongbox = null;
 	public static BlockCistern cistern = null;
 	
+	public static BlockPump pump = null;
+	
 	public static BlockSimpleDuct simpleduct = null;
 	public static BlockKernel robot_kernel = null;
 	public static BlockLink robot_link = null;
@@ -74,6 +78,8 @@ public class MGThriveBlocks {
 
 	public static void preInit() {
 
+		pump=new BlockPump();
+		
 		cistern=new BlockCistern();
 		strongbox=new BlockStrongbox();
 		
@@ -92,6 +98,8 @@ public class MGThriveBlocks {
 	public static void init() {
 
 		TileEntity.addMapping(TileCistern.class, cistern.getName());
+		TileEntity.addMapping(TilePump.class, pump.getName());
+		
 		
 		TileEntity.addMapping(TileEntityStrongbox.class, strongbox.getName());
 		
@@ -116,10 +124,17 @@ public class MGThriveBlocks {
 //		ItemStack woolGreen = new ItemStack(Blocks.wool,1,EnumDyeColor.GREEN.getMetadata());
 		ItemStack stoneGranite = new ItemStack(Blocks.stone,1,BlockStone.EnumType.GRANITE.getMetadata());
 		ItemStack stoneDiorite = new ItemStack(Blocks.stone,1,BlockStone.EnumType.DIORITE.getMetadata());
-		ItemStack logSpruce = new ItemStack(Blocks.log,1 , BlockPlanks.EnumType.SPRUCE.getMetadata());
+		ItemStack stoneAndesite = new ItemStack(Blocks.stone,1,BlockStone.EnumType.ANDESITE.getMetadata());
+		ItemStack logSpruce = new ItemStack(Blocks.log,1 , BlockPlanks.EnumType.BIRCH.getMetadata());
 		ItemStack logOak = new ItemStack(Blocks.log,1 , BlockPlanks.EnumType.OAK.getMetadata());
 		ItemStack blueDye=new ItemStack(Items.dye, EnumDyeColor.BLUE.getMetadata(), EnumDyeColor.BLUE.getDyeDamage());
 		ItemStack greenDye=new ItemStack(Items.dye, EnumDyeColor.GREEN.getMetadata(), EnumDyeColor.GREEN.getDyeDamage());
+		
+		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.pump)
+				.line(stoneAndesite,stoneAndesite, stoneAndesite)
+				.line(Blocks.glass, stoneAndesite, Blocks.glass)
+				.line(Blocks.glass, Items.redstone, Blocks.glass).build()
+		);
 		
 		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGThriveBlocks.cistern)
 				.line(MGCoreItems.hardconium_rod, null, MGCoreItems.hardconium_rod)

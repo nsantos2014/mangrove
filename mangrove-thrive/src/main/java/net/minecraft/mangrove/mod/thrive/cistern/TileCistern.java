@@ -1,5 +1,6 @@
 package net.minecraft.mangrove.mod.thrive.cistern;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -14,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class TileCistern extends TileEntity {
 
+	private static final int CONTAINER_MAX_SIZE = 64;
 	private static final ResourceLocation water = new ResourceLocation("textures/blocks/water_still.png");
 	private static final ResourceLocation lava = new ResourceLocation("textures/blocks/lava_still.png");
 	private static final ResourceLocation milk = new ResourceLocation("textures/blocks/wool_colored_white.png");
@@ -65,6 +67,10 @@ public class TileCistern extends TileEntity {
 	public int getLevel() {
 		return itemStack.stackSize;
 	}
+	
+	public int getMaxLevel(){
+		return CONTAINER_MAX_SIZE;
+	}
 
 	public boolean canRetrieve() {
 		return itemStack.stackSize > 0;
@@ -81,7 +87,7 @@ public class TileCistern extends TileEntity {
 	}
 
 	public boolean canPlace(ItemBucket item) {
-		return itemStack.stackSize == 0 || (itemStack.stackSize < 64 && itemStack.getItem() == item);
+		return itemStack.stackSize == 0 || (itemStack.stackSize < CONTAINER_MAX_SIZE && itemStack.getItem() == item);
 	}
 
 	public Item place(ItemBucket item) {
@@ -89,19 +95,19 @@ public class TileCistern extends TileEntity {
 		if (itemStack.stackSize == 0) {
 			itemStack.setItem(item);
 			itemStack.stackSize = 1;
-			System.out.println("StackSize:" + itemStack.stackSize);
+//			System.out.println("StackSize:" + itemStack.stackSize);
 			fireSync();
 			return Items.bucket;
 		}
 		if (itemStack.getItem() != item) {
 			return item;
 		}
-		if (itemStack.stackSize >= 64) {
+		if (itemStack.stackSize >= CONTAINER_MAX_SIZE) {
 			return item;
 		}
 
 		itemStack.stackSize++;
-		System.out.println("StackSize:" + itemStack.stackSize);
+//		System.out.println("StackSize:" + itemStack.stackSize);
 		fireSync();
 		return Items.bucket;
 

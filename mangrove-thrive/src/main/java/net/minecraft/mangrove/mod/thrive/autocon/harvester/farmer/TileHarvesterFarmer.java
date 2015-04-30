@@ -52,8 +52,9 @@ public class TileHarvesterFarmer extends AbstractTileHarvester {
 				if (!worldObj.isAirBlock(current)) {
 					IBlockState blockState = worldObj.getBlockState(current);
 					Block block = blockState.getBlock();
-					if (block != Blocks.dirt && block == Blocks.grass) {
+					if (!(block instanceof IGrowable) ) {
 						depth = j;
+//						System.out.println("Failed : 1 :"+depth+": "+block);
 						return false;
 					}
 				}
@@ -62,8 +63,9 @@ public class TileHarvesterFarmer extends AbstractTileHarvester {
 			BlockPos current = currentDepth.down(3);
 			IBlockState blockState = worldObj.getBlockState(current);
 			Block block = blockState.getBlock();
-			if (block != Blocks.dirt && block == Blocks.grass && block != Blocks.farmland) {
+			if (block != Blocks.dirt && block != Blocks.grass && block != Blocks.farmland) {
 				depth = j;
+//				System.out.println("Failed : 2 :"+depth+": "+block);
 				return false;
 			}
 		}
@@ -76,7 +78,7 @@ public class TileHarvesterFarmer extends AbstractTileHarvester {
 
 	@Override
 	protected boolean doExecute(int serverTick) {
-		System.out.println("Execute");
+//		System.out.println("Execute");
 		EnumFacing enumfacing = (EnumFacing) worldObj.getBlockState(pos).getValue(AbstractBlockHarvester.FACING);
 		BlockPos currentDepth = pos.offset(enumfacing.getOpposite(), depth);
 		for (int i = 0; i < 4; i++) {
@@ -145,6 +147,9 @@ public class TileHarvesterFarmer extends AbstractTileHarvester {
 	}
 
 	private Block convertToBlock(ItemStack seedStack) {
+		if( seedStack.getItem()==Items.wheat_seeds){
+			return Blocks.wheat;
+		}
 		return Blocks.carrots;
 	}
 
@@ -196,7 +201,7 @@ public class TileHarvesterFarmer extends AbstractTileHarvester {
 
 	@Override
 	protected boolean renderScene(int clientTick) {
-		System.out.println("RenderScene");
+//		System.out.println("RenderScene");
 		EnumFacing enumfacing = (EnumFacing) worldObj.getBlockState(pos).getValue(AbstractBlockHarvester.FACING);
 		BlockPos position = pos.offset(enumfacing.getOpposite(), depth).offset(EnumFacing.DOWN, 2);
 		AxisDirection dir = enumfacing.getAxisDirection();
@@ -212,7 +217,7 @@ public class TileHarvesterFarmer extends AbstractTileHarvester {
 
 	@Override
 	protected boolean renderSceneOut(int clientTick) {
-		System.out.println("RenderSceneOut");
+//		System.out.println("RenderSceneOut");
 		return true;
 	}
 

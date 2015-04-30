@@ -88,6 +88,8 @@ public class MGHudForge {
             }
         }
     }
+    
+    
     @SubscribeEvent
     public void onInitWorld(InitMapGenEvent event){
         MapGenBase newGen = event.newGen;
