@@ -1,5 +1,5 @@
 {
-    "parent": "mghouse:block/drawbridge_bottom",
+    "parent": "mghouse:block/drawbridge_hinge_lowered",
     "display": {
         "thirdperson": {
             "rotation": [ 10, -45, 170 ],

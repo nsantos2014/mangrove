@@ -9,17 +9,23 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.core.recipes.RecipeBuilder;
+import net.minecraft.mangrove.mod.house.doors.drawbridge.ItemDrawbridge;
+import net.minecraft.mangrove.mod.house.matplace.ItemCobblestonePlacer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class MGHouseItems {
-
+	public static ItemDrawbridge drawbridge;
+	public static ItemCobblestonePlacer cobblestonePlacer;
 	public static void preInit() {
+		drawbridge=new ItemDrawbridge(MGHouseBlocks.drawbridge);
+		cobblestonePlacer=new ItemCobblestonePlacer();
 	}
 
 	public static void init(FMLInitializationEvent event) {
+		
 		if (event.getSide() == Side.CLIENT) {
 			RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 
@@ -29,7 +35,9 @@ public class MGHouseItems {
 			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.glass_lamp), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "glass_lamp", "inventory"));
 			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.glow_ladder), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "glow_ladder", "inventory"));
 			
-			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.drawbridge), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseBlocks.drawbridge.getName(), "inventory"));
+			itemModelMesher.register(drawbridge, 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseItems.drawbridge.getName(), "inventory"));
+
+			itemModelMesher.register(cobblestonePlacer, 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseItems.cobblestonePlacer.getName(), "inventory"));
 
 			// items
 			// renderItem.getItemModelMesher().register(tutorialItem, 0, new
