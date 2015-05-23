@@ -48,13 +48,39 @@ public class MGWarfareForge {
     	MGWarfareItems.registerSurpass(event);
     	MGWarfareItems.registerArmor(event);
     	
-    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 21, 521){
+    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 1, 1){
     		@Override
     		protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
     			int size = newInventory.getSizeInventory();
     			for( int i=0; i< size; i++){
     				ItemStack iStack=newInventory.getStackInSlot(i);
-    				if( iStack.getItem()==MGWarfareItems.woodenSurpass){
+    				if( iStack!=null && iStack.getItem()==MGWarfareItems.woodenSurpass){
+    					return new ItemStack[0];		
+    				}
+    			}
+    			return new ItemStack[]{new ItemStack(MGWarfareItems.woodenSurpass)};
+    		}
+    	});
+    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 1, 21){
+    		@Override
+    		protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
+    			int size = newInventory.getSizeInventory();
+    			for( int i=0; i< size; i++){
+    				ItemStack iStack=newInventory.getStackInSlot(i);
+    				if( iStack!=null && iStack.getItem()==MGWarfareItems.woodenSurpass){
+    					return new ItemStack[0];		
+    				}
+    			}
+    			return new ItemStack[]{new ItemStack(MGWarfareItems.woodenSurpass)};
+    		}
+    	});
+    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 1, 521){
+    		@Override
+    		protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
+    			int size = newInventory.getSizeInventory();
+    			for( int i=0; i< size; i++){
+    				ItemStack iStack=newInventory.getStackInSlot(i);
+    				if( iStack!=null && iStack.getItem()==MGWarfareItems.woodenSurpass){
     					return new ItemStack[0];		
     				}
     			}
@@ -62,7 +88,7 @@ public class MGWarfareForge {
     		}
     	});
     	
-    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 91, 5121){
+    	ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(MGWarfareItems.woodenSurpass), 1, 1, 5121){
     		@Override
     		protected ItemStack[] generateChestContent(Random random, IInventory newInventory) {
     			int size = newInventory.getSizeInventory();
