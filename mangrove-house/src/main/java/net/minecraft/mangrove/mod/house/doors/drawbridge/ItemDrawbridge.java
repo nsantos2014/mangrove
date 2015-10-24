@@ -5,6 +5,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.mangrove.mod.house.MGHouseForge;
 import net.minecraft.util.BlockPos;
@@ -12,11 +13,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class ItemDrawbridge extends Item {
-	private String	name	= "drawbridge_item";
+public class ItemDrawbridge extends ItemBlock {
+	private final String	name;
 	private Block	block;
 
 	public ItemDrawbridge(Block block) {
+		super(block);
+		this.name="drawbridge_item";
 		this.block = block;
 		GameRegistry.registerItem(this, name, MGHouseForge.ID);
 		this.setCreativeTab(CreativeTabs.tabRedstone);

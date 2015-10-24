@@ -82,7 +82,7 @@ public abstract class AbstractItemSurpass extends Item {
                 return 40.0f*damageModifier;
             }
             if( block==Blocks.netherrack){                
-                return 30.0f*damageModifier;
+                return 10.0f*damageModifier;
             }            
             if( block==Blocks.redstone_ore){                
                 return 20.0f*damageModifier;

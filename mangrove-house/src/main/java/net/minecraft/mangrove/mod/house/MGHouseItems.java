@@ -17,11 +17,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class MGHouseItems {
-	public static ItemDrawbridge drawbridge;
+//	public static ItemDrawbridge drawbridge;
 	public static ItemCobblestonePlacer cobblestonePlacer;
+	
 	public static void preInit() {
-		drawbridge=new ItemDrawbridge(MGHouseBlocks.drawbridge);
-		cobblestonePlacer=new ItemCobblestonePlacer();
+//		drawbridge=new ItemDrawbridge(MGHouseBlocks.drawbridge);
+//		cobblestonePlacer=new ItemCobblestonePlacer();
 	}
 
 	public static void init(FMLInitializationEvent event) {
@@ -34,10 +35,11 @@ public class MGHouseItems {
 //			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.crate), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "crate", "inventory"));
 			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.glass_lamp), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "glass_lamp", "inventory"));
 			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.glow_ladder), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "glow_ladder", "inventory"));
+//			itemModelMesher.register(Item.getItemFromBlock(MGHouseBlocks.drawbridge), 0, new ModelResourceLocation(MGHouseForge.ID + ":" + "drawbridge", "inventory"));
 			
-			itemModelMesher.register(drawbridge, 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseItems.drawbridge.getName(), "inventory"));
+//			itemModelMesher.register(drawbridge, 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseItems.drawbridge.getName(), "inventory"));
 
-			itemModelMesher.register(cobblestonePlacer, 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseItems.cobblestonePlacer.getName(), "inventory"));
+//			itemModelMesher.register(cobblestonePlacer, 0, new ModelResourceLocation(MGHouseForge.ID + ":" + MGHouseItems.cobblestonePlacer.getName(), "inventory"));
 
 			// items
 			// renderItem.getItemModelMesher().register(tutorialItem, 0, new
@@ -58,6 +60,13 @@ public class MGHouseItems {
 				.line( null,  null,  null)
 				.line( null, Blocks.ladder,  null)
 				.line( null,  Blocks.torch,  null)
+				.build()
+		);
+		
+		GameRegistry.addRecipe(RecipeBuilder.newRecipe().of(MGHouseBlocks.drawbridge, 1)
+				.line( Blocks.planks,  Blocks.planks,  Blocks.planks)
+				.line( Blocks.planks, Blocks.planks,  Blocks.planks)
+				.line( Items.iron_ingot,  Items.iron_ingot,  Items.iron_ingot)
 				.build()
 		);
 		

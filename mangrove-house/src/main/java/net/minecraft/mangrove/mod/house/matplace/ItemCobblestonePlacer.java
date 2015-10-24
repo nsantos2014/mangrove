@@ -10,7 +10,7 @@ public class ItemCobblestonePlacer extends ItemMaterialPlacer{
 	
 	public ItemCobblestonePlacer() {
 		super(Blocks.cobblestone);
-		GameRegistry.registerItem(this, name);
+		GameRegistry.registerItem(this, name,MGHouseForge.ID );
 		setUnlocalizedName(MGHouseForge.ID + "_" + name);
 		setCreativeTab(CreativeTabs.tabTools);
 		

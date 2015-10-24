@@ -3,6 +3,7 @@
 	<name>mangrove-core</name>
 	<comment></comment>
 	<projects>
+		<project>MDKExample</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

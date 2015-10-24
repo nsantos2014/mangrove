@@ -51,9 +51,10 @@ public class BlockDrawbridge extends Block {
 		setStepSound(Block.soundTypeGravel);
 
 		GameRegistry.registerBlock(this, name);
+//		GameRegistry.registerBlock(this, ItemDrawbridge.class, name);
 		setUnlocalizedName(MGHouseForge.ID + "_" + name);
 
-		// setCreativeTab(CreativeTabs.tabDecorations);
+		 setCreativeTab(CreativeTabs.tabDecorations);
 		setHarvestLevel("axe", 0);
 		setLightLevel(1.0F);
 
@@ -64,6 +65,8 @@ public class BlockDrawbridge extends Block {
 
 	}
 
+
+	
 	public String getName() {
 		return name;
 	}
@@ -298,16 +301,17 @@ public class BlockDrawbridge extends Block {
 		return true;
 	}
 
-	@Override
-	public Item getItem(World worldIn, BlockPos pos) {
-		return MGHouseItems.drawbridge;
-	}
-
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-//		return state.getValue(TYPE) == ComponentType.HINGE ? MGHouseItems.drawbridge : null;
-		return MGHouseItems.drawbridge;
-	}
+//	@Override
+//	public Item getItem(World worldIn, BlockPos pos) {
+//		return MGHouseItems.drawbridge;
+//	}
+//
+//	@Override
+//	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+////		return state.getValue(TYPE) == ComponentType.HINGE ? MGHouseItems.drawbridge : null;
+//		return MGHouseItems.drawbridge;
+//	}
+	
 
 	@Override
 	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {

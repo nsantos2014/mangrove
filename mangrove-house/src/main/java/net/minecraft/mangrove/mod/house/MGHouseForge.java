@@ -42,6 +42,7 @@ public class MGHouseForge {
 	    MinecraftForge.TERRAIN_GEN_BUS.register(this);
 	    MGHouseBlocks.preInit();
 	    MGHouseItems.preInit();
+	    
 	}
 	
 	@EventHandler
